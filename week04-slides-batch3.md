@@ -486,19 +486,111 @@ def train_language_model(
             print(f"✓ Saved best model (val_loss: {best_val_loss:.4f})")
 
 
-# Complete example usage
+# Complete example usage - SELF-CONTAINED VERSION
+# This includes all necessary class definitions so you can run it independently
 if __name__ == "__main__":
-    # 1. Prepare data
+    import torch
+    import torch.nn as nn
+    import torch.nn.functional as F
     import urllib.request
+    
+    print("="*70)
+    print("COMPLETE LANGUAGE MODEL TRAINING EXAMPLE")
+    print("Self-contained - includes all necessary class definitions")
+    print("="*70)
+    
+    # ===== STEP 1: Define GPTBlock class (from Slide 21) =====
+    class GPTBlock(nn.Module):
+        """Single transformer block for GPT"""
+        def __init__(self, n_embd, n_head, dropout=0.1):
+            super().__init__()
+            head_size = n_embd // n_head
+            self.sa = nn.MultiheadAttention(n_embd, n_head, dropout=dropout, batch_first=True)
+            self.ffwd = nn.Sequential(
+                nn.Linear(n_embd, 4 * n_embd),
+                nn.GELU(),
+                nn.Linear(4 * n_embd, n_embd),
+                nn.Dropout(dropout),
+            )
+            self.ln1 = nn.LayerNorm(n_embd)
+            self.ln2 = nn.LayerNorm(n_embd)
+        
+        def forward(self, x):
+            # Self-attention with causal mask
+            attn_mask = torch.triu(torch.ones(x.size(1), x.size(1)), diagonal=1).bool().to(x.device)
+            x = x + self.sa(self.ln1(x), self.ln1(x), self.ln1(x), attn_mask=attn_mask, need_weights=False)[0]
+            x = x + self.ffwd(self.ln2(x))
+            return x
+    
+    # ===== STEP 2: Define GPTModel class (from Slide 21) =====
+    class GPTModel(nn.Module):
+        """GPT Language Model"""
+        def __init__(self, vocab_size, n_embd, n_head, n_layer, block_size, dropout=0.1):
+            super().__init__()
+            
+            self.block_size = block_size
+            self.token_embedding = nn.Embedding(vocab_size, n_embd)
+            self.position_embedding = nn.Embedding(block_size, n_embd)
+            
+            # Stack of transformer blocks
+            self.blocks = nn.Sequential(*[
+                GPTBlock(n_embd, n_head, dropout) 
+                for _ in range(n_layer)
+            ])
+            
+            self.ln_f = nn.LayerNorm(n_embd)
+            self.lm_head = nn.Linear(n_embd, vocab_size, bias=False)
+            
+            # Weight tying
+            self.token_embedding.weight = self.lm_head.weight
+            
+            self.apply(self._init_weights)
+        
+        def _init_weights(self, module):
+            if isinstance(module, nn.Linear):
+                torch.nn.init.normal_(module.weight, mean=0.0, std=0.02)
+                if module.bias is not None:
+                    torch.nn.init.zeros_(module.bias)
+            elif isinstance(module, nn.Embedding):
+                torch.nn.init.normal_(module.weight, mean=0.0, std=0.02)
+        
+        def forward(self, idx):
+            B, T = idx.shape
+            assert T <= self.block_size, f"Cannot forward sequence of length {T}, max is {self.block_size}"
+            
+            # Token + position embeddings
+            tok_emb = self.token_embedding(idx)
+            pos = torch.arange(0, T, dtype=torch.long, device=idx.device)
+            pos_emb = self.position_embedding(pos)
+            x = tok_emb + pos_emb
+            
+            # Apply transformer blocks
+            x = self.blocks(x)
+            x = self.ln_f(x)
+            
+            # Generate logits
+            logits = self.lm_head(x)
+            
+            return logits
+    
+    print("\n✓ GPTBlock and GPTModel classes defined")
+    
+    # ===== STEP 3: Prepare data =====
+    print("\n" + "="*70)
+    print("STEP 3: PREPARING DATA")
+    print("="*70)
     
     # Download sample text (or use your own)
     try:
+        print("Downloading Shakespeare text...")
         url = "https://raw.githubusercontent.com/karpathy/char-rnn/master/data/tinyshakespeare/input.txt"
         with urllib.request.urlopen(url) as response:
             text = response.read().decode('utf-8')
-    except:
-        # Fallback to sample text
-        text = "This is sample text. " * 1000
+        print(f"✓ Downloaded {len(text):,} characters")
+    except Exception as e:
+        print(f"⚠ Download failed: {e}")
+        print("Using sample text instead...")
+        text = "This is sample text for language modeling. " * 1000
     
     # Create character-level tokenizer
     chars = sorted(list(set(text)))
@@ -506,6 +598,18 @@ if __name__ == "__main__":
     stoi = {ch: i for i, ch in enumerate(chars)}
     itos = {i: ch for i, ch in enumerate(chars)}
     encode = lambda s: [stoi[c] for c in s]
+    decode = lambda l: ''.join([itos[i] for i in l])
+    
+    print(f"Vocabulary size: {vocab_size} unique characters")
+    
+    # Test tokenizer
+    sample = "Hello"
+    encoded = encode(sample)
+    decoded = decode(encoded)
+    print(f"\nTokenizer test:")
+    print(f"  Original: '{sample}'")
+    print(f"  Encoded: {encoded}")
+    print(f"  Decoded: '{decoded}'")
     
     # Tokenize
     data = torch.tensor(encode(text), dtype=torch.long)
@@ -515,30 +619,24 @@ if __name__ == "__main__":
     train_data = data[:n]
     val_data = data[n:]
     
-    # 2. Create datasets
+    print(f"\nDataset prepared:")
+    print(f"  Total tokens: {len(data):,}")
+    print(f"  Training tokens: {len(train_data):,}")
+    print(f"  Validation tokens: {len(val_data):,}")
+    
+    # ===== STEP 4: Create datasets =====
     block_size = 128
     train_dataset = TextDataset(train_data, block_size)
     val_dataset = TextDataset(val_data, block_size)
     
-    # 3. Create model using GPTModel from Slide 21
-    # 
-    # IMPORTANT: Make sure you have BOTH classes defined:
-    #   1. GPTBlock (from Slide 21)
-    #   2. GPTModel (from Slide 21)
-    # 
-    # Do NOT try to use TransformerBlock from Slide 19 - GPTModel uses GPTBlock!
-    # 
-    # Option 1: Copy both classes from Slide 21 into this script
-    # Option 2: Run this code in the same file as Slide 21
+    print(f"  Block size (context length): {block_size}")
+    print(f"  Training samples: {len(train_dataset):,}")
+    print(f"  Validation samples: {len(val_dataset):,}")
     
-    # Verify classes are available
-    try:
-        test_block = GPTBlock(n_embd=64, n_head=4, dropout=0.1)
-        print("✓ GPTBlock class found")
-    except NameError:
-        print("ERROR: GPTBlock class not found!")
-        print("Please copy GPTBlock class from Slide 21 above")
-        raise
+    # ===== STEP 5: Create model =====
+    print("\n" + "="*70)
+    print("STEP 5: CREATING MODEL")
+    print("="*70)
     
     model = GPTModel(
         vocab_size=vocab_size,
@@ -550,8 +648,14 @@ if __name__ == "__main__":
     
     print(f"\nModel created:")
     print(f"  Vocabulary: {vocab_size} tokens")
+    print(f"  Embedding dimension: 256")
+    print(f"  Number of heads: 4")
+    print(f"  Number of layers: 4")
     print(f"  Parameters: {sum(p.numel() for p in model.parameters()) / 1e6:.2f}M")
-    print(f"  Architecture: {n_layer} layers, {n_head} heads, {n_embd} embedding dim")
+    
+    print("\n✓ All components ready for training!")
+    print("\nTo train the model, call:")
+    print("  train_language_model(model, train_dataset, val_dataset, epochs=10)")
     
     # 4. Train
     train_language_model(
