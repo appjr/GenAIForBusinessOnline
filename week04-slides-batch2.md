@@ -904,6 +904,84 @@ class Transformer(nn.Module):
             x = layer(x)
         
         return x
+
+
+# Complete working example
+if __name__ == "__main__":
+    print("="*60)
+    print("TRANSFORMER BLOCK EXAMPLE")
+    print("="*60)
+    
+    # Parameters
+    vocab_size = 1000
+    embed_dim = 128
+    num_heads = 4
+    ff_dim = 512  # Feed-forward dimension (typically 4x embed_dim)
+    num_layers = 2
+    batch_size = 8
+    seq_len = 20
+    
+    # Create transformer
+    transformer = Transformer(
+        vocab_size=vocab_size,
+        embed_dim=embed_dim,
+        num_heads=num_heads,
+        ff_dim=ff_dim,
+        num_layers=num_layers
+    )
+    
+    print(f"\nTransformer Configuration:")
+    print(f"  Vocabulary Size: {vocab_size}")
+    print(f"  Embedding Dimension: {embed_dim}")
+    print(f"  Number of Heads: {num_heads}")
+    print(f"  Feed-Forward Dimension: {ff_dim}")
+    print(f"  Number of Layers: {num_layers}")
+    print(f"  Total Parameters: {sum(p.numel() for p in transformer.parameters()):,}")
+    
+    # Create sample input (token IDs)
+    sample_tokens = torch.randint(0, vocab_size, (batch_size, seq_len))
+    
+    print(f"\n\nInput:")
+    print(f"  Shape: {sample_tokens.shape}")
+    print(f"  Sample tokens: {sample_tokens[0, :5].tolist()}")
+    
+    # Forward pass
+    transformer.eval()
+    with torch.no_grad():
+        output = transformer(sample_tokens)
+    
+    print(f"\n\nOutput:")
+    print(f"  Shape: {output.shape}")
+    print(f"  (batch_size, sequence_length, embedding_dimension)")
+    
+    # Test single TransformerBlock
+    print("\n" + "="*60)
+    print("SINGLE TRANSFORMER BLOCK TEST")
+    print("="*60)
+    
+    single_block = TransformerBlock(
+        embed_dim=embed_dim,
+        num_heads=num_heads,
+        ff_dim=ff_dim,
+        dropout=0.1
+    )
+    
+    # Random embedded input
+    embedded_input = torch.randn(batch_size, seq_len, embed_dim)
+    
+    print(f"\nInput to block: {embedded_input.shape}")
+    
+    single_block.eval()
+    with torch.no_grad():
+        block_output = single_block(embedded_input)
+    
+    print(f"Output from block: {block_output.shape}")
+    print(f"✓ TransformerBlock processes embeddings through attention + FFN")
+    
+    print("\n" + "="*60)
+    print("✓ Transformer successfully processes token sequences!")
+    print("Use case: Language modeling, translation, text understanding")
+    print("="*60)
 ```
 
 ---
