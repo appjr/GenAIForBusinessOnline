@@ -520,9 +520,25 @@ if __name__ == "__main__":
     train_dataset = TextDataset(train_data, block_size)
     val_dataset = TextDataset(val_data, block_size)
     
-    # 3. Create model (using GPTModel defined in Slide 21)
-    # NOTE: Copy the GPTModel and GPTBlock classes from Slide 21 above,
-    # or run this in the same script where they are defined
+    # 3. Create model using GPTModel from Slide 21
+    # 
+    # IMPORTANT: Make sure you have BOTH classes defined:
+    #   1. GPTBlock (from Slide 21)
+    #   2. GPTModel (from Slide 21)
+    # 
+    # Do NOT try to use TransformerBlock from Slide 19 - GPTModel uses GPTBlock!
+    # 
+    # Option 1: Copy both classes from Slide 21 into this script
+    # Option 2: Run this code in the same file as Slide 21
+    
+    # Verify classes are available
+    try:
+        test_block = GPTBlock(n_embd=64, n_head=4, dropout=0.1)
+        print("✓ GPTBlock class found")
+    except NameError:
+        print("ERROR: GPTBlock class not found!")
+        print("Please copy GPTBlock class from Slide 21 above")
+        raise
     
     model = GPTModel(
         vocab_size=vocab_size,
@@ -533,7 +549,9 @@ if __name__ == "__main__":
     )
     
     print(f"\nModel created:")
+    print(f"  Vocabulary: {vocab_size} tokens")
     print(f"  Parameters: {sum(p.numel() for p in model.parameters()) / 1e6:.2f}M")
+    print(f"  Architecture: {n_layer} layers, {n_head} heads, {n_embd} embedding dim")
     
     # 4. Train
     train_language_model(
