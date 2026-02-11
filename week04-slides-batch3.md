@@ -520,8 +520,9 @@ if __name__ == "__main__":
     train_dataset = TextDataset(train_data, block_size)
     val_dataset = TextDataset(val_data, block_size)
     
-    # 3. Create model (assuming GPTModel is defined)
-    from your_model import GPTModel  # Replace with actual import
+    # 3. Create model (using GPTModel defined in Slide 21)
+    # NOTE: Copy the GPTModel and GPTBlock classes from Slide 21 above,
+    # or run this in the same script where they are defined
     
     model = GPTModel(
         vocab_size=vocab_size,
@@ -530,6 +531,9 @@ if __name__ == "__main__":
         n_layer=4,
         block_size=block_size
     )
+    
+    print(f"\nModel created:")
+    print(f"  Parameters: {sum(p.numel() for p in model.parameters()) / 1e6:.2f}M")
     
     # 4. Train
     train_language_model(
