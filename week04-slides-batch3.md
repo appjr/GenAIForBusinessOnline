@@ -19,48 +19,162 @@
 
 **Architecture:**
 ```python
+import torch
+import torch.nn as nn
+import torch.nn.functional as F
+import math
+
+class GPTBlock(nn.Module):
+    """Single transformer block for GPT"""
+    def __init__(self, n_embd, n_head, dropout=0.1):
+        super().__init__()
+        head_size = n_embd // n_head
+        self.sa = nn.MultiheadAttention(n_embd, n_head, dropout=dropout, batch_first=True)
+        self.ffwd = nn.Sequential(
+            nn.Linear(n_embd, 4 * n_embd),
+            nn.GELU(),
+            nn.Linear(4 * n_embd, n_embd),
+            nn.Dropout(dropout),
+        )
+        self.ln1 = nn.LayerNorm(n_embd)
+        self.ln2 = nn.LayerNorm(n_embd)
+    
+    def forward(self, x):
+        # Self-attention with causal mask
+        attn_mask = torch.triu(torch.ones(x.size(1), x.size(1)), diagonal=1).bool().to(x.device)
+        x = x + self.sa(self.ln1(x), self.ln1(x), self.ln1(x), attn_mask=attn_mask, need_weights=False)[0]
+        x = x + self.ffwd(self.ln2(x))
+        return x
+
+
 class GPTModel(nn.Module):
-    def __init__(self, vocab_size, n_embd, n_head, n_layer, block_size):
+    """GPT Language Model"""
+    def __init__(self, vocab_size, n_embd, n_head, n_layer, block_size, dropout=0.1):
         super().__init__()
         
+        self.block_size = block_size
         self.token_embedding = nn.Embedding(vocab_size, n_embd)
         self.position_embedding = nn.Embedding(block_size, n_embd)
         
         # Stack of transformer blocks
         self.blocks = nn.Sequential(*[
-            TransformerBlock(n_embd, n_head) 
+            GPTBlock(n_embd, n_head, dropout) 
             for _ in range(n_layer)
         ])
         
         self.ln_f = nn.LayerNorm(n_embd)
         self.lm_head = nn.Linear(n_embd, vocab_size, bias=False)
+        
+        # Weight tying
+        self.token_embedding.weight = self.lm_head.weight
+        
+        self.apply(self._init_weights)
+    
+    def _init_weights(self, module):
+        if isinstance(module, nn.Linear):
+            torch.nn.init.normal_(module.weight, mean=0.0, std=0.02)
+            if module.bias is not None:
+                torch.nn.init.zeros_(module.bias)
+        elif isinstance(module, nn.Embedding):
+            torch.nn.init.normal_(module.weight, mean=0.0, std=0.02)
     
     def forward(self, idx):
         B, T = idx.shape
+        assert T <= self.block_size, f"Cannot forward sequence of length {T}, max is {self.block_size}"
         
         # Token + position embeddings
-        tok_emb = self.token_embedding(idx)
-        pos_emb = self.position_embedding(torch.arange(T, device=idx.device))
-        x = tok_emb + pos_emb
+        tok_emb = self.token_embedding(idx)  # (B, T, n_embd)
+        pos = torch.arange(0, T, dtype=torch.long, device=idx.device)  # (T,)
+        pos_emb = self.position_embedding(pos)  # (T, n_embd)
+        x = tok_emb + pos_emb  # (B, T, n_embd)
         
         # Apply transformer blocks
         x = self.blocks(x)
         x = self.ln_f(x)
         
         # Generate logits
-        logits = self.lm_head(x)
+        logits = self.lm_head(x)  # (B, T, vocab_size)
         
         return logits
 
-# GPT-2 Small config
-model = GPTModel(
-    vocab_size=50257,
-    n_embd=768,
-    n_head=12,
-    n_layer=12,
-    block_size=1024
-)
-print(f"Parameters: {sum(p.numel() for p in model.parameters()) / 1e6:.1f}M")
+
+# Example usage
+if __name__ == "__main__":
+    print("="*60)
+    print("GPT MODEL EXAMPLE")
+    print("="*60)
+    
+    # Mini GPT config (scaled down for demonstration)
+    vocab_size = 5000
+    n_embd = 256
+    n_head = 4
+    n_layer = 4
+    block_size = 128
+    
+    # Create model
+    model = GPTModel(
+        vocab_size=vocab_size,
+        n_embd=n_embd,
+        n_head=n_head,
+        n_layer=n_layer,
+        block_size=block_size
+    )
+    
+    print(f"\nModel Configuration:")
+    print(f"  Vocabulary Size: {vocab_size:,}")
+    print(f"  Embedding Dimension: {n_embd}")
+    print(f"  Number of Heads: {n_head}")
+    print(f"  Number of Layers: {n_layer}")
+    print(f"  Block Size (max context): {block_size}")
+    print(f"  Total Parameters: {sum(p.numel() for p in model.parameters()) / 1e6:.2f}M")
+    
+    # Test forward pass
+    batch_size = 4
+    seq_length = 50
+    
+    # Random token IDs (simulating tokenized text)
+    sample_tokens = torch.randint(0, vocab_size, (batch_size, seq_length))
+    
+    print(f"\n\nInput:")
+    print(f"  Shape: {sample_tokens.shape}")
+    print(f"  Sample tokens (first sequence): {sample_tokens[0, :10].tolist()}")
+    
+    # Forward pass
+    model.eval()
+    with torch.no_grad():
+        logits = model(sample_tokens)
+    
+    print(f"\n\nOutput:")
+    print(f"  Logits Shape: {logits.shape}")
+    print(f"  (batch_size, sequence_length, vocab_size)")
+    
+    # Get next token predictions
+    next_token_logits = logits[:, -1, :]  # Take last position
+    probs = F.softmax(next_token_logits, dim=-1)
+    next_tokens = torch.argmax(probs, dim=-1)
+    
+    print(f"\n\nNext Token Predictions:")
+    for i in range(batch_size):
+        print(f"  Sequence {i+1}: Next token ID = {next_tokens[i].item()}, "
+              f"Probability = {probs[i, next_tokens[i]].item():.3f}")
+    
+    print("\n" + "="*60)
+    print("✓ GPT model successfully processes and predicts next tokens!")
+    print("Use case: Text generation, completion, translation")
+    print("="*60)
+    
+    # Show GPT-2 comparison
+    print("\n\nGPT-2 Configuration Comparison:")
+    configs = {
+        'GPT-2 Small': {'params': '124M', 'n_layer': 12, 'n_embd': 768, 'n_head': 12},
+        'GPT-2 Medium': {'params': '350M', 'n_layer': 24, 'n_embd': 1024, 'n_head': 16},
+        'GPT-2 Large': {'params': '774M', 'n_layer': 36, 'n_embd': 1280, 'n_head': 20},
+        'GPT-2 XL': {'params': '1.5B', 'n_layer': 48, 'n_embd': 1600, 'n_head': 25},
+    }
+    
+    for name, config in configs.items():
+        print(f"  {name}: {config['params']} parameters")
+        print(f"    Layers: {config['n_layer']}, Embedding: {config['n_embd']}, Heads: {config['n_head']}")
 ```
 
 ---

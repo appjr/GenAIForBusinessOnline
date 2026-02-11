@@ -205,6 +205,7 @@ Output: y₁   y₂   y₃   y₄
 
 **Basic RNN Implementation:**
 ```python
+import torch
 import torch.nn as nn
 
 class SimpleRNN(nn.Module):
@@ -235,8 +236,54 @@ class SimpleRNN(nn.Module):
         
         return out
 
-# Example usage
-model = SimpleRNN(input_size=10, hidden_size=128, output_size=5)
+
+# Example usage with actual data
+if __name__ == "__main__":
+    print("="*60)
+    print("SIMPLE RNN EXAMPLE")
+    print("="*60)
+    
+    # Create model
+    input_size = 10
+    hidden_size = 128
+    output_size = 5
+    model = SimpleRNN(input_size=input_size, hidden_size=hidden_size, output_size=output_size)
+    
+    print(f"\nModel Architecture:")
+    print(f"  Input Size: {input_size}")
+    print(f"  Hidden Size: {hidden_size}")
+    print(f"  Output Size: {output_size}")
+    print(f"  Total Parameters: {sum(p.numel() for p in model.parameters()):,}")
+    
+    # Create sample input: batch of 32 sequences, each 20 time steps, 10 features
+    batch_size = 32
+    seq_length = 20
+    sample_input = torch.randn(batch_size, seq_length, input_size)
+    
+    print(f"\n\nInput Shape: {sample_input.shape}")
+    print(f"  Batch Size: {batch_size}")
+    print(f"  Sequence Length: {seq_length}")
+    print(f"  Features per Time Step: {input_size}")
+    
+    # Forward pass
+    model.eval()
+    with torch.no_grad():
+        output = model(sample_input)
+    
+    print(f"\n\nOutput Shape: {output.shape}")
+    print(f"  Batch Size: {output.shape[0]}")
+    print(f"  Output Classes: {output.shape[1]}")
+    
+    print(f"\nSample Output (first 3 samples):")
+    for i in range(3):
+        print(f"  Sample {i+1}: {output[i].numpy()}")
+        predicted_class = torch.argmax(output[i]).item()
+        print(f"    → Predicted Class: {predicted_class}")
+    
+    print("\n" + "="*60)
+    print("✓ RNN successfully processed sequential data!")
+    print("Use case: Time series prediction, sentiment analysis, etc.")
+    print("="*60)
 ```
 
 ---
@@ -252,6 +299,9 @@ model = SimpleRNN(input_size=10, hidden_size=128, output_size=5)
 
 **LSTM (Long Short-Term Memory):**
 ```python
+import torch
+import torch.nn as nn
+
 class LSTMModel(nn.Module):
     def __init__(self, vocab_size, embedding_dim, hidden_dim, output_dim):
         super(LSTMModel, self).__init__()
@@ -281,12 +331,67 @@ class LSTMModel(nn.Module):
         # Use final hidden state
         return self.fc(hidden[-1])
 
-model = LSTMModel(
-    vocab_size=10000,
-    embedding_dim=100,
-    hidden_dim=256,
-    output_dim=1
-)
+
+# Example usage for sentiment analysis
+if __name__ == "__main__":
+    print("="*60)
+    print("LSTM MODEL EXAMPLE - Sentiment Analysis")
+    print("="*60)
+    
+    # Model hyperparameters
+    vocab_size = 10000
+    embedding_dim = 100
+    hidden_dim = 256
+    output_dim = 1  # Binary sentiment: positive (1) or negative (0)
+    
+    # Create model
+    model = LSTMModel(
+        vocab_size=vocab_size,
+        embedding_dim=embedding_dim,
+        hidden_dim=hidden_dim,
+        output_dim=output_dim
+    )
+    
+    print(f"\nModel Configuration:")
+    print(f"  Vocabulary Size: {vocab_size:,}")
+    print(f"  Embedding Dimension: {embedding_dim}")
+    print(f"  Hidden Dimension: {hidden_dim}")
+    print(f"  Output Dimension: {output_dim} (sentiment score)")
+    print(f"  Total Parameters: {sum(p.numel() for p in model.parameters()):,}")
+    
+    # Simulate tokenized text input
+    # Example: "This movie is amazing!" might be tokenized as [45, 892, 23, 3401, 12]
+    batch_size = 8
+    sequence_length = 15  # Average sentence length
+    
+    # Random token IDs (in real use, these would come from a tokenizer)
+    sample_reviews = torch.randint(0, vocab_size, (batch_size, sequence_length))
+    
+    print(f"\n\nInput:")
+    print(f"  Batch Size: {batch_size} reviews")
+    print(f"  Sequence Length: {sequence_length} tokens per review")
+    print(f"  Sample token IDs (first review): {sample_reviews[0][:10].tolist()}...")
+    
+    # Forward pass
+    model.eval()
+    with torch.no_grad():
+        sentiment_scores = model(sample_reviews)
+        # Apply sigmoid to get probabilities
+        probabilities = torch.sigmoid(sentiment_scores)
+    
+    print(f"\n\nOutput - Sentiment Analysis:")
+    print(f"  Shape: {sentiment_scores.shape}")
+    
+    for i in range(min(5, batch_size)):
+        prob = probabilities[i].item()
+        sentiment = "Positive 😊" if prob > 0.5 else "Negative 😞"
+        print(f"  Review {i+1}: Score={prob:.3f} → {sentiment}")
+    
+    print("\n" + "="*60)
+    print("✓ LSTM successfully processed text sequences!")
+    print("Use cases: Sentiment analysis, text classification,")
+    print("           language modeling, machine translation")
+    print("="*60)
 ```
 
 **GRU (Gated Recurrent Unit):**
@@ -468,7 +573,9 @@ if __name__ == "__main__":
 
 **Self-Attention Implementation:**
 ```python
+import torch
 import torch.nn as nn
+import torch.nn.functional as F
 import math
 
 class SelfAttention(nn.Module):
@@ -502,10 +609,55 @@ class SelfAttention(nn.Module):
         
         return output, attention_weights
 
-# Usage
-attention_layer = SelfAttention(embed_dim=512)
-x = torch.randn(32, 10, 512)  # batch, seq_len, embed_dim
-output, weights = attention_layer(x)
+
+# Example usage
+if __name__ == "__main__":
+    print("="*60)
+    print("SELF-ATTENTION EXAMPLE")
+    print("="*60)
+    
+    # Parameters
+    batch_size = 4
+    seq_len = 10
+    embed_dim = 64
+    
+    # Create self-attention layer
+    attention_layer = SelfAttention(embed_dim=embed_dim)
+    
+    # Create sample input (e.g., embedded sentence)
+    x = torch.randn(batch_size, seq_len, embed_dim)
+    
+    print(f"\nInput:")
+    print(f"  Shape: {x.shape}")
+    print(f"  Batch Size: {batch_size}")
+    print(f"  Sequence Length: {seq_len} tokens")
+    print(f"  Embedding Dimension: {embed_dim}")
+    
+    # Forward pass
+    attention_layer.eval()
+    with torch.no_grad():
+        output, weights = attention_layer(x)
+    
+    print(f"\nOutput:")
+    print(f"  Shape: {output.shape}")
+    print(f"  Attention Weights Shape: {weights.shape}")
+    
+    # Analyze attention pattern for first sample
+    print(f"\nAttention Weights (First Sample):")
+    print(f"  Each token attends to all {seq_len} tokens")
+    print(f"  Sample weights (token 0 attending to others):")
+    print(f"    {weights[0, 0, :5].numpy()}")
+    print(f"  Sum of attention weights per token: {weights[0, 0, :].sum():.3f}")
+    
+    # Show which tokens get most attention
+    most_attended = torch.argmax(weights[0], dim=-1)
+    print(f"\n  Most attended token for each position:")
+    print(f"    {most_attended.numpy()}")
+    
+    print("\n" + "="*60)
+    print("✓ Self-Attention allows each token to attend to all others!")
+    print("Use case: Understanding context and relationships in sequences")
+    print("="*60)
 ```
 
 ---
@@ -578,7 +730,10 @@ print(f"Output shape: {output.shape}")
 
 **Positional Encoding:**
 ```python
-import numpy as np
+import torch
+import torch.nn as nn
+import math
+import matplotlib.pyplot as plt
 
 class PositionalEncoding(nn.Module):
     def __init__(self, d_model, max_len=5000):
@@ -607,10 +762,77 @@ class PositionalEncoding(nn.Module):
         x = x + self.pe[:, :x.size(1)]
         return x
 
-# Usage
-pos_encoding = PositionalEncoding(d_model=512)
-x = torch.randn(32, 100, 512)
-x_with_pos = pos_encoding(x)
+
+# Example usage
+if __name__ == "__main__":
+    print("="*60)
+    print("POSITIONAL ENCODING EXAMPLE")
+    print("="*60)
+    
+    # Parameters
+    d_model = 128
+    max_len = 100
+    batch_size = 8
+    seq_len = 50
+    
+    # Create positional encoding layer
+    pos_encoding = PositionalEncoding(d_model=d_model, max_len=max_len)
+    
+    # Create sample embeddings (without positional info)
+    x = torch.randn(batch_size, seq_len, d_model)
+    
+    print(f"\nInput (Token Embeddings):")
+    print(f"  Shape: {x.shape}")
+    print(f"  Sample values (position 0): {x[0, 0, :5].tolist()}")
+    
+    # Add positional encoding
+    x_with_pos = pos_encoding(x)
+    
+    print(f"\nOutput (With Positional Encoding):")
+    print(f"  Shape: {x_with_pos.shape}")
+    print(f"  Sample values (position 0): {x_with_pos[0, 0, :5].tolist()}")
+    
+    # Show how positional encoding differs across positions
+    print(f"\nPositional Encoding Patterns:")
+    print(f"  Position 0 encoding: {pos_encoding.pe[0, 0, :5].tolist()}")
+    print(f"  Position 10 encoding: {pos_encoding.pe[0, 10, :5].tolist()}")
+    print(f"  Position 20 encoding: {pos_encoding.pe[0, 20, :5].tolist()}")
+    
+    print("\n" + "="*60)
+    print("✓ Positional Encoding adds position information to tokens!")
+    print("Each position gets a unique encoding pattern")
+    print("="*60)
+    
+    # Visualize positional encodings
+    def visualize_positional_encoding():
+        pe = pos_encoding.pe[0, :50, :64].numpy()  # First 50 positions, 64 dims
+        
+        fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(14, 5))
+        
+        # Heatmap of positional encodings
+        im = ax1.imshow(pe.T, cmap='RdBu', aspect='auto')
+        ax1.set_xlabel('Position', fontsize=12)
+        ax1.set_ylabel('Embedding Dimension', fontsize=12)
+        ax1.set_title('Positional Encoding Heatmap', fontsize=14, fontweight='bold')
+        plt.colorbar(im, ax=ax1, label='Value')
+        
+        # Plot specific dimensions
+        dims_to_plot = [0, 1, 10, 20]
+        for dim in dims_to_plot:
+            ax2.plot(pe[:, dim], label=f'Dim {dim}')
+        
+        ax2.set_xlabel('Position', fontsize=12)
+        ax2.set_ylabel('Encoding Value', fontsize=12)
+        ax2.set_title('Positional Encoding Over Positions', fontsize=14, fontweight='bold')
+        ax2.legend()
+        ax2.grid(True, alpha=0.3)
+        
+        plt.tight_layout()
+        plt.savefig('positional_encoding.png', dpi=300, bbox_inches='tight')
+        print("\n✓ Saved visualization to 'positional_encoding.png'")
+        plt.show()
+    
+    visualize_positional_encoding()
 ```
 
 ---
