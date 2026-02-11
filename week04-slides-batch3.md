@@ -1149,6 +1149,7 @@ benchmarks = {
 ```python
 import torch
 import torch.nn as nn
+import urllib.request
 
 # Mini GPT configuration
 config = {
@@ -1160,10 +1161,23 @@ config = {
     'dropout': 0.1
 }
 
-# Load data
-text = open('shakespeare.txt', 'r').read()
+# Load data from URL
+print("Downloading Shakespeare text...")
+url = "https://raw.githubusercontent.com/karpathy/char-rnn/master/data/tinyshakespeare/input.txt"
+
+try:
+    with urllib.request.urlopen(url) as response:
+        text = response.read().decode('utf-8')
+    print(f"✓ Downloaded {len(text):,} characters")
+except Exception as e:
+    print(f"Error downloading: {e}")
+    print("Using sample text instead...")
+    text = "This is sample text for demonstration. " * 100
+
+# Build character-level vocabulary
 chars = sorted(list(set(text)))
 vocab_size = len(chars)
+print(f"Vocabulary size: {vocab_size} unique characters")
 
 # Character-level tokenizer
 stoi = {ch: i for i, ch in enumerate(chars)}
@@ -1171,11 +1185,25 @@ itos = {i: ch for i, ch in enumerate(chars)}
 encode = lambda s: [stoi[c] for c in s]
 decode = lambda l: ''.join([itos[i] for i in l])
 
+# Test tokenizer
+sample = "Hello"
+encoded = encode(sample)
+decoded = decode(encoded)
+print(f"\nTokenizer test:")
+print(f"  Original: '{sample}'")
+print(f"  Encoded: {encoded}")
+print(f"  Decoded: '{decoded}'")
+
 # Prepare dataset
 data = torch.tensor(encode(text), dtype=torch.long)
 n = int(0.9 * len(data))
 train_data = data[:n]
 val_data = data[n:]
+
+print(f"\nDataset prepared:")
+print(f"  Total tokens: {len(data):,}")
+print(f"  Training tokens: {len(train_data):,}")
+print(f"  Validation tokens: {len(val_data):,}")
 
 # TODO: Implement model, training, generation
 # (Lab exercise)
