@@ -77,50 +77,107 @@ print(f"Parameters: {sum(p.numel() for p in model.parameters()) / 1e6:.1f}M")
 
 **Implementation:**
 ```python
-def generate(model, idx, max_new_tokens, temperature=1.0, top_k=None):
+import torch
+import torch.nn.functional as F
+from typing import Optional
+
+def generate(model: torch.nn.Module, 
+             idx: torch.Tensor, 
+             max_new_tokens: int, 
+             temperature: float = 1.0, 
+             top_k: Optional[int] = None,
+             block_size: int = 1024) -> torch.Tensor:
     """
-    Generate text autoregressively
+    Generate text autoregressively using a language model.
     
-    idx: (B, T) current context
-    max_new_tokens: how many tokens to generate
-    temperature: randomness (higher = more random)
-    top_k: sample from top k tokens only
+    Args:
+        model: Trained language model (e.g., GPT)
+        idx: Initial context tokens of shape (batch, sequence_length)
+        max_new_tokens: Number of new tokens to generate
+        temperature: Controls randomness (higher = more random)
+                    - temperature < 1: More focused/deterministic
+                    - temperature = 1: Normal sampling
+                    - temperature > 1: More random/creative
+        top_k: If specified, only sample from top k most likely tokens
+        block_size: Maximum context length the model can handle
+    
+    Returns:
+        Generated token sequence of shape (batch, sequence_length + max_new_tokens)
+    
+    Example:
+        >>> model = GPTModel(...)
+        >>> prompt_tokens = torch.tensor([[1, 2, 3, 4]])  # "Hello world"
+        >>> generated = generate(model, prompt_tokens, max_new_tokens=20)
+        >>> # Decode generated tokens back to text
     """
+    model.eval()  # Set to evaluation mode
     
-    for _ in range(max_new_tokens):
-        # Crop context if needed
-        idx_cond = idx if idx.size(1) <= block_size else idx[:, -block_size:]
-        
-        # Get predictions
-        logits = model(idx_cond)
-        logits = logits[:, -1, :]  # Get last token
-        
-        # Apply temperature
-        logits = logits / temperature
-        
-        # Optionally crop logits to top k
-        if top_k is not None:
-            v, _ = torch.topk(logits, top_k)
-            logits[logits < v[:, [-1]]] = -float('Inf')
-        
-        # Apply softmax to get probabilities
-        probs = F.softmax(logits, dim=-1)
-        
-        # Sample from distribution
-        idx_next = torch.multinomial(probs, num_samples=1)
-        
-        # Append to sequence
-        idx = torch.cat((idx, idx_next), dim=1)
+    with torch.no_grad():  # No gradient computation needed
+        for _ in range(max_new_tokens):
+            # Crop context if it exceeds model's maximum length
+            idx_cond = idx if idx.size(1) <= block_size else idx[:, -block_size:]
+            
+            # Forward pass: get predictions for next token
+            logits = model(idx_cond)
+            logits = logits[:, -1, :]  # Focus on last position: (batch, vocab_size)
+            
+            # Apply temperature scaling
+            # Lower temperature → more confident predictions
+            # Higher temperature → more diverse predictions
+            logits = logits / temperature
+            
+            # Optional: Top-k sampling (only consider top k tokens)
+            if top_k is not None:
+                v, _ = torch.topk(logits, min(top_k, logits.size(-1)))
+                logits[logits < v[:, [-1]]] = -float('Inf')
+            
+            # Convert logits to probabilities
+            probs = F.softmax(logits, dim=-1)  # (batch, vocab_size)
+            
+            # Sample next token from probability distribution
+            idx_next = torch.multinomial(probs, num_samples=1)  # (batch, 1)
+            
+            # Append sampled token to sequence
+            idx = torch.cat((idx, idx_next), dim=1)  # (batch, seq_len + 1)
     
     return idx
 
-# Usage
-prompt = "The future of AI is"
-tokens = tokenizer.encode(prompt)
-idx = torch.tensor([tokens])
-generated = generate(model, idx, max_new_tokens=50)
-text = tokenizer.decode(generated[0].tolist())
-print(text)
+
+# Complete usage example
+if __name__ == "__main__":
+    from transformers import GPT2Tokenizer, GPT2LMHeadModel
+    
+    # Load pre-trained model and tokenizer
+    tokenizer = GPT2Tokenizer.from_pretrained('gpt2')
+    model = GPT2LMHeadModel.from_pretrained('gpt2')
+    model.eval()
+    
+    # Encode prompt
+    prompt = "The future of AI is"
+    tokens = tokenizer.encode(prompt, return_tensors='pt')
+    print(f"Prompt: {prompt}")
+    print(f"Token IDs: {tokens}")
+    
+    # Generate with different temperatures
+    print("\n--- Temperature = 0.5 (More focused) ---")
+    generated_low = generate(model, tokens, max_new_tokens=30, temperature=0.5)
+    text_low = tokenizer.decode(generated_low[0].tolist())
+    print(text_low)
+    
+    print("\n--- Temperature = 1.0 (Balanced) ---")
+    generated_mid = generate(model, tokens, max_new_tokens=30, temperature=1.0)
+    text_mid = tokenizer.decode(generated_mid[0].tolist())
+    print(text_mid)
+    
+    print("\n--- Temperature = 1.5 (More creative) ---")
+    generated_high = generate(model, tokens, max_new_tokens=30, temperature=1.5)
+    text_high = tokenizer.decode(generated_high[0].tolist())
+    print(text_high)
+    
+    print("\n--- With top_k = 10 ---")
+    generated_topk = generate(model, tokens, max_new_tokens=30, temperature=1.0, top_k=10)
+    text_topk = tokenizer.decode(generated_topk[0].tolist())
+    print(text_topk)
 ```
 
 ---
@@ -134,41 +191,282 @@ print(text)
 - Learn from massive unlabeled data
 - Captures language patterns and knowledge
 
-**Pre-training Loss:**
+**Complete Training Implementation:**
 ```python
-def compute_loss(model, batch):
-    # batch shape: (B, T+1)
+import torch
+import torch.nn.functional as F
+from torch.utils.data import Dataset, DataLoader
+from typing import List, Tuple
+
+class TextDataset(Dataset):
+    """
+    Dataset for language modeling.
+    Creates input-target pairs for next-token prediction.
+    """
+    def __init__(self, tokens: torch.Tensor, block_size: int):
+        """
+        Args:
+            tokens: Tensor of token IDs
+            block_size: Maximum sequence length
+        """
+        self.tokens = tokens
+        self.block_size = block_size
+    
+    def __len__(self):
+        return len(self.tokens) - self.block_size
+    
+    def __getitem__(self, idx):
+        # Get block_size + 1 tokens
+        chunk = self.tokens[idx:idx + self.block_size + 1]
+        return chunk
+
+
+def compute_loss(model: torch.nn.Module, batch: torch.Tensor) -> torch.Tensor:
+    """
+    Compute language modeling loss (next token prediction).
+    
+    Args:
+        model: Language model
+        batch: Token sequences of shape (batch_size, block_size + 1)
+    
+    Returns:
+        Cross-entropy loss
+    
+    How it works:
+        Input:  [1, 2, 3, 4, 5] → model predicts → [2, 3, 4, 5, 6]
+        Target: [2, 3, 4, 5, 6]
+    """
     # Split into input and target
     x = batch[:, :-1]  # Input: first T tokens
-    y = batch[:, 1:]   # Target: next T tokens
+    y = batch[:, 1:]   # Target: next T tokens (shifted by 1)
     
     # Forward pass
-    logits = model(x)  # (B, T, vocab_size)
+    logits = model(x)  # Shape: (batch_size, seq_len, vocab_size)
     
-    # Compute cross-entropy loss
+    # Reshape for cross-entropy loss
+    # From: (B, T, V) → (B*T, V)
+    # From: (B, T) → (B*T,)
     loss = F.cross_entropy(
-        logits.view(-1, logits.size(-1)),
-        y.view(-1)
+        logits.reshape(-1, logits.size(-1)),
+        y.reshape(-1)
     )
     
     return loss
 
-# Training loop
-optimizer = torch.optim.AdamW(model.parameters(), lr=3e-4)
 
-for epoch in range(num_epochs):
-    for batch in dataloader:
-        optimizer.zero_grad()
-        loss = compute_loss(model, batch)
-        loss.backward()
+def train_language_model(
+    model: torch.nn.Module,
+    train_dataset: TextDataset,
+    val_dataset: TextDataset,
+    epochs: int = 10,
+    batch_size: int = 64,
+    learning_rate: float = 3e-4,
+    device: str = 'cuda' if torch.cuda.is_available() else 'cpu'
+):
+    """
+    Complete training loop for language model.
+    
+    Args:
+        model: Language model to train
+        train_dataset: Training dataset
+        val_dataset: Validation dataset
+        epochs: Number of training epochs
+        batch_size: Batch size
+        learning_rate: Learning rate
+        device: Device to train on
+    """
+    # Move model to device
+    model = model.to(device)
+    
+    # Create dataloaders
+    train_loader = DataLoader(
+        train_dataset,
+        batch_size=batch_size,
+        shuffle=True,
+        num_workers=0
+    )
+    
+    val_loader = DataLoader(
+        val_dataset,
+        batch_size=batch_size,
+        shuffle=False,
+        num_workers=0
+    )
+    
+    # Optimizer (AdamW is standard for transformers)
+    optimizer = torch.optim.AdamW(model.parameters(), lr=learning_rate)
+    
+    # Learning rate scheduler (cosine annealing)
+    scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(
+        optimizer,
+        T_max=epochs * len(train_loader)
+    )
+    
+    # Training loop
+    best_val_loss = float('inf')
+    step = 0
+    
+    for epoch in range(epochs):
+        # Training phase
+        model.train()
+        train_loss = 0
         
-        # Gradient clipping
-        torch.nn.utils.clip_grad_norm_(model.parameters(), 1.0)
+        for batch in train_loader:
+            batch = batch.to(device)
+            
+            # Zero gradients
+            optimizer.zero_grad()
+            
+            # Compute loss
+            loss = compute_loss(model, batch)
+            
+            # Backward pass
+            loss.backward()
+            
+            # Gradient clipping (prevents exploding gradients)
+            torch.nn.utils.clip_grad_norm_(model.parameters(), max_norm=1.0)
+            
+            # Update weights
+            optimizer.step()
+            scheduler.step()
+            
+            # Track loss
+            train_loss += loss.item()
+            step += 1
+            
+            # Logging
+            if step % 100 == 0:
+                print(f"Epoch {epoch}, Step {step}, Loss: {loss.item():.4f}, "
+                      f"LR: {scheduler.get_last_lr()[0]:.6f}")
         
-        optimizer.step()
+        # Average training loss
+        avg_train_loss = train_loss / len(train_loader)
         
-        if step % 100 == 0:
-            print(f"Step {step}, Loss: {loss.item():.4f}")
+        # Validation phase
+        model.eval()
+        val_loss = 0
+        
+        with torch.no_grad():
+            for batch in val_loader:
+                batch = batch.to(device)
+                loss = compute_loss(model, batch)
+                val_loss += loss.item()
+        
+        avg_val_loss = val_loss / len(val_loader)
+        val_perplexity = torch.exp(torch.tensor(avg_val_loss))
+        
+        print(f"\nEpoch {epoch} Summary:")
+        print(f"  Train Loss: {avg_train_loss:.4f}")
+        print(f"  Val Loss: {avg_val_loss:.4f}")
+        print(f"  Val Perplexity: {val_perplexity:.2f}\n")
+        
+        # Save best model
+        if avg_val_loss < best_val_loss:
+            best_val_loss = avg_val_loss
+            torch.save({
+                'epoch': epoch,
+                'model_state_dict': model.state_dict(),
+                'optimizer_state_dict': optimizer.state_dict(),
+                'loss': best_val_loss,
+            }, 'best_model.pth')
+            print(f"✓ Saved best model (val_loss: {best_val_loss:.4f})")
+
+
+# Complete example usage
+if __name__ == "__main__":
+    # 1. Prepare data
+    import urllib.request
+    
+    # Download sample text (or use your own)
+    try:
+        url = "https://raw.githubusercontent.com/karpathy/char-rnn/master/data/tinyshakespeare/input.txt"
+        with urllib.request.urlopen(url) as response:
+            text = response.read().decode('utf-8')
+    except:
+        # Fallback to sample text
+        text = "This is sample text. " * 1000
+    
+    # Create character-level tokenizer
+    chars = sorted(list(set(text)))
+    vocab_size = len(chars)
+    stoi = {ch: i for i, ch in enumerate(chars)}
+    itos = {i: ch for i, ch in enumerate(chars)}
+    encode = lambda s: [stoi[c] for c in s]
+    
+    # Tokenize
+    data = torch.tensor(encode(text), dtype=torch.long)
+    
+    # Split train/val
+    n = int(0.9 * len(data))
+    train_data = data[:n]
+    val_data = data[n:]
+    
+    # 2. Create datasets
+    block_size = 128
+    train_dataset = TextDataset(train_data, block_size)
+    val_dataset = TextDataset(val_data, block_size)
+    
+    # 3. Create model (assuming GPTModel is defined)
+    from your_model import GPTModel  # Replace with actual import
+    
+    model = GPTModel(
+        vocab_size=vocab_size,
+        n_embd=256,
+        n_head=4,
+        n_layer=4,
+        block_size=block_size
+    )
+    
+    # 4. Train
+    train_language_model(
+        model,
+        train_dataset,
+        val_dataset,
+        epochs=10,
+        batch_size=32,
+        learning_rate=3e-4
+    )
+    
+    # 5. Visualize training progress
+    import matplotlib.pyplot as plt
+    
+    def plot_training_progress(train_losses: list, val_losses: list):
+        """
+        Visualize training and validation loss over time.
+        
+        Args:
+            train_losses: List of training losses per epoch
+            val_losses: List of validation losses per epoch
+        """
+        fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(14, 5))
+        
+        epochs = range(1, len(train_losses) + 1)
+        
+        # Loss curves
+        ax1.plot(epochs, train_losses, 'b-', linewidth=2, label='Training Loss')
+        ax1.plot(epochs, val_losses, 'r-', linewidth=2, label='Validation Loss')
+        ax1.set_xlabel('Epoch', fontsize=12)
+        ax1.set_ylabel('Loss', fontsize=12)
+        ax1.set_title('Training Progress', fontsize=14, fontweight='bold')
+        ax1.legend()
+        ax1.grid(True, alpha=0.3)
+        
+        # Perplexity curves
+        train_perp = [np.exp(loss) for loss in train_losses]
+        val_perp = [np.exp(loss) for loss in val_losses]
+        
+        ax2.plot(epochs, train_perp, 'b-', linewidth=2, label='Training Perplexity')
+        ax2.plot(epochs, val_perp, 'r-', linewidth=2, label='Validation Perplexity')
+        ax2.set_xlabel('Epoch', fontsize=12)
+        ax2.set_ylabel('Perplexity', fontsize=12)
+        ax2.set_title('Model Perplexity', fontsize=14, fontweight='bold')
+        ax2.legend()
+        ax2.grid(True, alpha=0.3)
+        
+        plt.tight_layout()
+        plt.savefig('training_progress.png', dpi=300, bbox_inches='tight')
+        print("\n✓ Saved training visualization to 'training_progress.png'")
+        plt.show()
 ```
 
 **Fine-tuning:**

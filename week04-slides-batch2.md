@@ -64,52 +64,123 @@ fc = nn.Linear(in_features=512, out_features=10)
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
+from typing import Tuple
 
 class SimpleCNN(nn.Module):
-    def __init__(self, num_classes=10):
+    """
+    Convolutional Neural Network for image classification.
+    
+    Architecture:
+        - 3 Convolutional blocks (Conv → BatchNorm → ReLU → MaxPool)
+        - 2 Fully connected layers
+        - Dropout for regularization
+    
+    Input: RGB images of shape (batch, 3, 32, 32)
+    Output: Class logits of shape (batch, num_classes)
+    """
+    
+    def __init__(self, num_classes: int = 10, input_channels: int = 3):
+        """
+        Initialize CNN architecture.
+        
+        Args:
+            num_classes: Number of output classes
+            input_channels: Number of input channels (3 for RGB, 1 for grayscale)
+        """
         super(SimpleCNN, self).__init__()
         
-        # Convolutional blocks
-        self.conv1 = nn.Conv2d(3, 32, kernel_size=3, padding=1)
+        # Convolutional Block 1: 3 → 32 channels
+        self.conv1 = nn.Conv2d(input_channels, 32, kernel_size=3, padding=1)
         self.bn1 = nn.BatchNorm2d(32)
+        
+        # Convolutional Block 2: 32 → 64 channels
         self.conv2 = nn.Conv2d(32, 64, kernel_size=3, padding=1)
         self.bn2 = nn.BatchNorm2d(64)
+        
+        # Convolutional Block 3: 64 → 128 channels
         self.conv3 = nn.Conv2d(64, 128, kernel_size=3, padding=1)
         self.bn3 = nn.BatchNorm2d(128)
         
-        # Pooling
+        # Max pooling (reduces spatial dimensions by half)
         self.pool = nn.MaxPool2d(2, 2)
         
         # Fully connected layers
+        # After 3 pooling: 32x32 → 16x16 → 8x8 → 4x4
         self.fc1 = nn.Linear(128 * 4 * 4, 512)
         self.fc2 = nn.Linear(512, num_classes)
         
         # Dropout for regularization
         self.dropout = nn.Dropout(0.5)
     
-    def forward(self, x):
-        # Block 1
-        x = self.pool(F.relu(self.bn1(self.conv1(x))))
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
+        """
+        Forward pass through the network.
         
-        # Block 2
-        x = self.pool(F.relu(self.bn2(self.conv2(x))))
+        Args:
+            x: Input tensor of shape (batch, 3, 32, 32)
         
-        # Block 3
-        x = self.pool(F.relu(self.bn3(self.conv3(x))))
+        Returns:
+            Output logits of shape (batch, num_classes)
         
-        # Flatten
+        Example:
+            >>> model = SimpleCNN(num_classes=10)
+            >>> x = torch.randn(16, 3, 32, 32)
+            >>> logits = model(x)
+            >>> logits.shape
+            torch.Size([16, 10])
+        """
+        # Block 1: (batch, 3, 32, 32) → (batch, 32, 16, 16)
+        x = self.conv1(x)
+        x = self.bn1(x)
+        x = F.relu(x)
+        x = self.pool(x)
+        
+        # Block 2: (batch, 32, 16, 16) → (batch, 64, 8, 8)
+        x = self.conv2(x)
+        x = self.bn2(x)
+        x = F.relu(x)
+        x = self.pool(x)
+        
+        # Block 3: (batch, 64, 8, 8) → (batch, 128, 4, 4)
+        x = self.conv3(x)
+        x = self.bn3(x)
+        x = F.relu(x)
+        x = self.pool(x)
+        
+        # Flatten: (batch, 128, 4, 4) → (batch, 2048)
         x = x.view(x.size(0), -1)
         
-        # Fully connected
+        # Fully connected layers
         x = F.relu(self.fc1(x))
         x = self.dropout(x)
         x = self.fc2(x)
         
         return x
 
-# Create model
-model = SimpleCNN(num_classes=10)
-print(f"Parameters: {sum(p.numel() for p in model.parameters())}")
+
+# Example usage
+if __name__ == "__main__":
+    # Create model
+    model = SimpleCNN(num_classes=10)
+    
+    # Print model architecture
+    print(model)
+    print(f"\nTotal parameters: {sum(p.numel() for p in model.parameters()):,}")
+    
+    # Test forward pass
+    batch_size = 16
+    x = torch.randn(batch_size, 3, 32, 32)
+    
+    with torch.no_grad():
+        logits = model(x)
+    
+    print(f"\nInput shape: {x.shape}")
+    print(f"Output shape: {logits.shape}")
+    
+    # Get predictions
+    probs = F.softmax(logits, dim=1)
+    predictions = torch.argmax(probs, dim=1)
+    print(f"Predictions: {predictions}")
 ```
 
 ---
@@ -271,7 +342,7 @@ def attention(query, keys, values):
     
     return context.squeeze(1), attention_weights
 
-# Example
+# Example with visualization
 batch_size = 32
 seq_len = 10
 dim = 64
@@ -283,6 +354,59 @@ values = torch.randn(batch_size, seq_len, dim)
 context, weights = attention(query, keys, values)
 print(f"Context shape: {context.shape}")
 print(f"Attention weights shape: {weights.shape}")
+
+
+# Visualize attention weights
+def visualize_attention(attention_weights: torch.Tensor, 
+                       input_tokens: list = None,
+                       output_token: str = "Output"):
+    """
+    Visualize attention weights as a heatmap.
+    
+    Args:
+        attention_weights: Attention weights of shape (1, seq_len)
+        input_tokens: List of input token names
+        output_token: Name of output token
+    """
+    import matplotlib.pyplot as plt
+    import seaborn as sns
+    
+    # Get first sample
+    weights = attention_weights[0].squeeze().detach().numpy()
+    
+    if input_tokens is None:
+        input_tokens = [f"Token_{i}" for i in range(len(weights))]
+    
+    # Create heatmap
+    fig, ax = plt.subplots(figsize=(12, 2))
+    sns.heatmap(weights.reshape(1, -1), 
+                annot=True, 
+                fmt='.3f',
+                cmap='YlOrRd',
+                xticklabels=input_tokens,
+                yticklabels=[output_token],
+                cbar_kws={'label': 'Attention Weight'},
+                ax=ax)
+    
+    ax.set_title('Attention Weights Visualization', fontsize=14, fontweight='bold')
+    ax.set_xlabel('Input Tokens')
+    
+    plt.tight_layout()
+    plt.savefig('attention_weights.png', dpi=300, bbox_inches='tight')
+    print("\n✓ Saved attention visualization to 'attention_weights.png'")
+    plt.show()
+
+
+# Example: Visualize attention for a sentence
+if __name__ == "__main__":
+    # Simulate attention for a sentence
+    sentence = ["The", "cat", "sat", "on", "the", "mat"]
+    query = torch.randn(1, 64)
+    keys = torch.randn(1, len(sentence), 64)
+    values = torch.randn(1, len(sentence), 64)
+    
+    context, weights = attention(query, keys, values)
+    visualize_attention(weights, input_tokens=sentence, output_token="Context")
 ```
 
 ---
