@@ -1,10 +1,9 @@
 """
-Week 4: Deep Learning and the GenAI General Algorithm
-Slide 6: Building a Simple Neural Network
+Week 4: Slide 6 - Building a Simple Neural Network
 
 Description: 
-    A basic 2-layer neural network for classification.
-    Architecture: Input → Hidden (ReLU) → Output (Softmax)
+    Complete 2-layer neural network implementation from scratch.
+    Demonstrates forward propagation with ReLU and Softmax activations.
 
 Dependencies:
     - numpy

@@ -1,13 +1,9 @@
 """
-Week 4: Deep Learning and the GenAI General Algorithm
-Slide 5: Activation Functions
+Week 4: Slide 5 - Activation Functions
 
 Description: 
-    Implementation and visualization of common activation functions used in neural networks:
-    - Sigmoid (for binary classification output)
-    - ReLU (most common for hidden layers)
-    - Tanh (zero-centered alternative to sigmoid)
-    - Softmax (for multi-class classification output)
+    Complete implementation of common activation functions with visualization.
+    Includes: Sigmoid, ReLU, Tanh, and Softmax.
 
 Dependencies:
     - numpy

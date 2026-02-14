@@ -1,10 +1,9 @@
 """
-Week 4: Deep Learning and the GenAI General Algorithm
-Slide 4: What is a Neural Network?
+Week 4: Slide 4 - What is a Neural Network?
 
 Description: 
-    Simulates a single artificial neuron with sigmoid activation.
-    Demonstrates the basic building block of neural networks.
+    Basic artificial neuron (perceptron) implementation.
+    Demonstrates how a single neuron processes inputs with weights and bias.
 
 Dependencies:
     - numpy
