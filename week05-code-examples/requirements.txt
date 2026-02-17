@@ -1,0 +1,41 @@
+# Week 5 Requirements: Image, Audio, and Music Generation
+# Install with: pip install -r requirements.txt
+
+# Core PyTorch
+torch>=2.0.0
+torchvision>=0.15.0
+torchaudio>=2.0.0
+
+# Image Generation
+diffusers>=0.21.0
+transformers>=4.30.0
+accelerate>=0.20.0
+safetensors>=0.3.1
+
+# Audio Processing
+librosa>=0.10.0
+soundfile>=0.12.1
+scipy>=1.10.0
+
+# Music Generation
+pretty_midi>=0.2.9
+music21>=8.1.0
+
+# Utilities
+numpy>=1.24.0
+matplotlib>=3.7.0
+Pillow>=9.5.0
+tqdm>=4.65.0
+
+# Optional: For faster inference
+# xformers>=0.0.20  # Requires specific CUDA version
+# triton>=2.0.0     # For optimized kernels
+
+# Optional: For production deployment
+# fastapi>=0.100.0
+# uvicorn>=0.23.0
+
+# Notes:
+# - GPU recommended (CUDA 11.7+ or 12.x)
+# - Minimum 8GB RAM, 16GB+ recommended
+# - Stable Diffusion requires ~4GB disk space for model
