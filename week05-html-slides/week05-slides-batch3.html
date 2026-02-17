@@ -1,0 +1,1191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>week05-slides-batch3</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        h1 {
+            color: #2c3e50;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 10px;
+        }
+        h2 {
+            color: #34495e;
+            margin-top: 30px;
+            border-left: 4px solid #3498db;
+            padding-left: 15px;
+        }
+        h3 {
+            color: #7f8c8d;
+        }
+        pre {
+            background-color: #2c3e50;
+            color: #ecf0f1;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+        code {
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+        }
+        li {
+            margin: 5px 0;
+        }
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin: 20px 0;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+        th {
+            background-color: #3498db;
+            color: white;
+        }
+        .container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Week 5: Image Generation, Audio, and Music - Slides Batch 3 (Slides 16-20)</h1>
+
+<strong>Course:</strong> BUAN 6v99.SW2 - Generative AI for Business  
+<strong>Continuation from Batch 2</strong>
+
+---
+
+<h2>Slide 16: Introduction to Audio Generation</h2>
+
+<h3>From Images to Audio - New Challenges</h3>
+
+<strong>Why Audio is Different from Images:</strong>
+
+| Aspect | Images | Audio |
+|--------|--------|-------|
+| <strong>Dimensions</strong> | 2D (height × width) | 1D (time) but high sampling rate |
+| <strong>Sampling</strong> | ~1M pixels (512×512×3) | ~44,100 samples/second |
+| <strong>Perception</strong> | Spatial, instant | Temporal, sequential |
+| <strong>Generation</strong> | Independent pixels | Must maintain continuity |
+| <strong>Quality</strong> | Some blur tolerable | Artifacts very noticeable |
+
+<strong>Key Challenge:</strong> Audio requires <strong>high temporal resolution</strong>
+<li>1 second = 44,100 samples</li>
+<li>Tiny errors create audible glitches</li>
+<li>Must maintain long-range coherence</li>
+
+<strong>Audio Representations:</strong>
+
+<strong>1. Raw Waveform</strong>
+<pre><code>Amplitude vs Time
+Sample rate: 44.1kHz (CD quality)
+Pros: Direct, lossless
+Cons: Very high dimensional
+</code></pre>
+
+<strong>2. Spectrogram</strong>
+<pre><code>Frequency × Time
+Created via Short-Time Fourier Transform (STFT)
+Pros: Lower dimensional, visual
+Cons: Phase information lost
+</code></pre>
+
+<strong>3. Mel-Spectrogram</strong>
+<pre><code>Mel-scaled frequency × Time
+Matches human perception
+Pros: Perceptually relevant
+Cons: Need vocoder to convert back
+</code></pre>
+
+<strong>Audio Processing Basics:</strong>
+
+<pre><code class="language-python">import librosa
+import numpy as np
+import matplotlib.pyplot as plt
+from scipy.io import wavfile
+
+class AudioProcessor:
+    """
+    Utilities for audio processing and visualization.
+    
+    Handles loading, converting, and visualizing audio.
+    """
+    
+    def __init__(self, sample_rate=22050):
+        """
+        Args:
+            sample_rate: Target sampling rate (Hz)
+        """
+        self.sample_rate = sample_rate
+    
+    def load_audio(self, filename):
+        """
+        Load audio file.
+        
+        Args:
+            filename: Path to audio file
+        
+        Returns:
+            waveform: Audio samples
+            sample_rate: Sampling rate
+        """
+        waveform, sr = librosa.load(filename, sr=self.sample_rate)
+        return waveform, sr
+    
+    def save_audio(self, waveform, filename):
+        """Save audio to file"""
+        # Normalize to 16-bit range
+        waveform = np.int16(waveform * 32767)
+        wavfile.write(filename, self.sample_rate, waveform)
+    
+    def compute_spectrogram(self, waveform):
+        """
+        Compute mel-spectrogram.
+        
+        Args:
+            waveform: Audio samples
+        
+        Returns:
+            mel_spec: Mel-spectrogram
+        """
+        mel_spec = librosa.feature.melspectrogram(
+            y=waveform,
+            sr=self.sample_rate,
+            n_mels=128,
+            fmax=8000
+        )
+        
+        # Convert to log scale (dB)
+        mel_spec_db = librosa.power_to_db(mel_spec, ref=np.max)
+        
+        return mel_spec_db
+    
+    def visualize_audio(self, waveform, mel_spec=None):
+        """
+        Visualize waveform and spectrogram.
+        
+        Args:
+            waveform: Audio samples
+            mel_spec: Optional mel-spectrogram
+        """
+        fig, axes = plt.subplots(2, 1, figsize=(12, 8))
+        
+        # Waveform
+        time = np.arange(len(waveform)) / self.sample_rate
+        axes[0].plot(time, waveform)
+        axes[0].set_xlabel('Time (s)')
+        axes[0].set_ylabel('Amplitude')
+        axes[0].set_title('Waveform')
+        axes[0].grid(True, alpha=0.3)
+        
+        # Spectrogram
+        if mel_spec is None:
+            mel_spec = self.compute_spectrogram(waveform)
+        
+        img = librosa.display.specshow(
+            mel_spec,
+            sr=self.sample_rate,
+            x_axis='time',
+            y_axis='mel',
+            ax=axes[1],
+            cmap='viridis'
+        )
+        axes[1].set_title('Mel-Spectrogram')
+        fig.colorbar(img, ax=axes[1], format='%+2.0f dB')
+        
+        plt.tight_layout()
+        return fig
+
+
+<h1>Usage example</h1>
+if __name__ == "__main__":
+    processor = AudioProcessor(sample_rate=22050)
+    
+    # Load audio
+    waveform, sr = processor.load_audio('sample.wav')
+    print(f"Loaded {len(waveform)} samples at {sr}Hz")
+    print(f"Duration: {len(waveform)/sr:.2f} seconds")
+    
+    # Compute spectrogram
+    mel_spec = processor.compute_spectrogram(waveform)
+    print(f"Spectrogram shape: {mel_spec.shape}")
+    
+    # Visualize
+    fig = processor.visualize_audio(waveform, mel_spec)
+    plt.savefig('audio_visualization.png', dpi=300)
+    plt.show()
+</code></pre>
+
+<strong>Business Relevance:</strong>
+<li>Content creation (podcasts, audiobooks)</li>
+<li>Voice assistants</li>
+<li>Music production</li>
+<li>Accessibility (text-to-speech)</li>
+<li>Entertainment (game audio, effects)</li>
+
+---
+
+<h2>Slide 17: WaveNet - Direct Waveform Generation</h2>
+
+<h3>Generating Audio Sample-by-Sample</h3>
+
+<strong>WaveNet (DeepMind, 2016):</strong>  
+Revolutionary model that generates raw audio waveforms directly.
+
+<strong>Key Innovation:</strong> Dilated Causal Convolutions
+
+<strong>Traditional Convolution:</strong>
+<pre><code>Limited receptive field
+Can only "see" nearby samples
+</code></pre>
+
+<strong>Dilated Causal Convolution:</strong>
+<pre><code>Exponentially growing receptive field
+Layer 1: sees 2 samples
+Layer 2: sees 4 samples  
+Layer 3: sees 8 samples
+...
+Layer 10: sees 1024 samples
+</code></pre>
+
+<strong>Architecture:</strong>
+
+<pre><code>Input: Previous audio samples
+    ↓
+Dilated Conv Layer 1 (dilation=1)
+    ↓
+Dilated Conv Layer 2 (dilation=2)
+    ↓
+Dilated Conv Layer 3 (dilation=4)
+    ↓
+... (stack of dilated conv layers)
+    ↓
+Output: Probability distribution over next sample
+</code></pre>
+
+<strong>Simplified WaveNet Implementation:</strong>
+
+<pre><code class="language-python">import torch
+import torch.nn as nn
+import torch.nn.functional as F
+import numpy as np
+
+class CausalConv1d(nn.Module):
+    """
+    Causal 1D convolution - only looks at past samples.
+    
+    Ensures autoregressive property: output at time t
+    only depends on inputs at times < t.
+    """
+    
+    def __init__(self, in_channels, out_channels, kernel_size, dilation=1):
+        super().__init__()
+        self.padding = (kernel_size - 1) * dilation
+        self.conv = nn.Conv1d(
+            in_channels,
+            out_channels,
+            kernel_size,
+            padding=self.padding,
+            dilation=dilation
+        )
+    
+    def forward(self, x):
+        """Forward pass with causal padding"""
+        x = self.conv(x)
+        # Remove future samples
+        if self.padding > 0:
+            x = x[:, :, :-self.padding]
+        return x
+
+
+class ResidualBlock(nn.Module):
+    """
+    Residual block with gated activation.
+    
+    Core building block of WaveNet.
+    """
+    
+    def __init__(self, residual_channels, dilation):
+        super().__init__()
+        
+        self.conv_filter = CausalConv1d(
+            residual_channels,
+            residual_channels,
+            kernel_size=2,
+            dilation=dilation
+        )
+        
+        self.conv_gate = CausalConv1d(
+            residual_channels,
+            residual_channels,
+            kernel_size=2,
+            dilation=dilation
+        )
+        
+        self.conv_residual = nn.Conv1d(
+            residual_channels,
+            residual_channels,
+            kernel_size=1
+        )
+        
+        self.conv_skip = nn.Conv1d(
+            residual_channels,
+            residual_channels,
+            kernel_size=1
+        )
+    
+    def forward(self, x):
+        """
+        Gated activation: tanh(filter) ⊙ sigmoid(gate)
+        
+        Args:
+            x: Input tensor
+        
+        Returns:
+            residual: For next layer
+            skip: For skip connection
+        """
+        # Gated activation
+        f = self.conv_filter(x)
+        g = self.conv_gate(x)
+        z = torch.tanh(f) * torch.sigmoid(g)
+        
+        # Residual and skip connections
+        residual = self.conv_residual(z) + x
+        skip = self.conv_skip(z)
+        
+        return residual, skip
+
+
+class SimpleWaveNet(nn.Module):
+    """
+    Simplified WaveNet for audio generation.
+    
+    Generates audio sample-by-sample autoregressively.
+    """
+    
+    def __init__(self, 
+                 layers=10,
+                 blocks=2,
+                 residual_channels=32,
+                 quantization_levels=256):
+        """
+        Args:
+            layers: Number of layers per block
+            blocks: Number of blocks
+            residual_channels: Hidden dimension
+            quantization_levels: Audio quantization (typically 256 for 8-bit)
+        """
+        super().__init__()
+        
+        self.quantization_levels = quantization_levels
+        
+        # Input embedding
+        self.input_conv = CausalConv1d(
+            quantization_levels,
+            residual_channels,
+            kernel_size=2
+        )
+        
+        # Residual blocks
+        self.residual_blocks = nn.ModuleList()
+        for b in range(blocks):
+            for i in range(layers):
+                dilation = 2 <em></em> i
+                self.residual_blocks.append(
+                    ResidualBlock(residual_channels, dilation)
+                )
+        
+        # Output layers
+        self.output_conv1 = nn.Conv1d(residual_channels, residual_channels, 1)
+        self.output_conv2 = nn.Conv1d(residual_channels, quantization_levels, 1)
+    
+    def forward(self, x):
+        """
+        Forward pass.
+        
+        Args:
+            x: One-hot encoded audio (batch, quantization_levels, time)
+        
+        Returns:
+            logits: Predicted distribution over next sample
+        """
+        # Input embedding
+        x = self.input_conv(x)
+        
+        # Residual blocks with skip connections
+        skip_connections = []
+        for block in self.residual_blocks:
+            x, skip = block(x)
+            skip_connections.append(skip)
+        
+        # Sum skip connections
+        x = sum(skip_connections)
+        
+        # Output
+        x = F.relu(x)
+        x = self.output_conv1(x)
+        x = F.relu(x)
+        x = self.output_conv2(x)
+        
+        return x
+    
+    @torch.no_grad()
+    def generate(self, length, temperature=1.0):
+        """
+        Generate audio sample-by-sample.
+        
+        Args:
+            length: Number of samples to generate
+            temperature: Sampling temperature (higher = more random)
+        
+        Returns:
+            generated: Generated audio samples
+        """
+        # Start with silence
+        generated = torch.zeros(1, self.quantization_levels, 1)
+        
+        for _ in range(length):
+            # Predict next sample
+            logits = self.forward(generated)[:, :, -1]
+            
+            # Sample from distribution
+            probs = F.softmax(logits / temperature, dim=1)
+            next_sample = torch.multinomial(probs, 1)
+            
+            # One-hot encode
+            next_sample_onehot = F.one_hot(
+                next_sample,
+                num_classes=self.quantization_levels
+            ).float().transpose(1, 2)
+            
+            # Append
+            generated = torch.cat([generated, next_sample_onehot], dim=2)
+        
+        return generated
+
+
+def mu_law_encode(audio, quantization_levels=256):
+    """
+    μ-law companding for better audio quantization.
+    
+    Compresses dynamic range of audio signal.
+    """
+    mu = quantization_levels - 1
+    safe_audio = np.minimum(np.maximum(audio, -1.0), 1.0)
+    magnitude = np.abs(safe_audio)
+    signal = np.sign(safe_audio) <em> np.log1p(mu </em> magnitude) / np.log1p(mu)
+    return ((signal + 1) / 2 * mu + 0.5).astype(np.int64)
+
+
+def mu_law_decode(quantized, quantization_levels=256):
+    """Decode μ-law encoded audio"""
+    mu = quantization_levels - 1
+    signal = 2 * (quantized / mu) - 1
+    magnitude = (1 / mu) <em> ((1 + mu)</em>*np.abs(signal) - 1)
+    return np.sign(signal) * magnitude
+
+
+<h1>Training example</h1>
+if __name__ == "__main__":
+    print("="*70)
+    print("WAVENET FOR AUDIO GENERATION")
+    print("="*70)
+    
+    # Create model
+    model = SimpleWaveNet(
+        layers=10,
+        blocks=2,
+        residual_channels=32,
+        quantization_levels=256
+    )
+    
+    print(f"\nModel parameters: {sum(p.numel() for p in model.parameters()):,}")
+    print(f"Receptive field: {2<em></em>10} samples")
+    
+    # Generate audio
+    print("\nGenerating audio...")
+    with torch.no_grad():
+        generated = model.generate(length=1000, temperature=1.0)
+    
+    print(f"Generated {generated.shape[2]} samples")
+    print("\n✓ WaveNet can generate realistic audio!")
+</code></pre>
+
+<strong>Key Features:</strong>
+
+1. <strong>Autoregressive:</strong> Generates one sample at a time
+2. <strong>Causal:</strong> Only uses past samples (no cheating!)
+3. <strong>Large receptive field:</strong> Can capture long-term dependencies
+4. <strong>High quality:</strong> Near human-level speech synthesis
+
+<strong>Limitations:</strong>
+<li><strong>Very slow:</strong> Must generate sequentially (can't parallelize)</li>
+<li><strong>44,100 samples/second</strong> = slow generation</li>
+<li><strong>Solution:</strong> Parallel WaveNet (teacher-student distillation)</li>
+
+<strong>Applications:</strong>
+<li>Google Assistant voice</li>
+<li>Text-to-speech systems</li>
+<li>Music generation</li>
+<li>Sound effects</li>
+
+---
+
+<h2>Slide 18: Text-to-Speech (TTS)</h2>
+
+<h3>From Text to Natural Speech</h3>
+
+<strong>TTS Pipeline:</strong>
+
+<pre><code>Text → Text Processing → Acoustic Model → Vocoder → Audio
+  ↓           ↓               ↓              ↓
+"Hello"   Phonemes      Mel-spectrogram   Waveform
+</code></pre>
+
+<strong>Modern TTS: Tacotron 2 + WaveNet</strong>
+
+<strong>1. Tacotron 2 (Text → Mel-Spectrogram)</strong>
+
+<pre><code class="language-python">class Tacotron2(nn.Module):
+    """
+    Text-to-Mel-Spectrogram model.
+    
+    Architecture:
+        Text → Encoder → Attention → Decoder → Mel-Spectrogram
+    """
+    
+    def __init__(self, vocab_size, hidden_dim=512):
+        super().__init__()
+        
+        # Character embedding
+        self.embedding = nn.Embedding(vocab_size, hidden_dim)
+        
+        # Encoder: Text → Hidden states
+        self.encoder = nn.LSTM(
+            hidden_dim,
+            hidden_dim // 2,
+            bidirectional=True,
+            batch_first=True
+        )
+        
+        # Attention mechanism
+        self.attention = nn.MultiheadAttention(
+            hidden_dim,
+            num_heads=4,
+            batch_first=True
+        )
+        
+        # Decoder: Generate mel-spectrogram
+        self.decoder_lstm = nn.LSTM(
+            hidden_dim + 80,  # hidden + mel
+            hidden_dim,
+            batch_first=True
+        )
+        
+        # Mel predictor
+        self.mel_linear = nn.Linear(hidden_dim, 80)  # 80 mel bands
+        
+        # Stop token predictor
+        self.stop_linear = nn.Linear(hidden_dim, 1)
+    
+    def forward(self, text):
+        """
+        Generate mel-spectrogram from text.
+        
+        Args:
+            text: Character indices
+        
+        Returns:
+            mel: Mel-spectrogram
+            stop_tokens: When to stop generation
+        """
+        # Encode text
+        embedded = self.embedding(text)
+        encoded, _ = self.encoder(embedded)
+        
+        # Decode with attention
+        mel_outputs = []
+        stop_tokens = []
+        
+        # Start with zeros
+        decoder_input = torch.zeros(text.size(0), 1, 80).to(text.device)
+        
+        for _ in range(1000):  # Max length
+            # Attend to encoder outputs
+            context, _ = self.attention(
+                decoder_input,
+                encoded,
+                encoded
+            )
+            
+            # Decode
+            decoder_output, _ = self.decoder_lstm(
+                torch.cat([context, decoder_input], dim=2)
+            )
+            
+            # Predict mel frame
+            mel_frame = self.mel_linear(decoder_output)
+            mel_outputs.append(mel_frame)
+            
+            # Predict stop token
+            stop_prob = torch.sigmoid(self.stop_linear(decoder_output))
+            stop_tokens.append(stop_prob)
+            
+            # Use predicted mel as next input
+            decoder_input = mel_frame
+            
+            # Stop if stop token predicted
+            if stop_prob > 0.5:
+                break
+        
+        mel = torch.cat(mel_outputs, dim=1)
+        stops = torch.cat(stop_tokens, dim=1)
+        
+        return mel, stops
+
+
+<h1>Complete TTS pipeline</h1>
+class TTSSystem:
+    """
+    Complete Text-to-Speech system.
+    
+    Combines Tacotron 2 (text→mel) with WaveNet (mel→audio).
+    """
+    
+    def __init__(self):
+        self.tacotron = Tacotron2(vocab_size=128)
+        self.wavenet = SimpleWaveNet()
+    
+    def synthesize(self, text):
+        """
+        Convert text to audio.
+        
+        Args:
+            text: Input text string
+        
+        Returns:
+            audio: Generated waveform
+        """
+        # Text to character indices
+        char_indices = torch.tensor([ord(c) for c in text]).unsqueeze(0)
+        
+        # Generate mel-spectrogram
+        with torch.no_grad():
+            mel, _ = self.tacotron(char_indices)
+        
+        # Generate waveform
+        with torch.no_grad():
+            audio = self.wavenet.generate_from_mel(mel)
+        
+        return audio
+
+
+<h1>Usage</h1>
+tts = TTSSystem()
+audio = tts.synthesize("Hello, world!")
+</code></pre>
+
+<strong>2. Modern Alternative: FastSpeech 2</strong>
+<li><strong>Non-autoregressive</strong> (much faster!)</li>
+<li>Predicts duration explicitly</li>
+<li>Generates entire mel-spec in parallel</li>
+<li>50x faster than Tacotron 2</li>
+
+<strong>Real-World TTS APIs:</strong>
+
+<pre><code class="language-python"># Google Cloud Text-to-Speech
+from google.cloud import texttospeech
+
+def google_tts(text, voice_name="en-US-Neural2-A"):
+    """
+    Use Google Cloud TTS.
+    
+    Args:
+        text: Text to synthesize
+        voice_name: Voice to use
+    
+    Returns:
+        audio: Generated speech
+    """
+    client = texttospeech.TextToSpeechClient()
+    
+    synthesis_input = texttospeech.SynthesisInput(text=text)
+    
+    voice = texttospeech.VoiceSelectionParams(
+        language_code="en-US",
+        name=voice_name
+    )
+    
+    audio_config = texttospeech.AudioConfig(
+        audio_encoding=texttospeech.AudioEncoding.MP3,
+        speaking_rate=1.0,
+        pitch=0.0
+    )
+    
+    response = client.synthesize_speech(
+        input=synthesis_input,
+        voice=voice,
+        audio_config=audio_config
+    )
+    
+    return response.audio_content
+
+
+<h1>ElevenLabs (High-quality, realistic voices)</h1>
+import elevenlabs
+
+def elevenlabs_tts(text, voice_id="default"):
+    """
+    Use ElevenLabs for realistic TTS.
+    
+    Very high quality, natural sounding.
+    """
+    audio = elevenlabs.generate(
+        text=text,
+        voice=voice_id,
+        model="eleven_monolingual_v1"
+    )
+    
+    return audio
+</code></pre>
+
+<strong>Business Applications:</strong>
+
+<strong>Content Creation:</strong>
+<pre><code class="language-python"># Generate audiobook from text
+chapters = load_book_chapters()
+for i, chapter in enumerate(chapters):
+    audio = tts.synthesize(chapter)
+    save_audio(audio, f"chapter_{i}.mp3")
+
+<h1>ROI: $200/hour voice actor → $5 AI generation</h1>
+<h1>For 10-hour book: $2000 → $50 (97.5% cost reduction)</h1>
+</code></pre>
+
+<strong>Accessibility:</strong>
+<pre><code class="language-python"># Real-time website reader
+def make_accessible(webpage_text):
+    audio = tts.synthesize(webpage_text)
+    return audio
+
+<h1>Market: 285M visually impaired people worldwide</h1>
+<h1>Business opportunity: Accessibility-as-a-service</h1>
+</code></pre>
+
+<strong>Virtual Assistants:</strong>
+<pre><code class="language-python"># Dynamic responses
+user_query = "What's the weather?"
+response = get_weather_info()
+audio = tts.synthesize(response)
+play_audio(audio)
+
+<h1>Use: Customer service, education, gaming</h1>
+</code></pre>
+
+---
+
+<h2>Slide 19: Voice Cloning</h2>
+
+<h3>Creating Custom Voices</h3>
+
+<strong>Voice Cloning:</strong> Generate speech in someone's voice using minimal audio samples.
+
+<strong>How It Works:</strong>
+
+<strong>1. Speaker Embedding</strong>
+<li>Extract unique characteristics of a voice</li>
+<li>Encode into a vector (embedding)</li>
+<li>Capture pitch, tone, accent, style</li>
+
+<strong>2. Multi-Speaker TTS</strong>
+<li>Train model on many speakers</li>
+<li>Condition on speaker embedding</li>
+<li>Can generalize to new voices</li>
+
+<strong>Architecture:</strong>
+
+<pre><code>Reference Audio → Speaker Encoder → Speaker Embedding
+                                           ↓
+Text Input → Tacotron 2 (conditioned on embedding) → Mel-Spec → WaveNet → Audio
+</code></pre>
+
+<strong>Implementation:</strong>
+
+<pre><code class="language-python">class SpeakerEncoder(nn.Module):
+    """
+    Extract speaker embedding from audio.
+    
+    Maps audio to a fixed-size vector representing speaker identity.
+    """
+    
+    def __init__(self, mel_dim=80, embedding_dim=256):
+        super().__init__()
+        
+        # Process mel-spectrogram
+        self.lstm = nn.LSTM(
+            mel_dim,
+            256,
+            num_layers=3,
+            batch_first=True
+        )
+        
+        # Project to embedding
+        self.linear = nn.Linear(256, embedding_dim)
+    
+    def forward(self, mel):
+        """
+        Extract speaker embedding.
+        
+        Args:
+            mel: Mel-spectrogram of reference audio
+        
+        Returns:
+            embedding: Speaker embedding vector
+        """
+        _, (hidden, _) = self.lstm(mel)
+        embedding = self.linear(hidden[-1])
+        
+        # L2 normalize
+        embedding = F.normalize(embedding, p=2, dim=1)
+        
+        return embedding
+
+
+class MultiSpeakerTTS(nn.Module):
+    """
+    TTS system that can clone voices.
+    
+    Conditions generation on speaker embedding.
+    """
+    
+    def __init__(self, vocab_size, embedding_dim=256):
+        super().__init__()
+        
+        self.speaker_encoder = SpeakerEncoder(embedding_dim=embedding_dim)
+        self.tacotron = Tacotron2(vocab_size)
+        
+        # Modify Tacotron to accept speaker embedding
+        # (inject embedding into decoder)
+    
+    def clone_voice(self, text, reference_audio):
+        """
+        Generate speech in voice of reference audio.
+        
+        Args:
+            text: Text to synthesize
+            reference_audio: Audio sample of target voice
+        
+        Returns:
+            audio: Generated speech in cloned voice
+        """
+        # Extract speaker embedding from reference
+        mel_ref = compute_mel(reference_audio)
+        speaker_embedding = self.speaker_encoder(mel_ref)
+        
+        # Generate with speaker conditioning
+        mel = self.tacotron(text, speaker_embedding)
+        audio = self.wavenet(mel)
+        
+        return audio
+
+
+<h1>Real-world voice cloning APIs</h1>
+def use_voice_cloning(text, voice_sample_path):
+    """
+    Use commercial voice cloning service.
+    
+    Example: ElevenLabs, Resemble.ai, Descript
+    """
+    # ElevenLabs voice cloning
+    voice = elevenlabs.clone(
+        name="Custom Voice",
+        description="Cloned from sample",
+        files=[voice_sample_path]
+    )
+    
+    audio = elevenlabs.generate(
+        text=text,
+        voice=voice
+    )
+    
+    return audio
+</code></pre>
+
+<strong>Use Cases:</strong>
+
+<strong>1. Content Localization</strong>
+<pre><code class="language-python"># Translate video while keeping original voice
+original_audio = extract_audio("video.mp4")
+translated_text = translate(transcribe(original_audio), target_lang="es")
+
+<h1>Generate Spanish audio in original speaker's voice</h1>
+spanish_audio = voice_clone(translated_text, reference=original_audio)
+
+<h1>ROI: $50/minute professional dubbing → $1 AI dubbing</h1>
+<h1>For 90-min movie: $4500 → $90 (98% savings)</h1>
+</code></pre>
+
+<strong>2. Personalized Experiences</strong>
+<pre><code class="language-python"># Audiobook in user's favorite celebrity voice
+<h1>(with permission/licensing)</h1>
+book_text = load_book()
+celebrity_sample = load_voice_sample("celebrity_authorized.wav")
+audiobook = voice_clone(book_text, celebrity_sample)
+
+<h1>Market: Premium audiobooks, personalized content</h1>
+</code></pre>
+
+<strong>3. Accessibility</strong>
+<pre><code class="language-python"># Restore voice for people who lost ability to speak
+<h1>Use recordings from before illness</h1>
+patient_recordings = load_patient_voice()
+speech_text = get_aac_device_text()  # AAC device input
+spoken_output = voice_clone(speech_text, patient_recordings)
+
+<h1>Impact: Restore personal identity, emotional connection</h1>
+</code></pre>
+
+<strong>Ethical Considerations:</strong>
+
+⚠️ <strong>Concerns:</strong>
+<li><strong>Deepfakes:</strong> Impersonation, fraud</li>
+<li><strong>Consent:</strong> Using someone's voice without permission</li>
+<li><strong>Misinformation:</strong> Fake audio of public figures</li>
+
+✅ <strong>Safeguards:</strong>
+<li>Watermarking generated audio</li>
+<li>Detection systems for deepfakes</li>
+<li>Legal frameworks for consent</li>
+<li>Responsible use policies</li>
+
+---
+
+<h2>Slide 20: Audio Classification & Understanding</h2>
+
+<h3>Beyond Generation - Understanding Audio</h3>
+
+<strong>Audio Classification Tasks:</strong>
+
+<strong>1. Speech Recognition (ASR)</strong>
+<li>Convert speech to text</li>
+<li>Used in: Voice assistants, transcription</li>
+
+<strong>2. Speaker Identification</strong>
+<li>Who is speaking?</li>
+<li>Used in: Security, organization</li>
+
+<strong>3. Emotion Recognition</strong>
+<li>Detect speaker's emotional state</li>
+<li>Used in: Call centers, mental health</li>
+
+<strong>4. Sound Event Detection</strong>
+<li>Identify sounds (dog bark, car horn, etc.)</li>
+<li>Used in: Smart homes, surveillance</li>
+
+<strong>5. Music Genre Classification</strong>
+<li>Classify music by genre</li>
+<li>Used in: Music platforms, recommendation</li>
+
+<strong>Audio Classification Model:</strong>
+
+<pre><code class="language-python">class AudioClassifier(nn.Module):
+    """
+    General audio classification model.
+    
+    Uses CNN on mel-spectrogram for classification.
+    """
+    
+    def __init__(self, n_classes, n_mels=128):
+        super().__init__()
+        
+        # CNN for processing spectrogram
+        self.conv_layers = nn.Sequential(
+            nn.Conv2d(1, 32, kernel_size=3, padding=1),
+            nn.ReLU(),
+            nn.MaxPool2d(2),
+            
+            nn.Conv2d(32, 64, kernel_size=3, padding=1),
+            nn.ReLU(),
+            nn.MaxPool2d(2),
+            
+            nn.Conv2d(64, 128, kernel_size=3, padding=1),
+            nn.ReLU(),
+            nn.MaxPool2d(2),
+        )
+        
+        # Global average pooling
+        self.gap = nn.AdaptiveAvgPool2d(1)
+        
+        # Classification head
+        self.fc = nn.Sequential(
+            nn.Linear(128, 256),
+            nn.ReLU(),
+            nn.Dropout(0.3),
+            nn.Linear(256, n_classes)
+        )
+    
+    def forward(self, mel_spec):
+        """
+        Classify audio from mel-spectrogram.
+        
+        Args:
+            mel_spec: Mel-spectrogram (batch, 1, n_mels, time)
+        
+        Returns:
+            logits: Class predictions
+        """
+        x = self.conv_layers(mel_spec)
+        x = self.gap(x)
+        x = x.view(x.size(0), -1)
+        logits = self.fc(x)
+        return logits
+
+
+<h1>Business application: Call center quality monitoring</h1>
+class CallCenterMonitor:
+    """
+    Monitor call center conversations for quality.
+    
+    Detects emotions, keywords, compliance issues.
+    """
+    
+    def __init__(self):
+        self.emotion_classifier = AudioClassifier(n_classes=7)  # 7 emotions
+        self.keyword_detector = KeywordSpotter()
+        self.sentiment_analyzer = SentimentModel()
+    
+    def analyze_call(self, audio_path):
+        """
+        Comprehensive call analysis.
+        
+        Args:
+            audio_path: Path to call recording
+        
+        Returns:
+            report: Analysis report
+        """
+        # Load audio
+        audio, sr = librosa.load(audio_path)
+        mel = compute_mel(audio)
+        
+        # Detect emotions
+        emotions = self.emotion_classifier(mel)
+        dominant_emotion = emotions.argmax()
+        
+        # Detect keywords (compliance, escalation triggers)
+        keywords_found = self.keyword_detector(audio)
+        
+        # Overall sentiment
+        sentiment = self.sentiment_analyzer(audio)
+        
+        report = {
+            'duration': len(audio) / sr,
+            'dominant_emotion': dominant_emotion,
+            'keywords': keywords_found,
+            'sentiment': sentiment,
+            'quality_score': self.compute_quality(emotions, keywords_found, sentiment)
+        }
+        
+        return report
+    
+    def compute_quality(self, emotions, keywords, sentiment):
+        """Calculate overall call quality score"""
+        # Positive emotions + no escalation keywords + positive sentiment = high quality
+        quality = (
+            0.4 * (sentiment > 0.5) +
+            0.3 * (dominant_emotion in [0, 5, 6]) +  # happy, calm, satisfied
+            0.3 * (1 - len(keywords) / 10)  # fewer issues = better
+        )
+        return quality
+
+
+<h1>ROI Example</h1>
+def call_center_roi():
+    """
+    Calculate ROI of AI call monitoring.
+    """
+    traditional = {
+        'human_qa_analysts': 10,
+        'salary_per_analyst': 50000,
+        'calls_reviewed_per_analyst': 100,  # per month
+        'total_cost': 10 * 50000  # $500k/year
+    }
+    
+    ai_system = {
+        'setup_cost': 50000,  # One-time
+        'api_costs': 10000,  # per year
+        'calls_reviewed': 'unlimited',  # 100% of calls
+        'total_cost': 60000  # first year
+    }
+    
+    savings = traditional['total_cost'] - ai_system['total_cost']
+    improvement = "100% coverage vs 1% coverage"
+    
+    print(f"First Year Savings: ${savings:,}")
+    print(f"Coverage Improvement: {improvement}")
+    print(f"ROI: {(savings / ai_system['total_cost']) * 100:.1f}%")
+    
+    return {
+        'savings': savings,
+        'roi_percent': (savings / ai_system['total_cost']) * 100
+    }
+
+
+if __name__ == "__main__":
+    roi = call_center_roi()
+    print("\n" + "="*70)
+    print("CALL CENTER AI MONITORING ROI")
+    print("="*70)
+    print(f"Annual Savings: ${roi['savings']:,}")
+    print(f"ROI: {roi['roi_percent']:.1f}%")
+    print("Additional Benefits:")
+    print("  • 100% call coverage (vs 1% manual)")
+    print("  • Real-time insights")
+    print("  • Compliance monitoring")
+    print("  • Agent coaching opportunities")
+</code></pre>
+
+<strong>Additional Business Applications:</strong>
+
+<strong>Music Recommendation:</strong>
+<li>Analyze audio features</li>
+<li>Classify genre, mood, tempo</li>
+<li>Personalized playlists</li>
+
+<strong>Smart Home:</strong>
+<li>Detect specific sounds (glass breaking, baby crying)</li>
+<li>Trigger appropriate responses</li>
+<li>Enhanced security</li>
+
+<strong>Healthcare:</strong>
+<li>Detect breathing abnormalities</li>
+<li>Monitor cough patterns</li>
+<li>Early disease detection</li>
+
+---
+
+<strong>End of Batch 3 (Slides 16-20)</strong>
+
+<em>Continue to Batch 4 for Advanced Music Generation (Slides 21-25)</em>
+
+    </div>
+</body>
+</html>

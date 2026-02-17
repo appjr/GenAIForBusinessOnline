@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>week05-slides-batch7</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        h1 {
+            color: #2c3e50;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 10px;
+        }
+        h2 {
+            color: #34495e;
+            margin-top: 30px;
+            border-left: 4px solid #3498db;
+            padding-left: 15px;
+        }
+        h3 {
+            color: #7f8c8d;
+        }
+        pre {
+            background-color: #2c3e50;
+            color: #ecf0f1;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+        code {
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+        }
+        li {
+            margin: 5px 0;
+        }
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin: 20px 0;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+        th {
+            background-color: #3498db;
+            color: white;
+        }
+        .container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Week 5: Wrap-up & Next Steps - Batch 7 (Slides 36-40)</h1>
+
+<h2>Slide 36: Deployment Best Practices</h2>
+
+<h3>From Development to Production</h3>
+
+<strong>Key Considerations:</strong>
+
+<strong>1. Infrastructure</strong>
+<li>GPU requirements (A100, V100, T4)</li>
+<li>Latency targets</li>
+<li>Scalability needs</li>
+<li>Cost optimization</li>
+
+<strong>2. Model Serving</strong>
+<pre><code class="language-python"># Example: Deploy with FastAPI
+from fastapi import FastAPI
+from diffusers import StableDiffusionPipeline
+
+app = FastAPI()
+model = StableDiffusionPipeline.from_pretrained("stable-diffusion-v1-5")
+
+@app.post("/generate")
+async def generate_image(prompt: str):
+    image = model(prompt).images[0]
+    return {"image": image}
+</code></pre>
+
+<strong>3. Monitoring</strong>
+<li>Request latency</li>
+<li>Generation quality</li>
+<li>Cost per request</li>
+<li>Error rates</li>
+<li>User satisfaction</li>
+
+<strong>4. A/B Testing</strong>
+<li>Compare AI vs traditional</li>
+<li>Test different models</li>
+<li>Optimize prompts</li>
+<li>Measure business impact</li>
+
+---
+
+<h2>Slide 37: Ethics & Governance</h2>
+
+<h3>Responsible AI Development</h3>
+
+<strong>Key Ethical Considerations:</strong>
+
+<strong>1. Copyright & Ownership</strong>
+<li>Training data rights</li>
+<li>Generated content ownership</li>
+<li>Attribution requirements</li>
+<li>Fair use policies</li>
+
+<strong>2. Deepfakes & Misinformation</strong>
+<li>Watermarking generated content</li>
+<li>Detection systems</li>
+<li>Disclosure requirements</li>
+<li>Verification processes</li>
+
+<strong>3. Bias & Fairness</strong>
+<li>Training data diversity</li>
+<li>Output bias testing</li>
+<li>Fair representation</li>
+<li>Inclusive design</li>
+
+<strong>4. Privacy</strong>
+<li>Data protection</li>
+<li>Voice/likeness rights</li>
+<li>User consent</li>
+<li>Data retention policies</li>
+
+<strong>Best Practices:</strong>
+✅ Transparent AI usage disclosure
+✅ Human-in-the-loop workflows
+✅ Regular bias audits
+✅ Clear terms of service
+✅ User control over data
+
+---
+
+<h2>Slide 38: Week 5 Assignment</h2>
+
+<h3>Hands-on Project: Build a GenAI Application</h3>
+
+<strong>Project Options (Choose One):</strong>
+
+<strong>Option 1: Marketing Content Generator</strong>
+<li>Build image generation pipeline</li>
+<li>Generate 10 product images</li>
+<li>Calculate ROI vs traditional methods</li>
+<li>Present business case</li>
+
+<strong>Option 2: Audio Application</strong>
+<li>Create TTS or music system</li>
+<li>Generate 5 audio samples</li>
+<li>Evaluate quality metrics</li>
+<li>Propose business use case</li>
+
+<strong>Option 3: Multimodal System</strong>
+<li>Combine image + audio generation</li>
+<li>Create short video (15-30 seconds)</li>
+<li>Document technical approach</li>
+<li>Analyze cost-benefit</li>
+
+<strong>Deliverables:</strong>
+1. Working code (GitHub repo)
+2. Generated samples
+3. Technical documentation
+4. Business case presentation (5 slides)
+5. ROI analysis
+
+<strong>Due:</strong> Week 6, Day 1  
+<strong>Presentation:</strong> Week 6, Day 2
+
+<strong>Grading Criteria:</strong>
+<li>Technical implementation (40%)</li>
+<li>Quality of outputs (20%)</li>
+<li>Business viability (20%)</li>
+<li>Presentation (20%)</li>
+
+---
+
+<h2>Slide 39: Resources & Further Learning</h2>
+
+<h3>Continue Your GenAI Journey</h3>
+
+<strong>Online Courses:</strong>
+<li><strong>Hugging Face Diffusion Models Course</strong> (Free)</li>
+<li><strong>Fast.ai Practical Deep Learning</strong> (Free)</li>
+<li><strong>DeepLearning.AI Generative AI Specialization</strong></li>
+<li><strong>Stanford CS236: Deep Generative Models</strong></li>
+
+<strong>Tools & Platforms:</strong>
+<li><strong>Hugging Face</strong> - Models & datasets</li>
+<li><strong>Replicate</strong> - Easy model deployment</li>
+<li><strong>RunwayML</strong> - Creative AI tools</li>
+<li><strong>Google Colab</strong> - Free GPU notebooks</li>
+
+<strong>Research Papers:</strong>
+<li>"Denoising Diffusion Probabilistic Models" (Ho et al., 2020)</li>
+<li>"WaveNet: A Generative Model for Raw Audio" (van den Oord et al., 2016)</li>
+<li>"MuseNet" (OpenAI, 2019)</li>
+<li>"MusicLM: Generating Music From Text" (Google, 2023)</li>
+
+<strong>Communities:</strong>
+<li>r/StableDiffusion</li>
+<li>r/MachineLearning</li>
+<li>Hugging Face Discord</li>
+<li>AI Discord communities</li>
+
+<strong>Newsletters:</strong>
+<li>The Batch (DeepLearning.AI)</li>
+<li>Import AI</li>
+<li>The Algorithm (MIT Technology Review)</li>
+
+---
+
+<h2>Slide 40: Summary & Next Week Preview</h2>
+
+<h3>Week 5 Recap</h3>
+
+<strong>What We Covered:</strong>
+
+<strong>Images (Slides 1-15)</strong>
+✅ VAEs, GANs, Diffusion Models
+✅ Stable Diffusion & ControlNet
+✅ Image editing techniques
+✅ Business applications
+
+<strong>Audio & Music (Slides 16-25)</strong>
+✅ WaveNet architecture
+✅ Text-to-speech systems
+✅ Voice cloning
+✅ Music generation (RNN, Transformers, MuseNet, MusicLM)
+✅ Style transfer
+
+<strong>Advanced Topics (Slides 26-30)</strong>
+✅ Multimodal generation
+✅ Real-time optimization
+✅ Quality metrics
+✅ Deployment strategies
+
+<strong>Business Applications (Slides 31-40)</strong>
+✅ Industry use cases
+✅ ROI analysis
+✅ Implementation roadmap
+✅ Ethics & governance
+
+---
+
+<strong>Key Takeaways:</strong>
+
+1. <strong>Diffusion models</strong> are state-of-the-art for images
+2. <strong>Audio generation</strong> requires different techniques (WaveNet, Transformers)
+3. <strong>Real-time applications</strong> need optimization (distillation, quantization)
+4. <strong>Business value</strong> is substantial (90-99% cost reduction in many cases)
+5. <strong>Ethics matter</strong> - responsible AI is essential
+
+---
+
+<strong>Next Week Preview: Week 6 - Large Language Models</strong>
+
+Topics:
+<li>GPT architecture deep dive</li>
+<li>Prompt engineering</li>
+<li>Fine-tuning strategies</li>
+<li>RAG (Retrieval Augmented Generation)</li>
+<li>LangChain & agents</li>
+<li>Building LLM applications</li>
+
+<strong>Preparation:</strong>
+<li>Review transformer basics (Week 4)</li>
+<li>Complete Week 5 assignment</li>
+<li>Read: "Attention Is All You Need" paper</li>
+<li>Experiment with ChatGPT API</li>
+
+---
+
+<strong>Thank You!</strong>
+
+Questions? Office hours: TBD  
+Discussion forum: Canvas  
+Code examples: GitHub repo
+
+<strong>See you next week! 🚀</strong>
+
+---
+
+<strong>End of Week 5</strong>
+
+---
+
+<h2>Appendix: Quick Reference</h2>
+
+<h3>API Costs (Approximate, 2026)</h3>
+
+| Service | Type | Cost |
+|---------|------|------|
+| Stable Diffusion API | Image | $0.01/image |
+| DALL-E 3 | Image | $0.04/image |
+| ElevenLabs TTS | Audio | $0.30/1000 chars |
+| Google Cloud TTS | Audio | $4/1M chars |
+| MusicGen | Music | $0.05/minute |
+
+<h3>Model Sizes</h3>
+
+| Model | Parameters | VRAM | Speed |
+|-------|-----------|------|-------|
+| SD 1.5 | 860M | 4GB | 2s/image |
+| SDXL | 2.6B | 8GB | 5s/image |
+| SDXL Turbo | 2.6B | 8GB | 0.1s/image |
+| WaveNet | 100M+ | 2GB | 10s/second (audio) |
+| MusicLM | Multi-model | 16GB+ | 30s (30s audio) |
+
+<h3>Useful Commands</h3>
+
+<pre><code class="language-bash"># Install key packages
+pip install diffusers transformers torch torchvision
+pip install librosa pretty_midi musicgen
+
+<h1>Test GPU</h1>
+python -c "import torch; print(torch.cuda.is_available())"
+
+<h1>Run Stable Diffusion</h1>
+python -m diffusers.pipelines.stable_diffusion \
+  --prompt "a cat" --output cat.png
+
+<h1>Generate music</h1>
+python -m musicgen --prompt "upbeat jazz" --duration 30
+</code></pre>
+
+<h3>Troubleshooting</h3>
+
+<strong>Out of Memory Error:</strong>
+<li>Reduce batch size</li>
+<li>Use smaller resolution</li>
+<li>Enable gradient checkpointing</li>
+<li>Use mixed precision (fp16)</li>
+
+<strong>Slow Generation:</strong>
+<li>Use SDXL Turbo or distilled models</li>
+<li>Reduce inference steps</li>
+<li>Use GPU instead of CPU</li>
+<li>Enable xformers for memory efficiency</li>
+
+<strong>Poor Quality:</strong>
+<li>Improve prompts (be specific)</li>
+<li>Increase inference steps</li>
+<li>Use negative prompts</li>
+<li>Try different models</li>
+
+---
+
+<strong>Course Repository:</strong> https://github.com/appjr/GenAIForBusinessOnline  
+<strong>Instructor:</strong> Dr. [Name]  
+<strong>TA Support:</strong> [Email]  
+<strong>Office Hours:</strong> [Times]
+
+<strong>Good luck with your projects! 🎨🎵🤖</strong>
+
+    </div>
+</body>
+</html>
