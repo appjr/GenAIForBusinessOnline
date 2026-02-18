@@ -1,0 +1,722 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Week 5 Homework Assignments - Generative AI for Business</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 3px solid #3498db;
+        }
+        
+        h1 {
+            color: #2c3e50;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        
+        h2 {
+            color: #3498db;
+            font-size: 2em;
+            margin-top: 40px;
+            margin-bottom: 20px;
+            padding-left: 15px;
+            border-left: 5px solid #3498db;
+        }
+        
+        h3 {
+            color: #34495e;
+            font-size: 1.5em;
+            margin-top: 30px;
+            margin-bottom: 15px;
+        }
+        
+        h4 {
+            color: #555;
+            font-size: 1.2em;
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+        
+        .course-info {
+            background: #ecf0f1;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 30px;
+        }
+        
+        .course-info p {
+            margin: 5px 0;
+            font-weight: 500;
+        }
+        
+        .track-card {
+            background: #f8f9fa;
+            border-left: 5px solid #3498db;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+        
+        .track-option {
+            background: white;
+            border: 2px solid #e0e0e0;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 5px;
+            transition: all 0.3s;
+        }
+        
+        .track-option:hover {
+            border-color: #3498db;
+            box-shadow: 0 5px 15px rgba(52, 152, 219, 0.2);
+        }
+        
+        .points {
+            background: #3498db;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+            display: inline-block;
+            margin-left: 10px;
+        }
+        
+        ul {
+            margin-left: 30px;
+            margin-top: 10px;
+            margin-bottom: 15px;
+        }
+        
+        li {
+            margin: 8px 0;
+        }
+        
+        .deliverables {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+        
+        .deliverables h4 {
+            color: #856404;
+        }
+        
+        .rubric {
+            background: #d4edda;
+            border: 2px solid #28a745;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+        
+        .rubric h3 {
+            color: #155724;
+        }
+        
+        .rubric-item {
+            margin: 10px 0;
+            padding: 10px;
+            background: white;
+            border-radius: 3px;
+        }
+        
+        .tips {
+            background: #e7f3ff;
+            border-left: 4px solid #2196F3;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+        
+        .tips h3 {
+            color: #0056b3;
+        }
+        
+        code {
+            background: #f4f4f4;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+        }
+        
+        pre {
+            background: #2c3e50;
+            color: #ecf0f1;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+            margin: 15px 0;
+        }
+        
+        pre code {
+            background: none;
+            color: inherit;
+        }
+        
+        .warning {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+        
+        .success {
+            background: #d4edda;
+            border-left: 4px solid #28a745;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+        
+        .info {
+            background: #d1ecf1;
+            border-left: 4px solid #17a2b8;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+        
+        .bonus {
+            background: #f8d7da;
+            border-left: 4px solid #dc3545;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border: 1px solid #ddd;
+        }
+        
+        th {
+            background: #3498db;
+            color: white;
+            font-weight: bold;
+        }
+        
+        tr:nth-child(even) {
+            background: #f8f9fa;
+        }
+        
+        .faq {
+            background: #f8f9fa;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 5px;
+            border-left: 3px solid #6c757d;
+        }
+        
+        .faq strong {
+            color: #495057;
+        }
+        
+        @media print {
+            body {
+                background: white;
+            }
+            .container {
+                box-shadow: none;
+            }
+        }
+        
+        .toc {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 5px;
+            margin: 30px 0;
+        }
+        
+        .toc a {
+            color: #3498db;
+            text-decoration: none;
+            display: block;
+            padding: 5px 0;
+        }
+        
+        .toc a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🎨 Week 5 Homework Assignments</h1>
+            <p style="font-size: 1.3em; color: #555;">Image, Audio, and Music Generation with AI</p>
+        </header>
+
+        <div class="course-info">
+            <p><strong>Course:</strong> BUAN 6V99.SW2 - Generative AI for Business</p>
+            <p><strong>Due Date:</strong> [To be announced]</p>
+            <p><strong>Total Points:</strong> 100</p>
+        </div>
+
+        <div class="toc">
+            <h3>📋 Table of Contents</h3>
+            <a href="#overview">Assignment Overview</a>
+            <a href="#track1">Track 1: Image Generation</a>
+            <a href="#track2">Track 2: Audio Generation</a>
+            <a href="#track3">Track 3: Music Generation</a>
+            <a href="#rubric">Grading Rubric</a>
+            <a href="#submission">Submission Guidelines</a>
+            <a href="#tips">Tips for Success</a>
+            <a href="#resources">Resources</a>
+            <a href="#faq">FAQ</a>
+        </div>
+
+        <section id="overview">
+            <h2>📊 Assignment Overview</h2>
+            <p>Choose <strong>ONE</strong> of the following three tracks. Each track focuses on a different aspect of generative AI covered in Week 5.</p>
+            
+            <div class="track-card">
+                <h3>Track Options:</h3>
+                <ul>
+                    <li><strong>Track 1:</strong> Image Generation (VAE, GAN, or Diffusion Models)</li>
+                    <li><strong>Track 2:</strong> Audio Generation (Speech/Sound Synthesis)</li>
+                    <li><strong>Track 3:</strong> Music Generation (AI-Composed Music)</li>
+                </ul>
+            </div>
+        </section>
+
+        <section id="track1">
+            <h2>📊 TRACK 1: Image Generation <span class="points">100 points</span></h2>
+
+            <div class="track-option">
+                <h3>Option A: Fashion Design with VAE <span class="points">100 points</span></h3>
+                <p><strong>Objective:</strong> Build a VAE to generate new fashion item designs from the Fashion MNIST dataset.</p>
+
+                <h4>Part 1: Implementation <span class="points">60 points</span></h4>
+                <ul>
+                    <li><strong>Data Loading (10 points)</strong>
+                        <ul>
+                            <li>Load Fashion MNIST dataset</li>
+                            <li>Preprocess and normalize images</li>
+                            <li>Split into train/validation sets</li>
+                        </ul>
+                    </li>
+                    <li><strong>VAE Architecture (20 points)</strong>
+                        <ul>
+                            <li>Implement encoder with appropriate layers</li>
+                            <li>Implement decoder architecture</li>
+                            <li>Include reparameterization trick</li>
+                            <li>Latent dimension: 10-20</li>
+                        </ul>
+                    </li>
+                    <li><strong>Training (20 points)</strong>
+                        <ul>
+                            <li>Train for at least 20 epochs</li>
+                            <li>Monitor reconstruction loss</li>
+                            <li>Monitor KL divergence</li>
+                            <li>Save model checkpoints</li>
+                        </ul>
+                    </li>
+                    <li><strong>Generation (10 points)</strong>
+                        <ul>
+                            <li>Generate 50 new fashion items</li>
+                            <li>Create interpolations between items</li>
+                            <li>Visualize latent space</li>
+                        </ul>
+                    </li>
+                </ul>
+
+                <h4>Part 2: Analysis <span class="points">30 points</span></h4>
+                <ul>
+                    <li><strong>Quality Evaluation (10 points)</strong> - Analyze reconstruction quality, compare images, calculate metrics</li>
+                    <li><strong>Business Application (15 points)</strong> - Fashion retail applications, cost savings estimates, 3 use cases</li>
+                    <li><strong>Limitations (5 points)</strong> - Discuss limitations and suggest improvements</li>
+                </ul>
+
+                <h4>Part 3: Documentation <span class="points">10 points</span></h4>
+                <ul>
+                    <li>Well-commented code</li>
+                    <li>README with setup instructions</li>
+                    <li>Results visualization</li>
+                </ul>
+
+                <div class="deliverables">
+                    <h4>📦 Deliverables:</h4>
+                    <ul>
+                        <li>Jupyter notebook with all code</li>
+                        <li>Generated images (grid of 50 samples)</li>
+                        <li>2-page business analysis report (PDF)</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="track-option">
+                <h3>Option B: Product Image Generation with GAN <span class="points">100 points</span></h3>
+                <p><strong>Objective:</strong> Create a GAN to generate realistic product images.</p>
+
+                <h4>Part 1: Implementation <span class="points">60 points</span></h4>
+                <ul>
+                    <li><strong>Dataset Selection (10 points)</strong> - Choose dataset, justify choice, preprocess</li>
+                    <li><strong>GAN Architecture (25 points)</strong> - Generator, Discriminator, activations, batch norm</li>
+                    <li><strong>Training (20 points)</strong> - Alternating training, monitor losses, 50+ epochs</li>
+                    <li><strong>Evaluation (5 points)</strong> - Generate samples, assess quality</li>
+                </ul>
+
+                <h4>Part 2: Business Analysis <span class="points">30 points</span></h4>
+                <ul>
+                    <li><strong>ROI Calculation (10 points)</strong></li>
+                    <li><strong>Use Cases (15 points)</strong> - 3 applications, implementation, ethics</li>
+                    <li><strong>Quality Assessment (5 points)</strong></li>
+                </ul>
+
+                <div class="deliverables">
+                    <h4>📦 Deliverables:</h4>
+                    <ul>
+                        <li>Jupyter notebook with implementation</li>
+                        <li>GIF showing training progression</li>
+                        <li>Business case report (3 pages, PDF)</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="track-option">
+                <h3>Option C: Text-to-Image with Stable Diffusion <span class="points">100 points</span></h3>
+                <p><strong>Objective:</strong> Use Stable Diffusion to generate marketing images from text prompts.</p>
+
+                <h4>Part 1: Implementation <span class="points">50 points</span></h4>
+                <ul>
+                    <li><strong>Setup (10 points)</strong> - Install libraries, load model, configure</li>
+                    <li><strong>Prompt Engineering (25 points)</strong> - 20 business prompts, test parameters, document results</li>
+                    <li><strong>Generation (15 points)</strong> - Generate images, vary parameters, use negative prompts</li>
+                </ul>
+
+                <h4>Part 2: Business Application <span class="points">35 points</span></h4>
+                <ul>
+                    <li><strong>Marketing Campaign (20 points)</strong> - Complete campaign with 5 images</li>
+                    <li><strong>Best Practices Guide (10 points)</strong> - Prompt patterns, tips, do's & don'ts</li>
+                    <li><strong>Limitations (5 points)</strong> - When NOT to use, ethics, copyright</li>
+                </ul>
+
+                <div class="deliverables">
+                    <h4>📦 Deliverables:</h4>
+                    <ul>
+                        <li>Collection of 20+ generated images</li>
+                        <li>Prompt engineering guide (2 pages)</li>
+                        <li>Marketing campaign presentation (PDF/PPTX)</li>
+                        <li>Cost-benefit analysis</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section id="track2">
+            <h2>🎵 TRACK 2: Audio Generation <span class="points">100 points</span></h2>
+
+            <div class="track-option">
+                <h3>Voice Assistant for Business</h3>
+                <p><strong>Objective:</strong> Create a text-to-speech system for business applications.</p>
+
+                <h4>Part 1: Implementation <span class="points">50 points</span></h4>
+                <ul>
+                    <li><strong>TTS System (30 points)</strong> - Implement or use TTS library, multiple voices</li>
+                    <li><strong>Audio Processing (20 points)</strong> - Load/analyze audio, spectrograms, quality metrics</li>
+                </ul>
+
+                <h4>Part 2: Business Application <span class="points">35 points</span></h4>
+                <ul>
+                    <li><strong>Use Case Development (20 points)</strong> - Choose scenario, create 10 scripts, generate audio</li>
+                    <li><strong>Quality Analysis (10 points)</strong> - Compare to human voice, assess naturalness</li>
+                    <li><strong>Cost Analysis (5 points)</strong> - Voice actor vs AI costs, ROI</li>
+                </ul>
+
+                <div class="deliverables">
+                    <h4>📦 Deliverables:</h4>
+                    <ul>
+                        <li>Code/notebook with implementation</li>
+                        <li>10 audio files (WAV/MP3)</li>
+                        <li>Business case analysis (PDF)</li>
+                        <li>Demo video (2-3 minutes)</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section id="track3">
+            <h2>🎼 TRACK 3: Music Generation <span class="points">100 points</span></h2>
+
+            <div class="track-option">
+                <h3>AI Music for Business Applications</h3>
+                <p><strong>Objective:</strong> Generate background music for business use (ads, videos, retail).</p>
+
+                <h4>Part 1: Implementation <span class="points">50 points</span></h4>
+                <ul>
+                    <li><strong>Music Generation (35 points)</strong> - Generate 5 different styles, 30-60 seconds each</li>
+                    <li><strong>Customization (15 points)</strong> - Adjust tempo/mood, test prompts, create variations</li>
+                </ul>
+
+                <h4>Part 2: Business Application <span class="points">35 points</span></h4>
+                <ul>
+                    <li><strong>Use Case Portfolio (20 points)</strong> - Match music to scenarios, justify choices</li>
+                    <li><strong>Cost Analysis (10 points)</strong> - Licensing costs vs AI, 1-year savings</li>
+                    <li><strong>Quality Comparison (5 points)</strong> - Compare to licensed music, survey feedback</li>
+                </ul>
+
+                <div class="deliverables">
+                    <h4>📦 Deliverables:</h4>
+                    <ul>
+                        <li>5+ generated music tracks</li>
+                        <li>Matching guide (which track for what)</li>
+                        <li>Business proposal (3 pages, PDF)</li>
+                        <li>Demo video showcasing tracks in context</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section id="rubric">
+            <h2>📋 Grading Rubric (All Tracks)</h2>
+
+            <div class="rubric">
+                <h3>Technical Implementation (50-60 points)</h3>
+                <div class="rubric-item">
+                    <strong>Excellent (90-100%):</strong> Code runs perfectly, well-documented, creative solutions
+                </div>
+                <div class="rubric-item">
+                    <strong>Good (80-89%):</strong> Code works with minor issues, adequately documented
+                </div>
+                <div class="rubric-item">
+                    <strong>Satisfactory (70-79%):</strong> Code mostly works, basic documentation
+                </div>
+                <div class="rubric-item">
+                    <strong>Needs Improvement (&lt;70%):</strong> Major issues, poor documentation
+                </div>
+            </div>
+
+            <div class="rubric">
+                <h3>Business Analysis (30-35 points)</h3>
+                <div class="rubric-item">
+                    <strong>Excellent (90-100%):</strong> Comprehensive analysis, realistic costs, strong ROI case
+                </div>
+                <div class="rubric-item">
+                    <strong>Good (80-89%):</strong> Solid analysis, reasonable estimates, clear benefits
+                </div>
+                <div class="rubric-item">
+                    <strong>Satisfactory (70-79%):</strong> Basic analysis, general estimates
+                </div>
+                <div class="rubric-item">
+                    <strong>Needs Improvement (&lt;70%):</strong> Weak analysis, missing components
+                </div>
+            </div>
+
+            <div class="rubric">
+                <h3>Documentation & Presentation (10-15 points)</h3>
+                <div class="rubric-item">
+                    <strong>Excellent (90-100%):</strong> Professional, clear, complete, visually appealing
+                </div>
+                <div class="rubric-item">
+                    <strong>Good (80-89%):</strong> Clear and organized, minor improvements needed
+                </div>
+                <div class="rubric-item">
+                    <strong>Satisfactory (70-79%):</strong> Basic documentation, meets requirements
+                </div>
+                <div class="rubric-item">
+                    <strong>Needs Improvement (&lt;70%):</strong> Incomplete or unclear
+                </div>
+            </div>
+        </section>
+
+        <section id="submission">
+            <h2>💡 Submission Guidelines</h2>
+
+            <div class="info">
+                <h4>File Naming Convention:</h4>
+                <code>LastName_FirstName_Week5_TrackNumber.zip</code>
+            </div>
+
+            <h4>Required Files:</h4>
+            <ol>
+                <li>Jupyter notebook (.ipynb) or Python script (.py)</li>
+                <li>Report (PDF)</li>
+                <li>Generated outputs (images/audio/music)</li>
+                <li>README.txt with setup instructions</li>
+                <li>requirements.txt (if applicable)</li>
+            </ol>
+
+            <div class="warning">
+                <strong>⚠️ Important:</strong> Ensure all files are included and code runs before submitting!
+            </div>
+        </section>
+
+        <section id="tips">
+            <h2>🎯 Tips for Success</h2>
+
+            <div class="tips">
+                <h3>General Tips</h3>
+                <ul>
+                    <li>Start early - generative models can be computationally intensive</li>
+                    <li>Use Google Colab if you don't have GPU access</li>
+                    <li>Document your process as you go</li>
+                    <li>Test code incrementally</li>
+                </ul>
+            </div>
+
+            <div class="tips">
+                <h3>For Image Generation</h3>
+                <ul>
+                    <li>Start with small images (28x28 or 64x64)</li>
+                    <li>Monitor training losses carefully</li>
+                    <li>Save checkpoints regularly</li>
+                    <li>Use pre-trained models when possible</li>
+                </ul>
+            </div>
+
+            <div class="tips">
+                <h3>For Audio/Music</h3>
+                <ul>
+                    <li>Use existing APIs/libraries (faster development)</li>
+                    <li>Focus on business application over implementation</li>
+                    <li>Gather user feedback</li>
+                    <li>Consider quality vs cost tradeoff</li>
+                </ul>
+            </div>
+
+            <div class="success">
+                <h3>✨ Remember:</h3>
+                <ul>
+                    <li><strong>Business focus:</strong> This is a business analytics course</li>
+                    <li><strong>Practical application:</strong> Real-world use cases matter</li>
+                    <li><strong>ROI analysis:</strong> Show the financial benefit</li>
+                    <li><strong>Ethics:</strong> Address potential issues</li>
+                </ul>
+            </div>
+        </section>
+
+        <section id="resources">
+            <h2>📚 Resources</h2>
+
+            <h3>Code Examples</h3>
+            <ul>
+                <li>Week 5 code examples: <code>Class 5/week05-code-examples/</code></li>
+                <li>Week 5 notebooks: <code>Class 5/week05-notebooks/</code></li>
+            </ul>
+
+            <h3>Libraries</h3>
+            <ul>
+                <li><strong>Image:</strong> PyTorch, TensorFlow, diffusers, transformers</li>
+                <li><strong>Audio:</strong> librosa, pyttsx3, gTTS, TorToiSe</li>
+                <li><strong>Music:</strong> music21, magenta, MusicLM API</li>
+            </ul>
+
+            <h3>Datasets</h3>
+            <ul>
+                <li>Fashion MNIST: <code>torchvision.datasets</code></li>
+                <li>CIFAR-10: <code>torchvision.datasets</code></li>
+                <li>Audio: Free Music Archive, LibriSpeech</li>
+            </ul>
+
+            <h3>Documentation Links</h3>
+            <ul>
+                <li>Hugging Face Diffusers: <a href="https://huggingface.co/docs/diffusers" target="_blank">https://huggingface.co/docs/diffusers</a></li>
+                <li>PyTorch Tutorials: <a href="https://pytorch.org/tutorials/" target="_blank">https://pytorch.org/tutorials/</a></li>
+                <li>Librosa Docs: <a href="https://librosa.org/doc/latest/" target="_blank">https://librosa.org/doc/latest/</a></li>
+            </ul>
+        </section>
+
+        <section id="faq">
+            <h2>❓ Frequently Asked Questions</h2>
+
+            <div class="faq">
+                <p><strong>Q: Can I use pre-trained models?</strong></p>
+                <p>A: Yes! Focus on application and business analysis.</p>
+            </div>
+
+            <div class="faq">
+                <p><strong>Q: Do I need a GPU?</strong></p>
+                <p>A: Recommended but not required. Use Google Colab free tier.</p>
+            </div>
+
+            <div class="faq">
+                <p><strong>Q: Can I work in a group?</strong></p>
+                <p>A: Check with instructor. If yes, max 2 people, both submit.</p>
+            </div>
+
+            <div class="faq">
+                <p><strong>Q: What if my model doesn't generate good results?</strong></p>
+                <p>A: Document challenges and discuss in limitations section.</p>
+            </div>
+
+            <div class="faq">
+                <p><strong>Q: How long should training take?</strong></p>
+                <p>A: Varies by model. Budget 2-4 hours for training time.</p>
+            </div>
+        </section>
+
+        <section>
+            <h2>🏆 Bonus Opportunities (Optional, +10 points max)</h2>
+
+            <div class="bonus">
+                <h4>1. Compare multiple models (+5 points)</h4>
+                <ul>
+                    <li>Implement 2 different approaches</li>
+                    <li>Compare results quantitatively</li>
+                </ul>
+            </div>
+
+            <div class="bonus">
+                <h4>2. Real business pilot (+10 points)</h4>
+                <ul>
+                    <li>Partner with actual business</li>
+                    <li>Deploy your solution</li>
+                    <li>Document results</li>
+                </ul>
+            </div>
+
+            <div class="bonus">
+                <h4>3. Interactive demo (+5 points)</h4>
+                <ul>
+                    <li>Create Gradio/Streamlit interface</li>
+                    <li>Deploy online</li>
+                    <li>Share link</li>
+                </ul>
+            </div>
+        </section>
+
+        <footer style="margin-top: 60px; padding-top: 30px; border-top: 2px solid #e0e0e0; text-align: center; color: #777;">
+            <p style="font-size: 1.2em; font-weight: bold; color: #3498db;">Good luck! Focus on creating practical business value with generative AI! 🚀</p>
+            <p style="margin-top: 20px;">BUAN 6V99.SW2 - Generative AI for Business | Week 5 Homework</p>
+        </footer>
+    </div>
+</body>
+</html>
