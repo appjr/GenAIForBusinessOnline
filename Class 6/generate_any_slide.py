@@ -12,7 +12,7 @@ from pathlib import Path
 # Image generation configuration
 STYLE = "playful academic cartoon style, vibrant colors, friendly and approachable, professional but fun, suitable for business education"
 SIZE = "1024x1024"
-QUALITY = "standard"
+QUALITY = "medium"  # For gpt-image-1: 'low', 'medium', 'high', or 'auto'
 MODEL = "gpt-image-1"
 
 # Slide prompts for Week 6: Coding with AI (27 slides)
