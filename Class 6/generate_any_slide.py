@@ -13,7 +13,7 @@ from pathlib import Path
 STYLE = "playful academic cartoon style, vibrant colors, friendly and approachable, professional but fun, suitable for business education"
 SIZE = "1024x1024"
 QUALITY = "standard"
-MODEL = "dall-e-3"
+MODEL = "gpt-image-1"
 
 # Slide prompts for Week 6: Coding with AI (27 slides)
 SLIDE_PROMPTS = {
