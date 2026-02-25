@@ -1,0 +1,225 @@
+Slide 9 - Playful Academic Cartoon Style
+
+SLIDE CONTENT:
+## Slide 9: Code Completion and Refactoring
+
+### Making Existing Code Better
+
+**Use Case 1: Refactoring Legacy Code**
+
+**Before (Legacy Code):**
+```python
+def process_data(data):
+    result = []
+    for item in data:
+        if item['status'] == 'active':
+            if item['value'] > 100:
+                if item['category'] == 'A':
+                    result.append(item)
+    return result
+```
+
+**Prompt for Copilot:**
+```python
+# Refactor the above function to be more pythonic
+# Use list comprehension and reduce nesting
+# Add type hints and docstring
+
+def process_data(data: list[dict]) -> list[dict]:
+    """
+    Filter active items with value > 100 in category A.
+    
+    Args:
+        data: List of dictionaries with keys: status, value, category
+    
+    Returns:
+        Filtered list of items meeting all criteria
+    """
+    return [
+        item for item in data
+        if item.get('status') == 'active'
+        and item.get('value', 0) > 100
+        and item.get('category') == 'A'
+    ]
+```
+
+**Use Case 2: Adding Error Handling**
+
+**Original:**
+```python
+def read_config(filename):
+    with open(filename) as f:
+        return json.load(f)
+```
+
+**Copilot Enhancement (just add comment):**
+```python
+# Add comprehensive error handling for file operations and JSON parsing
+def read_config(filename: str) -> dict:
+    """
+    Read and parse JSON configuration file with error handling.
+    
+    Args:
+        filename: Path to JSON config file
+    
+    Returns:
+        Parsed configuration dictionary
+    
+    Raises:
+        FileNotFoundError: If config file doesn't exist
+        json.JSONDecodeError: If file contains invalid JSON
+    """
+    import json
+    import logging
+    
+    try:
+        with open(filename, 'r') as f:
+            config = json.load(f)
+            logging.info(f"Successfully loaded config from {filename}")
+            return config
+    except FileNotFoundError:
+        logging.error(f"Configuration file not found: {filename}")
+        raise
+    except json.JSONDecodeError as e:
+        logging.error(f"Invalid JSON in {filename}: {e}")
+        raise
+    except Exception as e:
+        logging.error(f"Unexpected error reading {filename}: {e}")
+        raise
+```
+
+**Use Case 3: Performance Optimization**
+
+**Original (Slow):**
+```python
+def find_duplicates(items):
+    duplicates = []
+    for i in range(len(items)):
+        for j in range(i + 1, len(items)):
+            if items[i] == items[j] and items[i] not in duplicates:
+                duplicates.append(items[i])
+    return duplicates
+```
+
+**Copilot Optimization:**
+```python
+# Optimize the above function using set operations for O(n) complexity
+def find_duplicates(items: list) -> list:
+    """
+    Find duplicate items efficiently using set operations.
+    
+    Time complexity: O(n) vs O(n) in original
+    
+    Args:
+        items: List of items to check for duplicates
+    
+    Returns:
+        List of items that appear more than once
+    """
+    from collections import Counter
+    
+    counts = Counter(items)
+    return [item for item, count in counts.items() if count > 1]
+```
+
+**Use Case 4: Adding Documentation**
+
+**Prompt:** Select your function and type:
+
+```python
+# Add comprehensive docstring with examples and type hints
+
+# Copilot generates:
+def calculate_discount(price: float, discount_percent: float, is_member: bool = False) -> float:
+    """
+    Calculate final price after applying discount and membership benefits.
+    
+    Args:
+        price: Original price of the item
+        discount_percent: Discount percentage (0-100)
+        is_member: Whether customer is a loyalty member (gets additional 5% off)
+    
+    Returns:
+        Final price after all discounts applied
+    
+    Examples:
+        >>> calculate_discount(100, 10)
+        90.0
+        >>> calculate_discount(100, 10, is_member=True)
+        85.5
+        >>> calculate_discount(50, 20, is_member=True)
+        38.0
+    
+    Raises:
+        ValueError: If price is negative or discount_percent not in range 0-100
+    """
+    if price < 0:
+        raise ValueError("Price cannot be negative")
+    if not 0 <= discount_percent <= 100:
+        raise ValueError("Discount percent must be between 0 and 100")
+    
+    discounted_price = price * (1 - discount_percent / 100)
+    
+    if is_member:
+        discounted_price *= 0.95  # Additional 5% member discount
+    
+    return round(discounted_price, 2)
+```
+
+**Refactoring Patterns Copilot Excels At:**
+
+1. **Converting loops to comprehensions**
+2. **Adding type hints**
+3. **Error handling improvements**
+4. **Documentation generation**
+5. **Breaking large functions into smaller ones**
+6. **Modernizing syntax (e.g., f-strings, walrus operator)**
+7. **Performance optimizations**
+
+---
+
+---
+
+IMAGE GENERATION PROMPT:
+
+Create a professional university presentation slide image with the following specifications:
+
+DESIGN THEME: Playful academic cartoon + clean university style
+
+COLOR PALETTE:
+- Soft blues (primary)
+- Oranges (accents)
+- Greens (secondary)
+- White background with subtle texture
+
+TYPOGRAPHY:
+- Bold headers in rounded friendly font (like Montserrat or Poppins)
+- Body text in clean sans-serif (like Open Sans)
+- Title at top - large, bold, centered
+- Section headers clearly differentiated
+
+VISUAL STYLE:
+- Illustrated cartoon-style icons (simple, friendly, hand-drawn feel)
+- Simple diagrams where appropriate
+- Light shadows for depth
+- Subtle paper/canvas texture background
+- Clean layout with good spacing
+- Playful but professional
+- Icons should be colorful and engaging
+
+LAYOUT:
+- 16:9 aspect ratio landscape (1536x1024)
+- Title at top center
+- Content well-organized with clear hierarchy
+- Bullet points clean and readable
+- Good white space
+- Professional university quality
+
+REQUIREMENTS:
+- All text from content must be included and readable
+- Professional enough for graduate business school
+- Playful enough to be engaging and memorable
+- Cartoon-style illustrations but sophisticated
+- Clean, organized, easy to read at presentation size
+
+Style reference: Coursera, Khan Academy, or Duolingo - educational, friendly, professional

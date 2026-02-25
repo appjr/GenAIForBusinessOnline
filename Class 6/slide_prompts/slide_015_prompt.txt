@@ -1,0 +1,367 @@
+Slide 15 - Playful Academic Cartoon Style
+
+SLIDE CONTENT:
+## Slide 15: Debugging with AI
+
+### Finding and Fixing Bugs Faster
+
+**Use Case 1: Understanding Error Messages**
+
+**Scenario:** You get a cryptic error
+
+**Error:**
+```python
+Traceback (most recent call last):
+  File "app.py", line 45, in process_data
+    result = data['users'][user_id]['transactions']
+KeyError: 'transactions'
+```
+
+**Prompt to ChatGPT:**
+```
+I'm getting this error in my Python application:
+
+[paste error]
+
+Here's the relevant code:
+
+```python
+def process_data(data, user_id):
+    user = data['users'][user_id]
+    transactions = user['transactions']
+    return sum(t['amount'] for t in transactions)
+```
+
+The data structure should be:
+{
+  'users': {
+    'user123': {
+      'name': 'John',
+      'transactions': [...]
+    }
+  }
+}
+
+Why might I be getting this KeyError, and how can I fix it defensively?
+```
+
+**ChatGPT Response:**
+```
+The KeyError indicates that the 'transactions' key doesn't exist for this user.
+
+Possible causes:
+1. User exists but has no 'transactions' key
+2. Data structure differs from expected
+3. Transactions key is sometimes None instead of missing
+
+Defensive solution:
+
+```python
+def process_data(data, user_id):
+    """
+    Process user transactions with defensive error handling
+    """
+    # Check if user exists
+    if 'users' not in data:
+        raise ValueError("Data missing 'users' key")
+    
+    if user_id not in data['users']:
+        raise ValueError(f"User {user_id} not found")
+    
+    user = data['users'][user_id]
+    
+    # Safely get transactions with default empty list
+    transactions = user.get('transactions', [])
+    
+    # Validate transactions is a list
+    if not isinstance(transactions, list):
+        logger.warning(f"User {user_id} has invalid transactions format")
+        return 0
+    
+    # Calculate total with validation
+    total = 0
+    for transaction in transactions:
+        if isinstance(transaction, dict) and 'amount' in transaction:
+            try:
+                total += float(transaction['amount'])
+            except (ValueError, TypeError):
+                logger.warning(f"Invalid amount in transaction: {transaction}")
+                continue
+    
+    return total
+```
+
+Additional debugging steps:
+1. Add logging to see actual data structure
+2. Validate data schema before processing
+3. Use Pydantic for data validation
+```
+
+**Use Case 2: Performance Debugging**
+
+**Prompt:**
+```
+This function is very slow with large datasets:
+
+```python
+def find_duplicates(data):
+    duplicates = []
+    for i in range(len(data)):
+        for j in range(i + 1, len(data)):
+            if data[i] == data[j] and data[i] not in duplicates:
+                duplicates.append(data[i])
+    return duplicates
+
+# Takes 45 seconds with 10,000 items!
+```
+
+Can you:
+1. Explain why it's slow
+2. Provide an optimized version
+3. Show performance comparison
+```
+
+**ChatGPT Response:**
+```
+PROBLEM ANALYSIS:
+
+Your function has O(n) time complexity:
+- Outer loop: O(n)
+- Inner loop: O(n)
+- `data[i] not in duplicates`: O(n) for list lookup
+
+Total: O(n) * O(n) * O(n) = O(n)
+
+For 10,000 items: ~1,000,000,000,000 operations!
+
+OPTIMIZED VERSION:
+
+```python
+from collections import Counter
+
+def find_duplicates_optimized(data):
+    """
+    Find duplicates using Counter - O(n) time complexity
+    """
+    counts = Counter(data)
+    return [item for item, count in counts.items() if count > 1]
+```
+
+PERFORMANCE COMPARISON:
+
+```python
+import time
+import random
+
+# Generate test data
+test_data = [random.randint(1, 1000) for _ in range(10000)]
+
+# Original version
+start = time.time()
+result1 = find_duplicates(test_data[:1000])  # Only 1000 items!
+time1 = time.time() - start
+
+# Optimized version
+start = time.time()
+result2 = find_duplicates_optimized(test_data)  # All 10,000 items
+time2 = time.time() - start
+
+print(f"Original (1,000 items): {time1:.2f} seconds")
+print(f"Optimized (10,000 items): {time2:.4f} seconds")
+print(f"Speedup factor: {time1/time2:.0f}x")
+
+# Output:
+# Original (1,000 items): 2.45 seconds
+# Optimized (10,000 items): 0.0023 seconds
+# Speedup factor: 1065x
+```
+
+EXPLANATION:
+
+Counter approach:
+1. Single pass through data: O(n)
+2. Build hash map of counts: O(n) space
+3. Filter items with count > 1: O(n)
+
+Total: O(n) time, O(n) space
+
+For 10,000 items: ~10,000 operations vs ~1 trillion!
+```
+
+**Use Case 3: Logic Bugs**
+
+**Scenario:** Code runs but gives wrong results
+
+**Prompt:**
+```
+This function should calculate customer loyalty discount, but customers are complaining:
+
+```python
+def calculate_loyalty_discount(total, years_member):
+    discount = 0
+    if years_member > 1:
+        discount = 0.05
+    if years_member > 3:
+        discount = 0.10
+    if years_member > 5:
+        discount = 0.15
+    
+    return total * (1 - discount)
+```
+
+A customer with 6 years membership and $100 purchase is getting charged $95 instead of $85.
+What's wrong?
+```
+
+**ChatGPT Response:**
+```
+BUG IDENTIFIED:
+
+The issue is with multiple IF statements instead of IF-ELIF.
+
+Current behavior:
+- For 6 years: all three conditions are TRUE
+- But each IF assigns discount, so only last assignment (0.15) matters
+- However, the customer expects cumulative discount
+
+Wait - if only 0.15 is applied, they should pay $85, not $95...
+
+Let me recalculate:
+- $100 * (1 - 0.15) = $85 
+
+Actually, checking the logic more carefully - they ARE getting $95, which means:
+- $100 * (1 - 0.05) = $95
+
+This suggests the discount variable is being set to 0.05, which means the later conditions aren't being met!
+
+ACTUAL BUG: The comparison operators!
+
+Looking again at years_member > 5:
+- If years_member is exactly 6, this should be TRUE
+- But customer is getting 5% discount (years_member > 1)
+
+OH! I see it now - the conditions are all being evaluated, but perhaps years_member is a string "6" not integer 6!
+
+FIXED VERSION:
+
+```python
+def calculate_loyalty_discount(total, years_member):
+    """
+    Calculate price after loyalty discount
+    
+    Discount tiers:
+    - 1-3 years: 5%
+    - 3-5 years: 10%
+    - 5+ years: 15%
+    """
+    # Ensure years_member is an integer
+    years_member = int(years_member)
+    
+    # Use elif to ensure only one discount applies
+    if years_member >= 5:
+        discount = 0.15
+    elif years_member >= 3:
+        discount = 0.10
+    elif years_member >= 1:
+        discount = 0.05
+    else:
+        discount = 0.0
+    
+    discounted_total = total * (1 - discount)
+    
+    return round(discounted_total, 2)
+
+# Test cases
+print(calculate_loyalty_discount(100, 6))    # Should be $85.00
+print(calculate_loyalty_discount(100, "6"))  # Should handle string input
+print(calculate_loyalty_discount(100, 3))    # Should be $90.00
+print(calculate_loyalty_discount(100, 1))    # Should be $95.00
+```
+
+KEY FIXES:
+1. Convert years_member to int (handles string inputs)
+2. Use >= instead of > (5 years should get 15% discount)
+3. Use elif to ensure only one discount applies (though with proper ordering, if statements would work)
+4. Round result to 2 decimal places for currency
+5. Order conditions from highest to lowest for clarity
+```
+
+---
+
+**Best Practices for AI-Assisted Debugging:**
+
+1. **Provide complete context:**
+   - Full error message
+   - Relevant code
+   - Expected vs actual behavior
+   - Sample data
+
+2. **Be specific about the problem:**
+   - "Returns wrong value"  "Returns 95 instead of expected 85"
+   - "It's slow"  "Takes 45 seconds for 10,000 items"
+
+3. **Ask for explanations:**
+   - "Why is this happening?"
+   - "What's the root cause?"
+   - "What are the implications?"
+
+4. **Request multiple solutions:**
+   - "Show me 3 different approaches"
+   - "What are the trade-offs?"
+
+5. **Verify with tests:**
+   - Always ask for test cases
+   - Run the suggested fix
+   - Compare with original
+
+---
+
+**End of Batch 3 (Slides 11-15)**
+
+*Continue to Batch 4 for Code Review, Testing & Documentation (Slides 16-20)*
+
+---
+
+IMAGE GENERATION PROMPT:
+
+Create a professional university presentation slide image with the following specifications:
+
+DESIGN THEME: Playful academic cartoon + clean university style
+
+COLOR PALETTE:
+- Soft blues (primary)
+- Oranges (accents)
+- Greens (secondary)
+- White background with subtle texture
+
+TYPOGRAPHY:
+- Bold headers in rounded friendly font (like Montserrat or Poppins)
+- Body text in clean sans-serif (like Open Sans)
+- Title at top - large, bold, centered
+- Section headers clearly differentiated
+
+VISUAL STYLE:
+- Illustrated cartoon-style icons (simple, friendly, hand-drawn feel)
+- Simple diagrams where appropriate
+- Light shadows for depth
+- Subtle paper/canvas texture background
+- Clean layout with good spacing
+- Playful but professional
+- Icons should be colorful and engaging
+
+LAYOUT:
+- 16:9 aspect ratio landscape (1536x1024)
+- Title at top center
+- Content well-organized with clear hierarchy
+- Bullet points clean and readable
+- Good white space
+- Professional university quality
+
+REQUIREMENTS:
+- All text from content must be included and readable
+- Professional enough for graduate business school
+- Playful enough to be engaging and memorable
+- Cartoon-style illustrations but sophisticated
+- Clean, organized, easy to read at presentation size
+
+Style reference: Coursera, Khan Academy, or Duolingo - educational, friendly, professional

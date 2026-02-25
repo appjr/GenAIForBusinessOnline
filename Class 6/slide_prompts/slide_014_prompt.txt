@@ -1,0 +1,460 @@
+Slide 14 - Playful Academic Cartoon Style
+
+SLIDE CONTENT:
+## Slide 14: Real-World ChatGPT/Claude Examples
+
+### Complete Solutions to Complex Problems
+
+**Example 1: Data Pipeline Architecture**
+
+**Prompt:**
+```
+I need to design a data pipeline for processing e-commerce transactions.
+
+Current Situation:
+- Receiving 10,000 transactions per minute from our API
+- Need to: validate, enrich with customer data, calculate metrics, store in database
+- Must handle failures gracefully and retry
+- Need real-time dashboard showing metrics
+
+Tech Stack: Python, PostgreSQL, Redis, Docker
+Budget: Can use AWS services if needed
+
+Please provide:
+1. Architecture diagram (in text/ASCII)
+2. Technology recommendations
+3. Python code for key components
+4. Scaling considerations
+```
+
+**Claude Response:**
+
+```
+I'll design a robust, scalable data pipeline for your e-commerce transactions.
+
+ARCHITECTURE:
+```
+
+   API       
+ (FastAPI)   
+
+       
+       
+
+   Message Queue (Redis Streams/RabbitMQ)
+
+       
+       
+
+      Worker Pool (Celery Workers)        
+          
+  Worker 1 Worker 2 Worker 3   ...   
+          
+                                       
+                                       
+             
+    Transaction Processor              
+    1. Validate                        
+    2. Enrich                          
+    3. Calculate Metrics               
+             
+
+             
+    
+                     
+    
+PostgreSQL      Redis   
+(Storage)      (Cache)  
+    
+                    
+     
+             
+      
+        Dashboard 
+       (Streamlit)
+      
+```
+
+RECOMMENDATIONS:
+
+1. Message Queue: Redis Streams
+   - Pros: Fast, persistent, built-in consumer groups
+   - Handles 10K/min easily
+   - Lower cost than Kafka for this scale
+
+2. Workers: Celery with Redis backend
+   - Auto-scaling based on queue size
+   - Retry logic built-in
+   - Easy monitoring
+
+3. Database: PostgreSQL with TimescaleDB extension
+   - Time-series optimization for metrics
+   - Supports analytics queries
+   - ACID compliance for transactions
+
+4. Caching: Redis
+   - Cache customer data (reduce DB hits)
+   - Store real-time metrics
+   - TTL for automatic cleanup
+
+IMPLEMENTATION:
+
+# 1. Transaction Model
+from sqlalchemy import Column, Integer, String, Float, DateTime, Index
+from sqlalchemy.ext.declarative import declarative_base
+from datetime import datetime
+
+Base = declarative_base()
+
+class Transaction(Base):
+    __tablename__ = 'transactions'
+    
+    id = Column(Integer, primary_key=True)
+    transaction_id = Column(String(50), unique=True, index=True)
+    customer_id = Column(String(50), index=True)
+    product_id = Column(String(50))
+    quantity = Column(Integer)
+    price = Column(Float)
+    total_amount = Column(Float)
+    timestamp = Column(DateTime, default=datetime.utcnow, index=True)
+    status = Column(String(20))  # pending, processed, failed
+    region = Column(String(50))
+    
+    # Composite index for common queries
+    __table_args__ = (
+        Index('idx_customer_timestamp', 'customer_id', 'timestamp'),
+        Index('idx_region_timestamp', 'region', 'timestamp'),
+    )
+
+# 2. Celery Task for Processing
+from celery import Celery
+from redis import Redis
+import logging
+
+app = Celery('transaction_processor', broker='redis://localhost:6379/0')
+redis_client = Redis(host='localhost', port=6379, db=1)
+logger = logging.getLogger(__name__)
+
+@app.task(bind=True, max_retries=3)
+def process_transaction(self, transaction_data):
+    """
+    Process a single transaction with retry logic
+    """
+    try:
+        # Step 1: Validate
+        validated = validate_transaction(transaction_data)
+        
+        # Step 2: Enrich with customer data
+        enriched = enrich_customer_data(validated)
+        
+        # Step 3: Calculate metrics
+        update_metrics(enriched)
+        
+        # Step 4: Store in database
+        save_transaction(enriched)
+        
+        logger.info(f"Successfully processed transaction: {transaction_data['transaction_id']}")
+        return {'status': 'success', 'transaction_id': transaction_data['transaction_id']}
+        
+    except Exception as e:
+        logger.error(f"Error processing transaction {transaction_data['transaction_id']}: {e}")
+        
+        # Retry with exponential backoff
+        try:
+            raise self.retry(exc=e, countdown=2 ** self.request.retries)
+        except self.MaxRetriesExceededError:
+            # After max retries, save to dead letter queue
+            save_to_dlq(transaction_data, str(e))
+            return {'status': 'failed', 'error': str(e)}
+
+def validate_transaction(data):
+    """Validate transaction data"""
+    required_fields = ['transaction_id', 'customer_id', 'product_id', 'quantity', 'price']
+    
+    for field in required_fields:
+        if field not in data or data[field] is None:
+            raise ValueError(f"Missing required field: {field}")
+    
+    if data['quantity'] <= 0:
+        raise ValueError("Quantity must be positive")
+    
+    if data['price'] < 0:
+        raise ValueError("Price cannot be negative")
+    
+    data['total_amount'] = data['quantity'] * data['price']
+    data['status'] = 'validated'
+    
+    return data
+
+def enrich_customer_data(transaction):
+    """Enrich with customer data from cache or database"""
+    customer_id = transaction['customer_id']
+    
+    # Try cache first
+    cached = redis_client.get(f"customer:{customer_id}")
+    if cached:
+        import json
+        customer_data = json.loads(cached)
+    else:
+        # Fetch from database
+        customer_data = fetch_customer_from_db(customer_id)
+        # Cache for 1 hour
+        redis_client.setex(
+            f"customer:{customer_id}",
+            3600,
+            json.dumps(customer_data)
+        )
+    
+    transaction['region'] = customer_data.get('region', 'unknown')
+    transaction['customer_tier'] = customer_data.get('tier', 'standard')
+    
+    return transaction
+
+def update_metrics(transaction):
+    """Update real-time metrics in Redis"""
+    from datetime import datetime
+    import json
+    
+    current_hour = datetime.utcnow().strftime('%Y-%m-%d-%H')
+    
+    # Increment transaction count
+    redis_client.hincrby(f"metrics:{current_hour}", 'transaction_count', 1)
+    
+    # Add to revenue
+    redis_client.hincrbyfloat(f"metrics:{current_hour}", 'total_revenue', transaction['total_amount'])
+    
+    # Update region metrics
+    redis_client.hincrby(f"metrics:region:{transaction['region']}:{current_hour}", 'count', 1)
+    redis_client.hincrbyfloat(f"metrics:region:{transaction['region']}:{current_hour}", 'revenue', transaction['total_amount'])
+    
+    # Set expiry for 7 days
+    redis_client.expire(f"metrics:{current_hour}", 7 * 24 * 3600)
+
+def save_transaction(transaction):
+    """Save to PostgreSQL"""
+    from sqlalchemy.orm import sessionmaker
+    from database import engine
+    
+    Session = sessionmaker(bind=engine)
+    session = Session()
+    
+    try:
+        db_transaction = Transaction(
+            transaction_id=transaction['transaction_id'],
+            customer_id=transaction['customer_id'],
+            product_id=transaction['product_id'],
+            quantity=transaction['quantity'],
+            price=transaction['price'],
+            total_amount=transaction['total_amount'],
+            status='processed',
+            region=transaction['region']
+        )
+        session.add(db_transaction)
+        session.commit()
+    except Exception as e:
+        session.rollback()
+        raise
+    finally:
+        session.close()
+
+def save_to_dlq(transaction, error):
+    """Save failed transaction to dead letter queue"""
+    import json
+    redis_client.lpush('dlq:transactions', json.dumps({
+        'transaction': transaction,
+        'error': error,
+        'timestamp': datetime.utcnow().isoformat()
+    }))
+
+# 3. FastAPI Endpoint
+from fastapi import FastAPI, HTTPException
+from pydantic import BaseModel, validator
+import uuid
+
+app = FastAPI()
+
+class TransactionCreate(BaseModel):
+    customer_id: str
+    product_id: str
+    quantity: int
+    price: float
+    
+    @validator('quantity')
+    def quantity_positive(cls, v):
+        if v <= 0:
+            raise ValueError('Quantity must be positive')
+        return v
+    
+    @validator('price')
+    def price_non_negative(cls, v):
+        if v < 0:
+            raise ValueError('Price cannot be negative')
+        return v
+
+@app.post("/api/v1/transactions")
+async def create_transaction(transaction: TransactionCreate):
+    """
+    Accept transaction and queue for processing
+    """
+    # Generate unique transaction ID
+    transaction_id = str(uuid.uuid4())
+    
+    transaction_data = {
+        'transaction_id': transaction_id,
+        **transaction.dict()
+    }
+    
+    # Queue for processing
+    process_transaction.delay(transaction_data)
+    
+    return {
+        'status': 'accepted',
+        'transaction_id': transaction_id,
+        'message': 'Transaction queued for processing'
+    }
+
+@app.get("/api/v1/metrics/current")
+async def get_current_metrics():
+    """
+    Get real-time metrics for current hour
+    """
+    from datetime import datetime
+    current_hour = datetime.utcnow().strftime('%Y-%m-%d-%H')
+    
+    metrics = redis_client.hgetall(f"metrics:{current_hour}")
+    
+    return {
+        'hour': current_hour,
+        'transaction_count': int(metrics.get(b'transaction_count', 0)),
+        'total_revenue': float(metrics.get(b'total_revenue', 0)),
+        'avg_transaction_value': float(metrics.get(b'total_revenue', 0)) / max(int(metrics.get(b'transaction_count', 1)), 1)
+    }
+
+# 4. Docker Compose Configuration
+```yaml
+version: '3.8'
+
+services:
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+
+  postgres:
+    image: timescale/timescaledb:latest-pg14
+    environment:
+      POSTGRES_DB: transactions
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: password
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  api:
+    build: .
+    ports:
+      - "8000:8000"
+    depends_on:
+      - redis
+      - postgres
+    environment:
+      REDIS_URL: redis://redis:6379
+      DATABASE_URL: postgresql://admin:password@postgres/transactions
+
+  worker:
+    build: .
+    command: celery -A tasks worker --loglevel=info --concurrency=4
+    depends_on:
+      - redis
+      - postgres
+    environment:
+      REDIS_URL: redis://redis:6379
+      DATABASE_URL: postgresql://admin:password@postgres/transactions
+    deploy:
+      replicas: 3  # 3 workers to start
+
+volumes:
+  redis_data:
+  postgres_data:
+```
+
+SCALING CONSIDERATIONS:
+
+1. Horizontal Scaling:
+   - API: Add more containers behind load balancer (ALB)
+   - Workers: Auto-scale based on queue length
+   - Database: Read replicas for analytics queries
+
+2. Performance Optimizations:
+   - Batch insert transactions (bulk operations)
+   - Connection pooling for database
+   - Redis pipelining for metrics updates
+
+3. Monitoring:
+   - Celery Flower for worker monitoring
+   - Prometheus + Grafana for metrics
+   - CloudWatch for AWS resources
+
+4. Cost Optimization:
+   - Start with 3 workers, scale up to 10 based on queue
+   - Use reserved instances for database
+   - Redis ElastiCache instead of self-hosted
+
+Expected Capacity:
+- 10,000 transactions/min = 167/second
+- With 3 workers @ 50 tx/sec each = handles load with buffer
+- Total monthly cost (AWS): ~$500-700
+```
+
+**This complete architecture took Claude about 30 seconds to generate!**
+
+---
+
+---
+
+IMAGE GENERATION PROMPT:
+
+Create a professional university presentation slide image with the following specifications:
+
+DESIGN THEME: Playful academic cartoon + clean university style
+
+COLOR PALETTE:
+- Soft blues (primary)
+- Oranges (accents)
+- Greens (secondary)
+- White background with subtle texture
+
+TYPOGRAPHY:
+- Bold headers in rounded friendly font (like Montserrat or Poppins)
+- Body text in clean sans-serif (like Open Sans)
+- Title at top - large, bold, centered
+- Section headers clearly differentiated
+
+VISUAL STYLE:
+- Illustrated cartoon-style icons (simple, friendly, hand-drawn feel)
+- Simple diagrams where appropriate
+- Light shadows for depth
+- Subtle paper/canvas texture background
+- Clean layout with good spacing
+- Playful but professional
+- Icons should be colorful and engaging
+
+LAYOUT:
+- 16:9 aspect ratio landscape (1536x1024)
+- Title at top center
+- Content well-organized with clear hierarchy
+- Bullet points clean and readable
+- Good white space
+- Professional university quality
+
+REQUIREMENTS:
+- All text from content must be included and readable
+- Professional enough for graduate business school
+- Playful enough to be engaging and memorable
+- Cartoon-style illustrations but sophisticated
+- Clean, organized, easy to read at presentation size
+
+Style reference: Coursera, Khan Academy, or Duolingo - educational, friendly, professional

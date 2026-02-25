@@ -1,216 +1,202 @@
-#!/usr/bin/env python3
 """
-Generate slide images for Week 6: Coding with AI
-Uses OpenAI's DALL-E 3 to create playful academic cartoon-style images
+Generic Slide Generator - Works for any slide number
+Generates playful academic cartoon style slides using gpt-image-1
 """
 
 import os
 import sys
-import requests
-from pathlib import Path
+import re
+import base64
+import subprocess
+from openai import OpenAI
 
-# Image generation configuration
-STYLE = "playful academic cartoon style, vibrant colors, friendly and approachable, professional but fun, suitable for business education"
-SIZE = "1024x1024"
-QUALITY = "medium"  # For gpt-image-1: 'low', 'medium', 'high', or 'auto'
-MODEL = "gpt-image-1"
+def extract_slide_content(slide_number):
+    """Extract slide content from markdown files"""
+    
+    # Determine which batch file to read and offset
+    # Batch 1: Slides 1-5, Batch 2: Slides 6-10, Batch 3: Slides 11-15
+    # Batch 4: Slides 16-20, Batch 5: Slides 21-27
+    if slide_number <= 5:
+        markdown_file = 'Class 6/week06-slides-batch1.md'
+        slide_offset = slide_number - 1  # Slides 1-5 in Batch 1
+    elif slide_number <= 10:
+        markdown_file = 'Class 6/week06-slides-batch2.md'
+        slide_offset = slide_number - 6  # Slides 6-10 in Batch 2
+    elif slide_number <= 15:
+        markdown_file = 'Class 6/week06-slides-batch3.md'
+        slide_offset = slide_number - 11  # Slides 11-15 in Batch 3
+    elif slide_number <= 20:
+        markdown_file = 'Class 6/week06-slides-batch4.md'
+        slide_offset = slide_number - 16  # Slides 16-20 in Batch 4
+    elif slide_number <= 27:
+        markdown_file = 'Class 6/week06-slides-batch5.md'
+        slide_offset = slide_number - 21  # Slides 21-27 in Batch 5
+    else:
+        raise ValueError(f"Slide number {slide_number} is out of range (1-27)")
+    
+    # Read the file
+    with open(markdown_file, 'r', encoding='utf-8') as f:
+        content = f.read()
+    
+    # Split by ## headers to get sections
+    sections = re.split(r'\n## ', content)
+    sections = [s.strip() for s in sections if s.strip() and not s.startswith('#')]
+    
+    # Get the appropriate section
+    if slide_offset < len(sections):
+        slide_content = "## " + sections[slide_offset]
+    else:
+        print(f"⚠️  Slide {slide_number} index {slide_offset} out of range (found {len(sections)} sections)")
+        # Try to get any content
+        slide_content = sections[0] if sections else ""
+    
+    # Clean content - remove emojis
+    slide_content = re.sub(r'[^\x00-\x7F]+', '', slide_content)
+    
+    # Keep structure but clean
+    slide_content = slide_content.strip()
+    
+    return slide_content
 
-# Slide prompts for Week 6: Coding with AI (27 slides)
-SLIDE_PROMPTS = {
-    # Batch 1: Introduction & AI Coding Landscape (Slides 1-5)
-    1: f"Week 6 title illustration: A cheerful developer sitting at a modern desk with an AI assistant hologram appearing beside them, helping write code on a glowing screen. Binary code and neural network patterns float in the background. The scene shows collaboration between human and AI. {STYLE}",
+def generate_slide_image(slide_number, slide_content):
+    """Generate slide image using gpt-image-1"""
     
-    2: f"Agenda overview: A colorful roadmap or timeline showing different stages of learning, with icons representing coding tools, chat bubbles for AI assistants, checkmarks for testing, and a trophy for ROI. The path winds through playful cloud-like sections. {STYLE}",
+    client = OpenAI(api_key=os.getenv('OPENAI_API_KEY'))
     
-    3: f"Learning objectives: A cheerful student character climbing a ladder toward floating knowledge bubbles, each bubble containing icons: a coding symbol, AI brain, GitHub logo, testing beaker, and dollar sign for ROI. Stars and achievement badges surround them. {STYLE}",
-    
-    4: f"Evolution timeline: A playful transformation showing four stages from left to right - an old typewriter (1990s), a simple computer with basic autocomplete (2000s), a laptop with smart suggestions (2010s), and a modern setup with a friendly AI robot assistant helping a developer (2020s). Progressive improvement visualization. {STYLE}",
-    
-    5: f"AI tools comparison: A friendly marketplace scene with different AI tool characters at colorful booths - GitHub Copilot as a helpful co-pilot with wings, ChatGPT as a wise advisor, Claude as a thoughtful scholar, and CodeWhisperer as an AWS cloud character. Developers happily comparing options. {STYLE}",
-    
-    # Batch 2: GitHub Copilot Deep Dive (Slides 6-10)
-    6: f"GitHub Copilot setup: A cheerful developer installing a plugin, with the GitHub Copilot logo appearing as a friendly co-pilot character helping them. Installation steps float around them like achievement unlocks in a game. VS Code interface shown in a friendly, simplified way. {STYLE}",
-    
-    7: f"Effective prompting: A developer writing a comment, and magical code appearing from the comment like a genie from a lamp. The AI assistant shows the connection between clear instructions and quality code output. Light bulbs and sparkles indicate good ideas. {STYLE}",
-    
-    8: f"Real-world examples: Split scene showing different coding scenarios - one section with data analysis charts and graphs, another with API connections illustrated as friendly robots shaking hands, and a third showing automated reports flying out of a printer. All interconnected with flowing code. {STYLE}",
-    
-    9: f"Code refactoring: A before/after comparison showing messy, tangled code on the left transforming into clean, organized code on the right. An AI character acts as a friendly organizer, tidying up the code like Marie Kondo organizing a closet. Sparkles show the improvement. {STYLE}",
-    
-    10: f"GitHub Copilot Chat: A friendly chat interface with a developer asking questions and an AI assistant providing helpful answers. Speech bubbles contain code snippets, explanations, and friendly emojis. The interaction feels like a helpful pair programming session. {STYLE}",
-    
-    # Batch 3: Conversational AI for Coding (Slides 11-15)
-    11: f"ChatGPT vs Claude: Two friendly AI characters side by side - ChatGPT as an energetic helper with the OpenAI logo, and Claude as a thoughtful scholar with books. They're both helping different developers, showing their unique strengths. No competition, just collaboration. {STYLE}",
-    
-    12: f"Complex problems visualization: A developer facing a large, intimidating puzzle or maze representing a complex coding problem. An AI assistant appears as a friendly guide with a glowing map, helping navigate through the complexity to find the solution. {STYLE}",
-    
-    13: f"Prompting strategies: A playful infographic showing the 4-part comment structure as building blocks - What, Input, Output, Special considerations - stacking together to form a strong prompt foundation. An AI character helps assemble them like LEGO blocks. {STYLE}",
-    
-    14: f"Data pipeline example: A cheerful factory-style illustration showing data flowing through different processing stages - incoming transactions as colorful packages on a conveyor belt, AI workers processing them, and clean organized outputs. Shows transformation from raw data to insights. {STYLE}",
-    
-    15: f"AI debugging: A detective-style scene with a developer and AI assistant examining code with magnifying glasses, finding bugs (shown as cute little bug characters). The AI highlights errors with spotlights, and provides fixes shown as bandages or repairs. Problem-solving collaboration. {STYLE}",
-    
-    # Batch 4: Code Review, Testing & Documentation (Slides 16-20)
-    16: f"AI code review: A friendly AI reviewer character examining code on a screen with a clipboard, highlighting issues with gentle markers - security vulnerabilities shown as small warning signs, performance bottlenecks as speed bumps, and best practices shown as gold stars. {STYLE}",
-    
-    17: f"Security review example: A shield-wielding AI guardian protecting code from security threats. SQL injection attacks shown as blocked arrows, password vulnerabilities as locked treasure chests, and security fixes as protective barriers. Hero defending the codebase. {STYLE}",
-    
-    18: f"Test generation: An AI factory worker creating test cases like widgets on an assembly line. Each test is a colorful building block - happy path tests in green, edge cases in yellow, error cases in orange. 100% coverage shown as a complete puzzle. {STYLE}",
-    
-    19: f"Comprehensive testing: A pyramid of tests with AI helpers at each level - unit tests at the bottom as small building blocks, integration tests in the middle as connected pieces, and performance tests at the top as a stopwatch. All pieces fit together perfectly. {STYLE}",
-    
-    20: f"Documentation automation: An AI scribe character writing beautiful documentation in a magical book. Docstrings appear as organized scrolls, README files as welcoming signs, and API docs as helpful guidebooks. Everything well-organized and inviting. {STYLE}",
-    
-    # Batch 5: Business ROI & Implementation (Slides 21-27)
-    21: f"Documentation examples: Side-by-side comparison of before (blank or messy notes) and after (beautifully formatted documentation with clear structure). An AI character transforms chaos into order with a magic wand. Professional yet friendly documentation. {STYLE}",
-    
-    22: f"Business impact metrics: A dashboard showing upward trending graphs, happy developers, faster delivery trucks, and quality badges. KPIs displayed as achievement medals - velocity increase, quality improvement, satisfaction scores. Success visualization. {STYLE}",
-    
-    23: f"ROI calculation: A friendly calculator or spreadsheet character showing impressive ROI numbers. Dollar signs and percentage symbols float around. Small investment on one side, massive value on the other, balanced on a scale that tips heavily toward value. {STYLE}",
-    
-    24: f"Case studies montage: Four different company scenarios - a startup team high-fiving, a mid-size company dashboard showing growth, an enterprise migration scene, and a financial services modernization. Success stories from different perspectives. {STYLE}",
-    
-    25: f"Implementation roadmap: A three-phase journey map showing Pilot (small team testing), Measurement (collecting metrics with charts), and Rollout (full team adoption). Each phase has cheerful milestone markers and celebration moments. Clear path to success. {STYLE}",
-    
-    26: f"Hands-on exercises: Developers actively coding with AI assistance, screens showing live code generation, pair programming sessions, and practical challenges. Energetic learning environment with people engaged and enjoying the process. {STYLE}",
-    
-    27: f"Key takeaways and next steps: A checklist or roadmap with completed items marked with checkmarks, future goals with sparkles, and a graduate character holding a diploma. Resources, community connections, and continued learning paths illustrated. Inspiring conclusion. {STYLE}",
-}
+    # Create comprehensive image generation prompt
+    image_prompt = f"""Create a professional university presentation slide image with the following specifications:
 
-def generate_slide_image(slide_number: int, output_dir: Path):
-    """
-    Generate a slide image using OpenAI's DALL-E 3
+SLIDE CONTENT:
+{slide_content}
+
+DESIGN THEME: Playful academic cartoon + clean university style
+
+COLOR PALETTE:
+- Soft blues (primary)
+- Oranges (accents)
+- Greens (secondary)
+- White background with subtle texture
+
+TYPOGRAPHY:
+- Bold headers in rounded friendly font (like Montserrat or Poppins)
+- Body text in clean sans-serif (like Open Sans)
+- Title at top - large, bold, centered
+- Section headers clearly differentiated
+
+VISUAL STYLE:
+- Illustrated cartoon-style icons (simple, friendly, hand-drawn feel)
+- Simple diagrams where appropriate
+- Light shadows for depth
+- Subtle paper/canvas texture background
+- Clean layout with good spacing
+- Playful but professional
+- Icons should be colorful and engaging
+
+LAYOUT:
+- 16:9 aspect ratio landscape (1536x1024)
+- Title at top center
+- Content well-organized with clear hierarchy
+- Bullet points clean and readable
+- Good white space
+- Professional university quality
+
+REQUIREMENTS:
+- All text from content must be included and readable
+- Professional enough for graduate business school
+- Playful enough to be engaging and memorable
+- Cartoon-style illustrations but sophisticated
+- Clean, organized, easy to read at presentation size
+
+Style reference: Coursera, Khan Academy, or Duolingo - educational, friendly, professional
+"""
     
-    Args:
-        slide_number: The slide number to generate (1-27)
-        output_dir: Directory to save the image
-    """
-    if slide_number not in SLIDE_PROMPTS:
-        print(f"❌ Error: No prompt defined for slide {slide_number}")
-        print(f"Valid slide numbers: 1-27")
-        return False
-    
-    # Get API key
-    api_key = os.environ.get('OPENAI_API_KEY')
-    if not api_key:
-        print("❌ Error: OPENAI_API_KEY environment variable not set")
-        print("Run: export OPENAI_API_KEY='your-key-here'")
-        return False
-    
-    prompt = SLIDE_PROMPTS[slide_number]
-    
-    print(f"\n{'='*60}")
-    print(f"Generating Slide {slide_number}")
-    print(f"{'='*60}")
-    print(f"Prompt: {prompt[:100]}...")
-    print(f"Model: {MODEL}")
-    print(f"Size: {SIZE}")
-    print(f"Quality: {QUALITY}")
+    print(f"🎨 Generating slide {slide_number} with playful academic cartoon style...")
+    print("Using gpt-image-1 model")
+    print("\nDesign specs:")
+    print("  - Palette: Soft blues, oranges, greens")
+    print("  - Style: Playful academic cartoon")
+    print("  - Typography: Bold + rounded friendly")
+    print("  - Visuals: Illustrated icons, clean diagrams")
     print()
     
-    # Call OpenAI API
-    try:
-        response = requests.post(
-            'https://api.openai.com/v1/images/generations',
-            headers={
-                'Authorization': f'Bearer {api_key}',
-                'Content-Type': 'application/json'
-            },
-            json={
-                'model': MODEL,
-                'prompt': prompt,
-                'n': 1,
-                'size': SIZE,
-                'quality': QUALITY
-            },
-            timeout=60
-        )
-        
-        response.raise_for_status()
-        result = response.json()
-        
-        if 'data' not in result or len(result['data']) == 0:
-            print("❌ Error: No image data in response")
-            return False
-        
-        image_url = result['data'][0]['url']
-        print(f"✅ Image generated successfully")
-        print(f"URL: {image_url}")
-        
-        # Download image
-        print(f"Downloading image...")
-        img_response = requests.get(image_url, timeout=30)
-        img_response.raise_for_status()
-        
-        # Save image
-        output_dir.mkdir(parents=True, exist_ok=True)
-        image_path = output_dir / f"slide{slide_number:02d}.png"
-        
-        with open(image_path, 'wb') as f:
-            f.write(img_response.content)
-        
-        print(f"✅ Image saved to: {image_path}")
-        
-        # Save URL for reference
-        url_file = output_dir.parent / f"slide_{slide_number}_image_url.txt"
-        with open(url_file, 'w') as f:
-            f.write(f"Slide {slide_number}\n")
-            f.write(f"URL: {image_url}\n")
-            f.write(f"Prompt: {prompt}\n")
-        
-        print(f"✅ URL saved to: {url_file}")
-        
-        return True
-        
-    except requests.exceptions.RequestException as e:
-        print(f"❌ Error calling OpenAI API: {e}")
-        if hasattr(e, 'response') and e.response is not None:
-            print(f"Response: {e.response.text}")
-        return False
-    except Exception as e:
-        print(f"❌ Unexpected error: {e}")
-        return False
-
-def main():
-    if len(sys.argv) != 2:
-        print("Usage: python generate_any_slide.py <slide_number>")
-        print("Example: python generate_any_slide.py 1")
-        print(f"Valid slide numbers: 1-27")
-        sys.exit(1)
+    response = client.images.generate(
+        model="gpt-image-1",
+        prompt=image_prompt,
+        size="1536x1024",  # 16:9 landscape format
+        quality="high",
+        n=1
+    )
     
-    try:
-        slide_number = int(sys.argv[1])
-    except ValueError:
-        print(f"❌ Error: '{sys.argv[1]}' is not a valid number")
-        sys.exit(1)
+    print(f"✅ Image generated successfully!")
     
-    if slide_number < 1 or slide_number > 27:
-        print(f"❌ Error: Slide number must be between 1 and 27")
-        print(f"Week 6 has 27 slides total across 5 batches")
-        sys.exit(1)
+    # Save image
+    output_file = f'Class 6/slide_images/slide_{slide_number:03d}_final.png'
+    os.makedirs('Class 6/slide_images', exist_ok=True)
     
-    # Set up paths
-    script_dir = Path(__file__).parent
-    output_dir = script_dir / "slide_images"
+    print(f"\n📥 Saving image...")
     
-    # Generate image
-    success = generate_slide_image(slide_number, output_dir)
-    
-    if success:
-        print(f"\n{'='*60}")
-        print(f"✨ SUCCESS!")
-        print(f"{'='*60}")
-        print(f"Slide {slide_number} image generated and saved")
-        print(f"Location: {output_dir / f'slide{slide_number:02d}.png'}")
-        print()
-        sys.exit(0)
+    # Check if we have URL or b64_json
+    if hasattr(response.data[0], 'url') and response.data[0].url:
+        image_url = response.data[0].url
+        print(f"🖼️  URL: {image_url}")
+        subprocess.run(['curl', '-s', '-o', output_file, image_url], check=True)
+    elif hasattr(response.data[0], 'b64_json') and response.data[0].b64_json:
+        # Decode base64 image
+        image_data = base64.b64decode(response.data[0].b64_json)
+        with open(output_file, 'wb') as f:
+            f.write(image_data)
+        image_url = "Generated as base64 (no URL)"
     else:
-        print(f"\n{'='*60}")
-        print(f"❌ FAILED")
-        print(f"{'='*60}")
-        print(f"Could not generate image for slide {slide_number}")
-        print()
-        sys.exit(1)
+        raise ValueError("No image data in response")
+    
+    print(f"✅ Saved to: {output_file}")
+    
+    # Save reference
+    ref_file = f'Class 6/slide_{slide_number:03d}_image_url.txt'
+    with open(ref_file, 'w') as f:
+        f.write(f"Slide {slide_number} - Playful Academic Cartoon Style\n")
+        f.write(f"Model: gpt-image-1\n")
+        f.write(f"URL: {image_url}\n")
+        f.write(f"\nPrompt used:\n{image_prompt}\n")
+    
+    return output_file
 
 if __name__ == "__main__":
-    main()
+    print("="*80)
+    print("🎓 GENERIC SLIDE GENERATOR - Playful Academic Cartoon Style")
+    print("="*80)
+    
+    if not os.getenv('OPENAI_API_KEY'):
+        print("❌ Error: OPENAI_API_KEY not set")
+        exit(1)
+    
+    # Get slide number from command line or prompt
+    if len(sys.argv) > 1:
+        slide_number = int(sys.argv[1])
+    else:
+        slide_number = int(input("Enter slide number to generate: "))
+    
+    print(f"\n📝 Extracting content for slide {slide_number}...")
+    slide_content = extract_slide_content(slide_number)
+    
+    if not slide_content or len(slide_content) < 50:
+        print(f"❌ Could not extract content for slide {slide_number}")
+        print("Please check the markdown files")
+        exit(1)
+    
+    print(f"✅ Content extracted ({len(slide_content)} characters)")
+    
+    output_file = generate_slide_image(slide_number, slide_content)
+    
+    print("\n" + "="*80)
+    print(f"✨ Slide {slide_number} image generated!")
+    print(f"📄 File: {output_file}")
+    print("\n🎨 Design features:")
+    print("   - Playful academic cartoon style")
+    print("   - Soft blues, oranges, greens palette")
+    print("   - Bold headers + friendly rounded font")
+    print("   - Illustrated icons and diagrams")
+    print("   - Clean, professional university quality")
+    print(f"\n🚀 To generate another slide, run:")
+    print(f"   python Class6/generate_any_slide.py <slide_number>")
+    print(f"\nExample: python Class6/generate_any_slide.py 5")

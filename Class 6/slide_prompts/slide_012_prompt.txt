@@ -1,0 +1,96 @@
+Slide 12 - Playful Academic Cartoon Style
+
+SLIDE CONTENT:
+## Slide 12: ChatGPT/Claude for Complex Problems
+
+### When to Use Conversational AI vs IDE Tools
+
+**The Workflow Difference:**
+
+**GitHub Copilot:**
+- Real-time, in-IDE suggestions
+- Best for: writing code as you think
+- Context: current file and nearby files
+- Speed: instant
+- Workflow: type  see suggestion  accept/reject
+
+**ChatGPT/Claude:**
+- Conversational, web-based (or API)
+- Best for: complex problems, learning, architecture
+- Context: large codebases (Claude: 100K+ tokens)
+- Speed: 2-10 seconds per response
+- Workflow: describe problem  get solution  copy/paste  iterate
+
+**When to Use ChatGPT/Claude:**
+
+1. **Architectural Decisions**
+   - "What's the best database for a high-traffic analytics dashboard?"
+   - "Should I use microservices or monolith for this application?"
+
+2. **Learning New Technologies**
+   - "Explain how React hooks work with examples"
+   - "Teach me async/await in Python step by step"
+
+3. **Debugging Complex Issues**
+   - Paste error stack trace and get explanation
+   - "This code works in dev but fails in production. Why?"
+
+4. **Code Review & Optimization**
+   - Paste entire function/class for analysis
+   - "Review this code for security vulnerabilities"
+
+5. **Writing Complete Features**
+   - "Build a complete authentication system with JWT"
+   - "Create a data pipeline for processing CSV files"
+
+6. **Algorithm Design**
+   - "Design an algorithm to find the shortest path considering traffic"
+   - "How do I implement rate limiting efficiently?"
+
+---
+
+---
+
+IMAGE GENERATION PROMPT:
+
+Create a professional university presentation slide image with the following specifications:
+
+DESIGN THEME: Playful academic cartoon + clean university style
+
+COLOR PALETTE:
+- Soft blues (primary)
+- Oranges (accents)
+- Greens (secondary)
+- White background with subtle texture
+
+TYPOGRAPHY:
+- Bold headers in rounded friendly font (like Montserrat or Poppins)
+- Body text in clean sans-serif (like Open Sans)
+- Title at top - large, bold, centered
+- Section headers clearly differentiated
+
+VISUAL STYLE:
+- Illustrated cartoon-style icons (simple, friendly, hand-drawn feel)
+- Simple diagrams where appropriate
+- Light shadows for depth
+- Subtle paper/canvas texture background
+- Clean layout with good spacing
+- Playful but professional
+- Icons should be colorful and engaging
+
+LAYOUT:
+- 16:9 aspect ratio landscape (1536x1024)
+- Title at top center
+- Content well-organized with clear hierarchy
+- Bullet points clean and readable
+- Good white space
+- Professional university quality
+
+REQUIREMENTS:
+- All text from content must be included and readable
+- Professional enough for graduate business school
+- Playful enough to be engaging and memorable
+- Cartoon-style illustrations but sophisticated
+- Clean, organized, easy to read at presentation size
+
+Style reference: Coursera, Khan Academy, or Duolingo - educational, friendly, professional

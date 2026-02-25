@@ -27,6 +27,7 @@
 - GitHub Copilot
 - ChatGPT/Claude for coding
 - Amazon CodeWhisperer
+- Cline (AI coding agent in VS Code)
 - AI debugging and testing tools
 
 ---
@@ -404,6 +405,14 @@ Here's a recommended architecture for your e-commerce product catalog API:
 - Privacy-focused (local models available)
 - Free tier + Pro at $12/month
 
+**Cline:**
+- Autonomous AI coding agent for VS Code
+- Multi-step task execution
+- File creation, editing, and command execution
+- Integrates with Claude, GPT-4, and other LLMs
+- Free and open source
+- Best for: Complex multi-file tasks and autonomous coding
+
 **Cursor:**
 - AI-first code editor (fork of VS Code)
 - Built-in ChatGPT integration
@@ -436,6 +445,7 @@ Here's a recommended architecture for your e-commerce product catalog API:
 | **CodeWhisperer** | AWS development | Free-$19/mo | Good | Medium | Security scanning |
 | **ChatGPT** | Complex problems | $20/mo | None | Large | Best explanations |
 | **Claude** | Large codebases | $20/mo | None | Huge (100K+) | Largest context |
+| **Cline** | Autonomous tasks | Free | Excellent (VS Code) | Configurable | Multi-step agent |
 | **Tabnine** | Team collaboration | Free-$12/mo | Good | Small-Large | Team training |
 | **Cursor** | Integrated workflow | $20/mo | Built-in | Large | AI-first editor |
 | **Codeium** | Budget-conscious | Free | Good | Medium | Free alternative |
@@ -452,10 +462,11 @@ def recommend_tool(use_case):
         'aws_development': 'Amazon CodeWhisperer - AWS optimized',
         'learning': 'ChatGPT/Claude - best explanations',
         'architecture': 'Claude - huge context window',
-        'budget': 'Codeium - free alternative',
+        'autonomous_tasks': 'Cline - multi-step agent for complex tasks',
+        'budget': 'Codeium or Cline - free alternatives',
         'team_collaboration': 'Tabnine - trains on team code',
         'privacy_sensitive': 'Tabnine (local) - on-premise models',
-        'integrated_workflow': 'Cursor - AI-first editor'
+        'integrated_workflow': 'Cursor or Cline - AI-first editors'
     }
     
     return recommendations.get(use_case, 'Try GitHub Copilot first')
@@ -473,7 +484,8 @@ print(recommend_tool('learning'))
 Most effective developers use a combination:
 1. **GitHub Copilot** for day-to-day coding
 2. **ChatGPT/Claude** for complex problems and learning
-3. **CodeWhisperer** for AWS-specific tasks (if applicable)
+3. **Cline** for autonomous multi-file tasks and refactoring
+4. **CodeWhisperer** for AWS-specific tasks (if applicable)
 
 **ROI Comparison:**
 
@@ -482,10 +494,10 @@ Most effective developers use a combination:
 import pandas as pd
 
 tools = {
-    'Tool': ['Copilot', 'CodeWhisperer', 'ChatGPT', 'Claude', 'Cursor'],
-    'Monthly Cost': [10, 19, 20, 20, 20],
-    'Time Saved (hrs/month)': [20, 15, 10, 12, 18],
-    'Developer Rate ($/hr)': [75, 75, 75, 75, 75]
+    'Tool': ['Copilot', 'CodeWhisperer', 'ChatGPT', 'Claude', 'Cline', 'Cursor'],
+    'Monthly Cost': [10, 19, 20, 20, 0, 20],
+    'Time Saved (hrs/month)': [20, 15, 10, 12, 15, 18],
+    'Developer Rate ($/hr)': [75, 75, 75, 75, 75, 75]
 }
 
 df = pd.DataFrame(tools)
@@ -502,9 +514,11 @@ Output:
 1  CodeWhisperer         19          15           1125        5821%
 2     ChatGPT            20          10            750        3650%
 3      Claude            20          12            900        4400%
-4      Cursor            20          18           1350        6650%
+4       Cline             0          15           1125           ∞%
+5      Cursor            20          18           1350        6650%
 
 Conclusion: Even conservative estimates show massive ROI!
+Note: Cline is free, making it infinite ROI - limited only by API costs if using paid LLMs.
 """
 ```
 

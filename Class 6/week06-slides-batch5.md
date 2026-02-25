@@ -721,6 +721,7 @@ print(f"Savings: ${savings:,.0f}")
 2. **Provide tools**
    - GitHub Copilot subscriptions
    - ChatGPT Plus or Claude Pro
+   - Cline extension for VS Code (free)
    - Clear usage guidelines
 
 3. **Train the team**
@@ -835,6 +836,7 @@ Improvements:
 - GitHub Copilot (all developers)
 - ChatGPT Plus (for complex problems)
 - Claude Pro (for large codebase analysis)
+- Cline (autonomous agent for multi-file tasks)
 
 ## Best Practices
 
@@ -945,6 +947,7 @@ def send_email(to, subject, body):
 2. **Multiple Tools, Multiple Use Cases**
    - Copilot: Real-time coding assistance
    - ChatGPT/Claude: Complex problems, learning
+   - Cline: Autonomous multi-file refactoring
    - Specialized tools: Testing, documentation, review
 
 3. **Start Small, Scale Fast**
@@ -968,6 +971,7 @@ def send_email(to, subject, body):
 
 **This Week:**
 - [ ] Try GitHub Copilot (free 30-day trial)
+- [ ] Install and try Cline extension in VS Code
 - [ ] Use ChatGPT for one coding problem
 - [ ] Review code with AI assistance
 

@@ -982,21 +982,23 @@ Would you like me to generate the code for any of these files?
    - "What are the trade-offs?"
    - "Can you explain the time complexity?"
 
-**Comparison: Copilot Inline vs. Copilot Chat**
+**Comparison: Copilot Inline vs. Copilot Chat vs. Cline**
 
-| Feature | Inline Suggestions | Copilot Chat |
-|---------|-------------------|--------------|
-| **Speed** | Instant | 2-5 seconds |
-| **Context** | Current file | Entire codebase |
-| **Interaction** | Accept/reject | Conversational |
-| **Best for** | Code completion | Problem solving |
-| **Explanation** | No | Yes |
-| **Alternatives** | Limited | Multiple options |
+| Feature | Inline Suggestions | Copilot Chat | Cline Agent |
+|---------|-------------------|--------------|-------------|
+| **Speed** | Instant | 2-5 seconds | 10-60 seconds |
+| **Context** | Current file | Entire codebase | Full project |
+| **Interaction** | Accept/reject | Conversational | Task-based |
+| **Best for** | Code completion | Problem solving | Multi-file tasks |
+| **Explanation** | No | Yes | Yes |
+| **Alternatives** | Limited | Multiple options | Iterative |
+| **Autonomy** | None | None | High |
 
 **When to use each:**
 
 - **Inline:** Writing code, autocomplete, known patterns
 - **Chat:** Debugging, learning, architecture, complex problems
+- **Cline:** Refactoring across files, creating new features, automated tasks
 
 ---
 

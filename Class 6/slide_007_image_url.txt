@@ -1,0 +1,276 @@
+Slide 7 - Playful Academic Cartoon Style
+Model: gpt-image-1
+URL: Generated as base64 (no URL)
+
+Prompt used:
+Create a professional university presentation slide image with the following specifications:
+
+SLIDE CONTENT:
+## Slide 7: Effective Prompting for Code Generation
+
+### Writing Comments That Get Great Code
+
+**The Art of Copilot Prompting:**
+
+Just like with ChatGPT, the quality of your comments determines the quality of generated code.
+
+**Principle 1: Be Specific and Descriptive**
+
+ **Bad Comment:**
+```python
+# Make a function
+```
+
+ **Good Comment:**
+```python
+# Function to validate email address using regex pattern
+# Returns True if valid, False otherwise
+# Handles common email formats including subdomains
+
+def validate_email(email):
+    import re
+    pattern = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
+    return re.match(pattern, email) is not None
+```
+
+**Principle 2: Include Input/Output Specifications**
+
+ **Bad Comment:**
+```python
+# Process data
+```
+
+ **Good Comment:**
+```python
+# Function to process sales data
+# Input: List of dictionaries with keys: 'date', 'product', 'quantity', 'price'
+# Output: Dictionary with total revenue, average order value, and top products
+# Example: [{'date': '2024-01-01', 'product': 'Widget', 'quantity': 5, 'price': 10.99}]
+
+def process_sales_data(sales_records):
+    from collections import defaultdict
+    
+    total_revenue = sum(record['quantity'] * record['price'] for record in sales_records)
+    avg_order_value = total_revenue / len(sales_records) if sales_records else 0
+    
+    product_sales = defaultdict(float)
+    for record in sales_records:
+        product_sales[record['product']] += record['quantity'] * record['price']
+    
+    top_products = sorted(product_sales.items(), key=lambda x: x[1], reverse=True)[:5]
+    
+    return {
+        'total_revenue': total_revenue,
+        'average_order_value': avg_order_value,
+        'top_products': top_products
+    }
+```
+
+**Principle 3: Specify Error Handling**
+
+ **Good Comment:**
+```python
+# Function to read JSON file and return parsed data
+# Handles FileNotFoundError and JSONDecodeError
+# Returns None if file doesn't exist or is invalid
+# Logs errors to console
+
+def read_json_file(filepath):
+    import json
+    import logging
+    
+    try:
+        with open(filepath, 'r') as f:
+            return json.load(f)
+    except FileNotFoundError:
+        logging.error(f"File not found: {filepath}")
+        return None
+    except json.JSONDecodeError as e:
+        logging.error(f"Invalid JSON in {filepath}: {e}")
+        return None
+```
+
+**Principle 4: Include Examples in Comments**
+
+ **Great Comment with Examples:**
+```python
+# Function to convert snake_case to camelCase
+# Examples:
+#   convert_to_camel_case('hello_world') -> 'helloWorld'
+#   convert_to_camel_case('user_first_name') -> 'userFirstName'
+#   convert_to_camel_case('api_key_value') -> 'apiKeyValue'
+
+def convert_to_camel_case(snake_str):
+    components = snake_str.split('_')
+    return components[0] + ''.join(x.title() for x in components[1:])
+```
+
+**Principle 5: Context from Existing Code**
+
+Copilot learns from your codebase. Start a pattern and it follows:
+
+```python
+# Establish a pattern first
+class UserRepository:
+    def get_by_id(self, user_id):
+        return self.db.query(User).filter(User.id == user_id).first()
+    
+    def get_by_email(self, email):
+        return self.db.query(User).filter(User.email == email).first()
+
+# Now Copilot understands your pattern - just start typing:
+class ProductRepository:
+    def get_by_id(self, product_id):
+        # Copilot will suggest similar pattern
+        return self.db.query(Product).filter(Product.id == product_id).first()
+    
+    def get_by_sku(self, sku):
+        # Copilot continues the pattern
+        return self.db.query(Product).filter(Product.sku == sku).first()
+```
+
+**Prompting Strategy: The 4-Part Comment**
+
+```python
+# 1. What: Clear function purpose
+# 2. Input: Expected parameters and types
+# 3. Output: Return value and type
+# 4. Special: Edge cases, errors, or important notes
+
+# Calculate monthly payment for a loan (amortization formula)
+# Input: principal (float), annual_rate (float, as decimal), years (int)
+# Output: monthly_payment (float, rounded to 2 decimals)
+# Handles zero interest rate case, validates inputs
+
+def calculate_monthly_payment(principal, annual_rate, years):
+    if principal <= 0 or years <= 0:
+        raise ValueError("Principal and years must be positive")
+    
+    if annual_rate == 0:
+        return round(principal / (years * 12), 2)
+    
+    monthly_rate = annual_rate / 12
+    num_payments = years * 12
+    
+    monthly_payment = principal * (monthly_rate * (1 + monthly_rate)**num_payments) / \
+                     ((1 + monthly_rate)**num_payments - 1)
+    
+    return round(monthly_payment, 2)
+```
+
+**Advanced: Multi-Function Prompting**
+
+```python
+# Create a complete data validation module for user registration
+# Include functions for: email validation, password strength, phone number format
+# Use regex patterns and return detailed error messages
+
+# Email validation function
+def validate_email(email):
+    import re
+    if not email or not isinstance(email, str):
+        return False, "Email must be a non-empty string"
+    
+    pattern = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
+    if re.match(pattern, email):
+        return True, "Valid email"
+    return False, "Invalid email format"
+
+# Password strength validation (min 8 chars, 1 upper, 1 lower, 1 digit, 1 special)
+def validate_password(password):
+    import re
+    if not password or len(password) < 8:
+        return False, "Password must be at least 8 characters"
+    
+    if not re.search(r'[A-Z]', password):
+        return False, "Password must contain uppercase letter"
+    if not re.search(r'[a-z]', password):
+        return False, "Password must contain lowercase letter"
+    if not re.search(r'\d', password):
+        return False, "Password must contain digit"
+    if not re.search(r'[!@#$%^&*(),.?":{}|<>]', password):
+        return False, "Password must contain special character"
+    
+    return True, "Valid password"
+
+# Phone number validation (US format)
+def validate_phone(phone):
+    import re
+    # Clean the input
+    cleaned = re.sub(r'\D', '', phone)
+    
+    if len(cleaned) != 10:
+        return False, "Phone number must be 10 digits"
+    
+    pattern = r'^\d{3}\d{3}\d{4}$'
+    if re.match(pattern, cleaned):
+        return True, "Valid phone number"
+    return False, "Invalid phone number format"
+```
+
+**Prompting Patterns Cheat Sheet:**
+
+```python
+# Pattern 1: Algorithm Implementation
+# "Implement [algorithm name] using [approach]"
+# Implement binary search using recursive approach
+
+# Pattern 2: Data Processing
+# "Function to transform [input format] to [output format]"
+# Function to transform CSV data to JSON format
+
+# Pattern 3: API Integration
+# "Function to call [API name] and [specific operation]"
+# Function to call Stripe API and create a payment intent
+
+# Pattern 4: Database Operations
+# "Function to [CRUD operation] [entity] with [conditions]"
+# Function to query users with pagination and filtering
+
+# Pattern 5: Error Handling
+# "Function to [operation] with error handling for [specific errors]"
+# Function to parse XML with error handling for malformed data
+```
+
+---
+
+DESIGN THEME: Playful academic cartoon + clean university style
+
+COLOR PALETTE:
+- Soft blues (primary)
+- Oranges (accents)
+- Greens (secondary)
+- White background with subtle texture
+
+TYPOGRAPHY:
+- Bold headers in rounded friendly font (like Montserrat or Poppins)
+- Body text in clean sans-serif (like Open Sans)
+- Title at top - large, bold, centered
+- Section headers clearly differentiated
+
+VISUAL STYLE:
+- Illustrated cartoon-style icons (simple, friendly, hand-drawn feel)
+- Simple diagrams where appropriate
+- Light shadows for depth
+- Subtle paper/canvas texture background
+- Clean layout with good spacing
+- Playful but professional
+- Icons should be colorful and engaging
+
+LAYOUT:
+- 16:9 aspect ratio landscape (1536x1024)
+- Title at top center
+- Content well-organized with clear hierarchy
+- Bullet points clean and readable
+- Good white space
+- Professional university quality
+
+REQUIREMENTS:
+- All text from content must be included and readable
+- Professional enough for graduate business school
+- Playful enough to be engaging and memorable
+- Cartoon-style illustrations but sophisticated
+- Clean, organized, easy to read at presentation size
+
+Style reference: Coursera, Khan Academy, or Duolingo - educational, friendly, professional
+

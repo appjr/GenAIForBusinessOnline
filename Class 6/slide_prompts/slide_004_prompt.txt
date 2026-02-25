@@ -1,0 +1,133 @@
+Slide 4 - Playful Academic Cartoon Style
+
+SLIDE CONTENT:
+## Slide 4: The Evolution of Coding Assistance
+
+### From Autocomplete to AI Pair Programming
+
+**Historical Timeline:**
+
+**1. Early IDEs (1990s-2000s)**
+- Syntax highlighting
+- Basic autocomplete (variable names, keywords)
+- Manual code templates
+- No intelligence, just text matching
+- Example: Eclipse, Visual Studio
+
+**2. IntelliSense & Smart Completion (2000s-2010s)**
+- Context-aware suggestions
+- API documentation integration
+- Type inference
+- Static analysis
+- Still rule-based, not learning
+
+**3. Language Servers & Advanced Analysis (2010s)**
+- Deep code understanding
+- Refactoring suggestions
+- Error detection before compilation
+- Jump to definition, find references
+- Example: Language Server Protocol (LSP)
+
+**4. Machine Learning-Based Tools (2015-2020)**
+- Pattern recognition from large codebases
+- Smarter autocomplete
+- Code smell detection
+- Limited to simple suggestions
+- Example: TabNine (early versions), Kite
+
+**5. AI Pair Programming (2020-Present)**
+- **GitHub Copilot (2021):** Revolutionary change
+- **ChatGPT for Code (2022):** Natural language  Code
+- **GPT-4 & Claude (2023):** Complex reasoning
+- **Specialized Tools (2024+):** Domain-specific AI
+
+**The Paradigm Shift:**
+
+```
+Traditional Coding:
+Developer  Writes every line  Code  Debug  Test
+
+AI-Assisted Coding:
+Developer  Describes intent  AI generates code  Developer reviews  Test
+         
+     50-80% faster for many tasks
+```
+
+**Key Statistics:**
+
+| Metric | Without AI | With AI | Improvement |
+|--------|-----------|---------|-------------|
+| **Code completion time** | 100% | 46% | 54% faster |
+| **New API learning** | 2-3 days | 2-3 hours | 90% faster |
+| **Boilerplate code** | Manual | Automated | 95% faster |
+| **Documentation** | Often skipped | Auto-generated |  improvement |
+| **Bug fix time** | Varies | 30% faster | Average |
+
+**Source:** GitHub Copilot research (2023), McKinsey Developer Survey
+
+**Business Impact:**
+```python
+# Calculate productivity gain
+developers = 50
+avg_salary = 120000
+hours_per_year = 2000
+time_saved_percent = 0.30  # Conservative estimate
+
+annual_value = developers * avg_salary * time_saved_percent
+print(f"Annual value: ${annual_value:,}")
+# Output: Annual value: $1,800,000
+
+# Cost of tools
+copilot_cost = 10 * 12 * developers  # $10/month per developer
+roi = (annual_value - copilot_cost) / copilot_cost * 100
+print(f"ROI: {roi:.0f}%")
+# Output: ROI: 2,900%
+```
+
+---
+
+---
+
+IMAGE GENERATION PROMPT:
+
+Create a professional university presentation slide image with the following specifications:
+
+DESIGN THEME: Playful academic cartoon + clean university style
+
+COLOR PALETTE:
+- Soft blues (primary)
+- Oranges (accents)
+- Greens (secondary)
+- White background with subtle texture
+
+TYPOGRAPHY:
+- Bold headers in rounded friendly font (like Montserrat or Poppins)
+- Body text in clean sans-serif (like Open Sans)
+- Title at top - large, bold, centered
+- Section headers clearly differentiated
+
+VISUAL STYLE:
+- Illustrated cartoon-style icons (simple, friendly, hand-drawn feel)
+- Simple diagrams where appropriate
+- Light shadows for depth
+- Subtle paper/canvas texture background
+- Clean layout with good spacing
+- Playful but professional
+- Icons should be colorful and engaging
+
+LAYOUT:
+- 16:9 aspect ratio landscape (1536x1024)
+- Title at top center
+- Content well-organized with clear hierarchy
+- Bullet points clean and readable
+- Good white space
+- Professional university quality
+
+REQUIREMENTS:
+- All text from content must be included and readable
+- Professional enough for graduate business school
+- Playful enough to be engaging and memorable
+- Cartoon-style illustrations but sophisticated
+- Clean, organized, easy to read at presentation size
+
+Style reference: Coursera, Khan Academy, or Duolingo - educational, friendly, professional

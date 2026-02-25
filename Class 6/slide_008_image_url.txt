@@ -1,0 +1,343 @@
+Slide 8 - Playful Academic Cartoon Style
+Model: gpt-image-1
+URL: Generated as base64 (no URL)
+
+Prompt used:
+Create a professional university presentation slide image with the following specifications:
+
+SLIDE CONTENT:
+## Slide 8: Real-World Code Generation Examples
+
+### Practical Business Use Cases
+
+**Example 1: Data Analysis Function**
+
+**Scenario:** CFO needs sales trend analysis
+
+```python
+# Function to analyze monthly sales trends
+# Input: DataFrame with columns: date, product_id, quantity, revenue
+# Output: Dictionary with growth rates, seasonal patterns, top products
+# Include month-over-month and year-over-year comparisons
+
+import pandas as pd
+import numpy as np
+
+def analyze_sales_trends(df):
+    # Ensure date column is datetime
+    df['date'] = pd.to_datetime(df['date'])
+    df['month'] = df['date'].dt.to_period('M')
+    
+    # Monthly aggregation
+    monthly_sales = df.groupby('month').agg({
+        'revenue': 'sum',
+        'quantity': 'sum'
+    }).reset_index()
+    
+    # Month-over-month growth
+    monthly_sales['mom_growth'] = monthly_sales['revenue'].pct_change() * 100
+    
+    # Year-over-year growth (if data spans multiple years)
+    monthly_sales['year'] = monthly_sales['month'].dt.year
+    monthly_sales['month_num'] = monthly_sales['month'].dt.month
+    
+    # Top products
+    product_revenue = df.groupby('product_id')['revenue'].sum().sort_values(ascending=False)
+    top_products = product_revenue.head(10).to_dict()
+    
+    # Seasonal analysis (average revenue by month across all years)
+    seasonal = df.copy()
+    seasonal['month_num'] = seasonal['date'].dt.month
+    seasonal_pattern = seasonal.groupby('month_num')['revenue'].mean().to_dict()
+    
+    return {
+        'monthly_sales': monthly_sales.to_dict('records'),
+        'average_mom_growth': monthly_sales['mom_growth'].mean(),
+        'top_products': top_products,
+        'seasonal_pattern': seasonal_pattern,
+        'total_revenue': df['revenue'].sum(),
+        'total_quantity': df['quantity'].sum()
+    }
+
+# Example usage:
+# df = pd.read_csv('sales_data.csv')
+# results = analyze_sales_trends(df)
+# print(f"Average MoM Growth: {results['average_mom_growth']:.2f}%")
+```
+
+**Example 2: API Client with Error Handling**
+
+**Scenario:** Need to integrate with CRM API
+
+```python
+# Create a CRM API client class
+# Features: authentication, rate limiting, retry logic, error handling
+# Methods: get_customer, update_customer, create_order
+# Use requests library with exponential backoff
+
+import requests
+import time
+from typing import Dict, Optional
+from functools import wraps
+
+class CRMAPIClient:
+    def __init__(self, api_key: str, base_url: str, max_retries: int = 3):
+        self.api_key = api_key
+        self.base_url = base_url.rstrip('/')
+        self.max_retries = max_retries
+        self.session = requests.Session()
+        self.session.headers.update({
+            'Authorization': f'Bearer {api_key}',
+            'Content-Type': 'application/json'
+        })
+    
+    def _retry_with_backoff(self, func):
+        """Decorator for exponential backoff retry logic"""
+        @wraps(func)
+        def wrapper(*args, **kwargs):
+            for attempt in range(self.max_retries):
+                try:
+                    response = func(*args, **kwargs)
+                    response.raise_for_status()
+                    return response.json()
+                except requests.exceptions.RequestException as e:
+                    if attempt == self.max_retries - 1:
+                        raise
+                    wait_time = 2 ** attempt  # Exponential backoff
+                    time.sleep(wait_time)
+            return None
+        return wrapper
+    
+    @_retry_with_backoff
+    def get_customer(self, customer_id: str) -> Optional[Dict]:
+        """Retrieve customer details by ID"""
+        url = f"{self.base_url}/customers/{customer_id}"
+        return self.session.get(url)
+    
+    @_retry_with_backoff
+    def update_customer(self, customer_id: str, data: Dict) -> Optional[Dict]:
+        """Update customer information"""
+        url = f"{self.base_url}/customers/{customer_id}"
+        return self.session.put(url, json=data)
+    
+    @_retry_with_backoff
+    def create_order(self, customer_id: str, order_data: Dict) -> Optional[Dict]:
+        """Create new order for customer"""
+        url = f"{self.base_url}/orders"
+        order_data['customer_id'] = customer_id
+        return self.session.post(url, json=order_data)
+    
+    def close(self):
+        """Close the session"""
+        self.session.close()
+
+# Usage example:
+# client = CRMAPIClient(api_key="your_key", base_url="https://api.crm.com/v1")
+# customer = client.get_customer("CUST123")
+# print(customer)
+```
+
+**Example 3: Automated Report Generator**
+
+**Scenario:** Weekly executive dashboard
+
+```python
+# Function to generate executive sales report
+# Input: sales data, date range, format (PDF or HTML)
+# Output: formatted report with charts and key metrics
+# Include: revenue, growth, top customers, regional breakdown
+
+import pandas as pd
+import matplotlib.pyplot as plt
+from datetime import datetime, timedelta
+import io
+import base64
+
+def generate_executive_report(sales_df, start_date, end_date, format='html'):
+    """
+    Generate executive sales report with visualizations
+    """
+    # Filter data for date range
+    mask = (sales_df['date'] >= start_date) & (sales_df['date'] <= end_date)
+    df = sales_df[mask].copy()
+    
+    # Calculate key metrics
+    total_revenue = df['revenue'].sum()
+    total_orders = len(df)
+    avg_order_value = total_revenue / total_orders if total_orders > 0 else 0
+    
+    # Previous period comparison
+    period_days = (end_date - start_date).days
+    prev_start = start_date - timedelta(days=period_days)
+    prev_mask = (sales_df['date'] >= prev_start) & (sales_df['date'] < start_date)
+    prev_revenue = sales_df[prev_mask]['revenue'].sum()
+    growth_rate = ((total_revenue - prev_revenue) / prev_revenue * 100) if prev_revenue > 0 else 0
+    
+    # Top customers
+    top_customers = df.groupby('customer_id')['revenue'].sum().sort_values(ascending=False).head(5)
+    
+    # Regional breakdown
+    regional_sales = df.groupby('region')['revenue'].sum().sort_values(ascending=False)
+    
+    # Create visualization
+    fig, axes = plt.subplots(2, 2, figsize=(12, 10))
+    fig.suptitle(f'Executive Sales Report: {start_date} to {end_date}', fontsize=16)
+    
+    # Daily revenue trend
+    daily_revenue = df.groupby('date')['revenue'].sum()
+    axes[0, 0].plot(daily_revenue.index, daily_revenue.values)
+    axes[0, 0].set_title('Daily Revenue Trend')
+    axes[0, 0].set_xlabel('Date')
+    axes[0, 0].set_ylabel('Revenue ($)')
+    
+    # Top customers
+    axes[0, 1].barh(range(len(top_customers)), top_customers.values)
+    axes[0, 1].set_yticks(range(len(top_customers)))
+    axes[0, 1].set_yticklabels(top_customers.index)
+    axes[0, 1].set_title('Top 5 Customers')
+    axes[0, 1].set_xlabel('Revenue ($)')
+    
+    # Regional breakdown
+    axes[1, 0].pie(regional_sales.values, labels=regional_sales.index, autopct='%1.1f%%')
+    axes[1, 0].set_title('Revenue by Region')
+    
+    # Key metrics table
+    axes[1, 1].axis('off')
+    metrics_text = f"""
+    KEY METRICS
+    
+    Total Revenue: ${total_revenue:,.2f}
+    Total Orders: {total_orders:,}
+    Avg Order Value: ${avg_order_value:,.2f}
+    
+    Growth vs Previous Period: {growth_rate:+.1f}%
+    
+    Top Region: {regional_sales.index[0]}
+    ({regional_sales.values[0]/total_revenue*100:.1f}% of revenue)
+    """
+    axes[1, 1].text(0.1, 0.5, metrics_text, fontsize=12, verticalalignment='center',
+                     family='monospace', bbox=dict(boxstyle='round', facecolor='wheat', alpha=0.5))
+    
+    plt.tight_layout()
+    
+    # Return based on format
+    if format == 'html':
+        # Convert plot to base64 image
+        img_buffer = io.BytesIO()
+        plt.savefig(img_buffer, format='png', dpi=100, bbox_inches='tight')
+        img_buffer.seek(0)
+        img_base64 = base64.b64encode(img_buffer.read()).decode()
+        
+        html = f"""
+        <html>
+        <head><title>Executive Sales Report</title></head>
+        <body>
+            <h1>Executive Sales Report</h1>
+            <p>Period: {start_date} to {end_date}</p>
+            <img src="data:image/png;base64,{img_base64}" />
+        </body>
+        </html>
+        """
+        return html
+    else:
+        # Save as file
+        filename = f"executive_report_{start_date}_{end_date}.png"
+        plt.savefig(filename, dpi=300, bbox_inches='tight')
+        return filename
+
+# Usage:
+# df = pd.read_csv('sales_data.csv')
+# df['date'] = pd.to_datetime(df['date'])
+# report = generate_executive_report(df, datetime(2024, 1, 1), datetime(2024, 1, 31))
+```
+
+**Example 4: Automated Testing**
+
+**Scenario:** Need unit tests for validation functions
+
+```python
+# Write unit tests for the email validation function
+# Include tests for: valid emails, invalid formats, edge cases
+# Use pytest framework with parametrize for multiple test cases
+
+import pytest
+from validation import validate_email
+
+class TestEmailValidation:
+    @pytest.mark.parametrize("email,expected", [
+        ("user@example.com", (True, "Valid email")),
+        ("john.doe@company.co.uk", (True, "Valid email")),
+        ("test+tag@domain.org", (True, "Valid email")),
+        ("invalid.email", (False, "Invalid email format")),
+        ("@example.com", (False, "Invalid email format")),
+        ("user@", (False, "Invalid email format")),
+        ("", (False, "Email must be a non-empty string")),
+        (None, (False, "Email must be a non-empty string")),
+        ("user@.com", (False, "Invalid email format")),
+        ("user name@example.com", (False, "Invalid email format")),
+    ])
+    def test_email_validation(self, email, expected):
+        """Test email validation with various inputs"""
+        assert validate_email(email) == expected
+    
+    def test_email_with_subdomain(self):
+        """Test email with multiple subdomains"""
+        result = validate_email("user@mail.company.example.com")
+        assert result[0] is True
+    
+    def test_email_case_insensitive(self):
+        """Email validation should work regardless of case"""
+        assert validate_email("User@Example.COM")[0] is True
+    
+    def test_email_max_length(self):
+        """Test very long email addresses"""
+        long_email = "a" * 64 + "@" + "b" * 63 + ".com"
+        assert validate_email(long_email)[0] is True
+
+# Run tests with: pytest test_validation.py -v
+```
+
+**Time Saved: Copilot generated these 4 complete examples in under 2 minutes!**
+
+---
+
+DESIGN THEME: Playful academic cartoon + clean university style
+
+COLOR PALETTE:
+- Soft blues (primary)
+- Oranges (accents)
+- Greens (secondary)
+- White background with subtle texture
+
+TYPOGRAPHY:
+- Bold headers in rounded friendly font (like Montserrat or Poppins)
+- Body text in clean sans-serif (like Open Sans)
+- Title at top - large, bold, centered
+- Section headers clearly differentiated
+
+VISUAL STYLE:
+- Illustrated cartoon-style icons (simple, friendly, hand-drawn feel)
+- Simple diagrams where appropriate
+- Light shadows for depth
+- Subtle paper/canvas texture background
+- Clean layout with good spacing
+- Playful but professional
+- Icons should be colorful and engaging
+
+LAYOUT:
+- 16:9 aspect ratio landscape (1536x1024)
+- Title at top center
+- Content well-organized with clear hierarchy
+- Bullet points clean and readable
+- Good white space
+- Professional university quality
+
+REQUIREMENTS:
+- All text from content must be included and readable
+- Professional enough for graduate business school
+- Playful enough to be engaging and memorable
+- Cartoon-style illustrations but sophisticated
+- Clean, organized, easy to read at presentation size
+
+Style reference: Coursera, Khan Academy, or Duolingo - educational, friendly, professional
+

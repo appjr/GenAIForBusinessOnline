@@ -1,0 +1,308 @@
+Slide 19 - Playful Academic Cartoon Style
+Model: gpt-image-1
+URL: Generated as base64 (no URL)
+
+Prompt used:
+Create a professional university presentation slide image with the following specifications:
+
+SLIDE CONTENT:
+## Slide 19: Test Generation Examples
+
+### From Code to Complete Test Suite
+
+**Example 1: Unit Test Generation**
+
+**Original Function:**
+```python
+def calculate_discount(price: float, discount_percent: float, customer_tier: str) -> float:
+    """
+    Calculate final price after discount and tier bonus.
+    
+    Args:
+        price: Original price
+        discount_percent: Discount percentage (0-100)
+        customer_tier: 'bronze', 'silver', 'gold', 'platinum'
+    
+    Returns:
+        Final price after all discounts
+    """
+    if price < 0:
+        raise ValueError("Price cannot be negative")
+    
+    if not 0 <= discount_percent <= 100:
+        raise ValueError("Discount must be between 0 and 100")
+    
+    # Apply base discount
+    discounted = price * (1 - discount_percent / 100)
+    
+    # Apply tier bonus
+    tier_bonuses = {
+        'bronze': 0.00,
+        'silver': 0.05,
+        'gold': 0.10,
+        'platinum': 0.15
+    }
+    
+    tier_bonus = tier_bonuses.get(customer_tier.lower(), 0)
+    final_price = discounted * (1 - tier_bonus)
+    
+    return round(final_price, 2)
+```
+
+**Prompt to ChatGPT:**
+```
+Generate comprehensive pytest tests for the calculate_discount function above.
+Include:
+- Happy path tests
+- Edge cases
+- Error cases
+- Parametrized tests for efficiency
+- Test fixtures if needed
+```
+
+**Generated Tests:**
+
+```python
+import pytest
+from decimal import Decimal
+from discount import calculate_discount
+
+class TestCalculateDiscount:
+    """Comprehensive test suite for calculate_discount function"""
+    
+    # Happy path tests
+    def test_no_discount_bronze(self):
+        """Test with no discount and bronze tier"""
+        assert calculate_discount(100, 0, 'bronze') == 100.00
+    
+    def test_basic_discount_no_tier_bonus(self):
+        """Test 10% discount with bronze tier (no bonus)"""
+        assert calculate_discount(100, 10, 'bronze') == 90.00
+    
+    def test_discount_with_silver_tier(self):
+        """Test 20% discount with silver tier (5% bonus)"""
+        # 100 * 0.8 = 80, then 80 * 0.95 = 76
+        assert calculate_discount(100, 20, 'silver') == 76.00
+    
+    def test_discount_with_gold_tier(self):
+        """Test 15% discount with gold tier (10% bonus)"""
+        # 100 * 0.85 = 85, then 85 * 0.90 = 76.5
+        assert calculate_discount(100, 15, 'gold') == 76.50
+    
+    def test_discount_with_platinum_tier(self):
+        """Test 25% discount with platinum tier (15% bonus)"""
+        # 100 * 0.75 = 75, then 75 * 0.85 = 63.75
+        assert calculate_discount(100, 25, 'platinum') == 63.75
+    
+    # Parametrized tests for multiple scenarios
+    @pytest.mark.parametrize("price,discount,tier,expected", [
+        (100, 0, 'bronze', 100.00),
+        (100, 10, 'bronze', 90.00),
+        (100, 20, 'silver', 76.00),
+        (100, 15, 'gold', 76.50),
+        (100, 25, 'platinum', 63.75),
+        (50, 50, 'bronze', 25.00),
+        (200, 10, 'silver', 171.00),
+        (1000, 5, 'platinum', 807.50),
+    ])
+    def test_various_combinations(self, price, discount, tier, expected):
+        """Test various price, discount, and tier combinations"""
+        assert calculate_discount(price, discount, tier) == expected
+    
+    # Edge cases
+    def test_zero_price(self):
+        """Test with zero price"""
+        assert calculate_discount(0, 10, 'bronze') == 0.00
+    
+    def test_100_percent_discount(self):
+        """Test with 100% discount"""
+        assert calculate_discount(100, 100, 'bronze') == 0.00
+    
+    def test_zero_percent_discount(self):
+        """Test with 0% discount"""
+        assert calculate_discount(100, 0, 'platinum') == 85.00
+    
+    def test_very_small_price(self):
+        """Test with very small price"""
+        assert calculate_discount(0.01, 10, 'bronze') == 0.01
+    
+    def test_very_large_price(self):
+        """Test with very large price"""
+        result = calculate_discount(1000000, 10, 'gold')
+        assert result == 810000.00
+    
+    def test_case_insensitive_tier(self):
+        """Test that tier names are case-insensitive"""
+        assert calculate_discount(100, 10, 'GOLD') == calculate_discount(100, 10, 'gold')
+        assert calculate_discount(100, 10, 'Silver') == calculate_discount(100, 10, 'silver')
+    
+    def test_unknown_tier_defaults_to_no_bonus(self):
+        """Test that unknown tier defaults to no bonus"""
+        assert calculate_discount(100, 10, 'unknown') == 90.00
+        assert calculate_discount(100, 10, 'diamond') == 90.00
+    
+    # Error cases
+    def test_negative_price_raises_error(self):
+        """Test that negative price raises ValueError"""
+        with pytest.raises(ValueError, match="Price cannot be negative"):
+            calculate_discount(-10, 10, 'bronze')
+    
+    def test_discount_below_zero_raises_error(self):
+        """Test that discount < 0 raises ValueError"""
+        with pytest.raises(ValueError, match="Discount must be between 0 and 100"):
+            calculate_discount(100, -5, 'bronze')
+    
+    def test_discount_above_100_raises_error(self):
+        """Test that discount > 100 raises ValueError"""
+        with pytest.raises(ValueError, match="Discount must be between 0 and 100"):
+            calculate_discount(100, 150, 'bronze')
+    
+    # Boundary tests
+    @pytest.mark.parametrize("discount", [0, 1, 99, 100])
+    def test_discount_boundaries(self, discount):
+        """Test discount at boundaries"""
+        result = calculate_discount(100, discount, 'bronze')
+        assert isinstance(result, float)
+        assert result >= 0
+    
+    # Precision tests
+    def test_rounding_precision(self):
+        """Test that result is rounded to 2 decimal places"""
+        result = calculate_discount(99.99, 33.33, 'bronze')
+        # Should have exactly 2 decimal places
+        assert len(str(result).split('.')[-1]) <= 2
+    
+    def test_multiple_decimal_precision(self):
+        """Test calculations that result in many decimals"""
+        result = calculate_discount(33.33, 33.33, 'silver')
+        assert isinstance(result, float)
+        assert result == 21.11  # Verify rounding works correctly
+
+# Fixtures for integration tests
+@pytest.fixture
+def standard_prices():
+    """Fixture providing standard test prices"""
+    return [10, 50, 100, 500, 1000]
+
+@pytest.fixture
+def all_tiers():
+    """Fixture providing all tier levels"""
+    return ['bronze', 'silver', 'gold', 'platinum']
+
+class TestDiscountIntegration:
+    """Integration tests using fixtures"""
+    
+    def test_all_tiers_with_standard_prices(self, standard_prices, all_tiers):
+        """Test all tier combinations with standard prices"""
+        for price in standard_prices:
+            for tier in all_tiers:
+                result = calculate_discount(price, 10, tier)
+                assert result > 0
+                assert result <= price
+
+# Performance tests
+def test_performance_with_many_calls():
+    """Test that function performs well with many calls"""
+    import time
+    
+    start = time.time()
+    for _ in range(10000):
+        calculate_discount(100, 10, 'gold')
+    duration = time.time() - start
+    
+    # Should complete 10,000 calls in under 1 second
+    assert duration < 1.0, f"Performance issue: took {duration} seconds"
+
+# Documentation tests (pytest-doctests)
+def test_function_has_docstring():
+    """Verify function has documentation"""
+    assert calculate_discount.__doc__ is not None
+    assert len(calculate_discount.__doc__) > 50
+
+# Run with: pytest -v test_discount.py
+# Coverage: pytest --cov=discount test_discount.py
+# Verbose: pytest -v -s test_discount.py
+```
+
+**Test Coverage Analysis:**
+
+```bash
+# Running the tests:
+$ pytest test_discount.py -v --cov=discount
+
+======================== test session starts =========================
+collected 35 items
+
+test_discount.py::TestCalculateDiscount::test_no_discount_bronze PASSED
+test_discount.py::TestCalculateDiscount::test_basic_discount_no_tier_bonus PASSED
+test_discount.py::TestCalculateDiscount::test_discount_with_silver_tier PASSED
+...
+test_discount.py::test_performance_with_many_calls PASSED
+
+======================== 35 passed in 0.15s ==========================
+
+---------- coverage: platform darwin, python 3.10 -----------
+Name           Stmts   Miss  Cover
+----------------------------------
+discount.py       15      0   100%
+----------------------------------
+TOTAL             15      0   100%
+```
+
+**What AI Generated:**
+
+ 35 comprehensive tests  
+ 100% code coverage  
+ Happy path, edge cases, errors  
+ Parametrized tests for efficiency  
+ Integration tests with fixtures  
+ Performance tests  
+ Documentation checks  
+
+**Time Saved:**
+- Manual: 2-3 hours to write these tests
+- With AI: 30 seconds + 10 minutes review
+- **Productivity gain: ~90%**
+
+---
+
+DESIGN THEME: Playful academic cartoon + clean university style
+
+COLOR PALETTE:
+- Soft blues (primary)
+- Oranges (accents)
+- Greens (secondary)
+- White background with subtle texture
+
+TYPOGRAPHY:
+- Bold headers in rounded friendly font (like Montserrat or Poppins)
+- Body text in clean sans-serif (like Open Sans)
+- Title at top - large, bold, centered
+- Section headers clearly differentiated
+
+VISUAL STYLE:
+- Illustrated cartoon-style icons (simple, friendly, hand-drawn feel)
+- Simple diagrams where appropriate
+- Light shadows for depth
+- Subtle paper/canvas texture background
+- Clean layout with good spacing
+- Playful but professional
+- Icons should be colorful and engaging
+
+LAYOUT:
+- 16:9 aspect ratio landscape (1536x1024)
+- Title at top center
+- Content well-organized with clear hierarchy
+- Bullet points clean and readable
+- Good white space
+- Professional university quality
+
+REQUIREMENTS:
+- All text from content must be included and readable
+- Professional enough for graduate business school
+- Playful enough to be engaging and memorable
+- Cartoon-style illustrations but sophisticated
+- Clean, organized, easy to read at presentation size
+
+Style reference: Coursera, Khan Academy, or Duolingo - educational, friendly, professional
+

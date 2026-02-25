@@ -1,0 +1,396 @@
+Slide 5 - Playful Academic Cartoon Style
+
+SLIDE CONTENT:
+## Slide 5: The AI Coding Tools Landscape
+
+### Major Players and Their Capabilities
+
+**1. GitHub Copilot (Microsoft/OpenAI)**
+
+**Overview:**
+- Powered by OpenAI Codex (GPT-3.5/GPT-4 based)
+- Trained on billions of lines of public code
+- IDE integration: VS Code, JetBrains, Neovim, Visual Studio
+- Launched: June 2021
+
+**Key Features:**
+-  Real-time code suggestions as you type
+-  Multi-language support (40+ languages)
+-  Context-aware (understands surrounding code)
+-  Generates functions, classes, tests
+-  Learns from your coding style
+
+**Pricing:**
+- Individual: $10/month or $100/year
+- Business: $19/user/month
+- Enterprise: Custom pricing
+
+**Strengths:**
+- Best IDE integration
+- Fast, real-time suggestions
+- Great for common patterns
+- Active development community
+
+**Limitations:**
+- Sometimes suggests outdated patterns
+- May suggest insecure code
+- Limited context window
+- Requires internet connection
+
+**Example Use Case:**
+```python
+# Type a comment, Copilot generates the code
+# Function to calculate compound interest
+
+# Copilot suggestion:
+def calculate_compound_interest(principal, rate, time, frequency=12):
+    """
+    Calculate compound interest.
+    
+    Args:
+        principal: Initial investment amount
+        rate: Annual interest rate (as decimal)
+        time: Time period in years
+        frequency: Compounding frequency per year
+    
+    Returns:
+        Final amount after compound interest
+    """
+    amount = principal * (1 + rate/frequency) ** (frequency * time)
+    interest = amount - principal
+    return amount, interest
+
+# That entire function was generated from just the comment!
+```
+
+---
+
+**2. Amazon CodeWhisperer**
+
+**Overview:**
+- Amazon's AI coding assistant
+- Integrated with AWS services
+- Free tier available
+- Launched: April 2022, Generally Available: April 2023
+
+**Key Features:**
+-  AWS SDK optimization
+-  Security scanning built-in
+-  Reference tracking (shows source of suggestions)
+-  Custom model training on private repos
+-  IDE support: VS Code, JetBrains, AWS Cloud9
+
+**Pricing:**
+- Individual: FREE
+- Professional: $19/user/month
+
+**Strengths:**
+- Free for individuals
+- Excellent AWS integration
+- Security scanning included
+- Reference tracking for licensing compliance
+
+**Limitations:**
+- Less mature than Copilot
+- Smaller training dataset
+- Fewer IDE integrations
+
+**Example Use Case:**
+```python
+# CodeWhisperer excels at AWS-specific code
+# Type: "Upload file to S3 bucket with encryption"
+
+import boto3
+from botocore.exceptions import ClientError
+
+def upload_file_to_s3(file_path, bucket_name, object_name=None, encryption='AES256'):
+    """
+    Upload file to S3 bucket with server-side encryption.
+    
+    Args:
+        file_path: Path to file to upload
+        bucket_name: Target S3 bucket
+        object_name: S3 object name (defaults to file_path)
+        encryption: Encryption type ('AES256' or 'aws:kms')
+    
+    Returns:
+        True if successful, False otherwise
+    """
+    if object_name is None:
+        object_name = file_path.split('/')[-1]
+    
+    s3_client = boto3.client('s3')
+    
+    try:
+        s3_client.upload_file(
+            file_path,
+            bucket_name,
+            object_name,
+            ExtraArgs={
+                'ServerSideEncryption': encryption
+            }
+        )
+        return True
+    except ClientError as e:
+        print(f"Error uploading file: {e}")
+        return False
+
+# CodeWhisperer also shows: "Reference: boto3 documentation"
+```
+
+---
+
+**3. ChatGPT/Claude (Conversational AI)**
+
+**Overview:**
+- General-purpose AI that excels at coding
+- Web interface + API
+- Not IDE-integrated (copy/paste workflow)
+- Best for: Architecture, learning, complex problems
+
+**ChatGPT (OpenAI):**
+- GPT-4: Advanced reasoning, large context
+- GPT-3.5: Fast, cost-effective
+- Web: $20/month for GPT-4
+- API: Pay per token
+
+**Claude (Anthropic):**
+- Claude 3 Opus: Best for complex reasoning
+- Claude 3 Sonnet: Balanced performance
+- 100K+ token context window (huge advantage!)
+- Web: Free tier + Pro at $20/month
+- API: Pay per token
+
+**Strengths:**
+-  Explains concepts deeply
+-  Helps with architecture decisions
+-  Great for learning new technologies
+-  Debugging complex issues
+-  Can analyze entire codebases (Claude)
+
+**Limitations:**
+-  No IDE integration (manual copy/paste)
+-  Not real-time
+-  May generate plausible but incorrect code
+-  Needs careful prompt engineering
+
+**Example Use Case:**
+```
+User: "I need to build a REST API for a e-commerce product catalog 
+with search, filtering, and caching. Using Python FastAPI. What's 
+the best architecture?"
+
+ChatGPT/Claude Response:
+"""
+Here's a recommended architecture for your e-commerce product catalog API:
+
+1. Architecture Layers:
+   - API Layer: FastAPI with Pydantic models
+   - Business Logic: Service layer for catalog operations
+   - Data Access: Repository pattern with SQLAlchemy
+   - Caching: Redis for frequently accessed products
+   - Search: Elasticsearch for full-text search
+   - Database: PostgreSQL for product data
+
+2. Key Components:
+
+[Provides complete code structure with:]
+- FastAPI app setup
+- Database models
+- Pydantic schemas
+- Repository layer
+- Service layer with caching
+- Search integration
+- API endpoints
+- Error handling
+- Testing approach
+- Deployment considerations
+
+3. Why this architecture:
+   - Scalability: Caching reduces DB load
+   - Performance: Elasticsearch for fast search
+   - Maintainability: Clear separation of concerns
+   - Testing: Easy to mock dependencies
+"""
+
+[Followed by complete implementation code]
+```
+
+---
+
+**4. Specialized Tools**
+
+**Tabnine:**
+- AI code completion
+- Trains on your team's codebase
+- Privacy-focused (local models available)
+- Free tier + Pro at $12/month
+
+**Cline:**
+- Autonomous AI coding agent for VS Code
+- Multi-step task execution
+- File creation, editing, and command execution
+- Integrates with Claude, GPT-4, and other LLMs
+- Free and open source
+- Best for: Complex multi-file tasks and autonomous coding
+
+**Cursor:**
+- AI-first code editor (fork of VS Code)
+- Built-in ChatGPT integration
+- Codebase-aware chat
+- $20/month
+
+**Codeium:**
+- Free Copilot alternative
+- Fast, accurate suggestions
+- 70+ language support
+- Free for individuals
+
+**Replit Ghostwriter:**
+- Integrated with Replit IDE
+- Great for learning/prototyping
+- $10/month
+
+**Sourcegraph Cody:**
+- Codebase-aware AI assistant
+- Understands your entire repository
+- Free tier + Pro at $9/month
+
+---
+
+**Comparison Matrix:**
+
+| Tool | Best For | Pricing | IDE Integration | Context Size | Unique Feature |
+|------|----------|---------|-----------------|--------------|----------------|
+| **GitHub Copilot** | General coding | $10-19/mo | Excellent | Medium | Best autocomplete |
+| **CodeWhisperer** | AWS development | Free-$19/mo | Good | Medium | Security scanning |
+| **ChatGPT** | Complex problems | $20/mo | None | Large | Best explanations |
+| **Claude** | Large codebases | $20/mo | None | Huge (100K+) | Largest context |
+| **Cline** | Autonomous tasks | Free | Excellent (VS Code) | Configurable | Multi-step agent |
+| **Tabnine** | Team collaboration | Free-$12/mo | Good | Small-Large | Team training |
+| **Cursor** | Integrated workflow | $20/mo | Built-in | Large | AI-first editor |
+| **Codeium** | Budget-conscious | Free | Good | Medium | Free alternative |
+
+**Choosing the Right Tool:**
+
+```python
+def recommend_tool(use_case):
+    """
+    Recommend AI coding tool based on use case.
+    """
+    recommendations = {
+        'general_coding': 'GitHub Copilot - best all-around',
+        'aws_development': 'Amazon CodeWhisperer - AWS optimized',
+        'learning': 'ChatGPT/Claude - best explanations',
+        'architecture': 'Claude - huge context window',
+        'autonomous_tasks': 'Cline - multi-step agent for complex tasks',
+        'budget': 'Codeium or Cline - free alternatives',
+        'team_collaboration': 'Tabnine - trains on team code',
+        'privacy_sensitive': 'Tabnine (local) - on-premise models',
+        'integrated_workflow': 'Cursor or Cline - AI-first editors'
+    }
+    
+    return recommendations.get(use_case, 'Try GitHub Copilot first')
+
+# Examples:
+print(recommend_tool('general_coding'))
+# Output: GitHub Copilot - best all-around
+
+print(recommend_tool('learning'))
+# Output: ChatGPT/Claude - best explanations
+```
+
+**Best Practice: Use Multiple Tools**
+
+Most effective developers use a combination:
+1. **GitHub Copilot** for day-to-day coding
+2. **ChatGPT/Claude** for complex problems and learning
+3. **Cline** for autonomous multi-file tasks and refactoring
+4. **CodeWhisperer** for AWS-specific tasks (if applicable)
+
+**ROI Comparison:**
+
+```python
+# Calculate ROI for different tools
+import pandas as pd
+
+tools = {
+    'Tool': ['Copilot', 'CodeWhisperer', 'ChatGPT', 'Claude', 'Cline', 'Cursor'],
+    'Monthly Cost': [10, 19, 20, 20, 0, 20],
+    'Time Saved (hrs/month)': [20, 15, 10, 12, 15, 18],
+    'Developer Rate ($/hr)': [75, 75, 75, 75, 75, 75]
+}
+
+df = pd.DataFrame(tools)
+df['Monthly Value'] = df['Time Saved (hrs/month)'] * df['Developer Rate ($/hr)']
+df['Monthly ROI'] = ((df['Monthly Value'] - df['Monthly Cost']) / df['Monthly Cost'] * 100).round(0)
+df['Annual ROI'] = df['Monthly ROI']  # Same for annual
+
+print(df[['Tool', 'Monthly Cost', 'Time Saved (hrs/month)', 'Monthly Value', 'Monthly ROI']])
+
+"""
+Output:
+         Tool  Monthly Cost  Time Saved  Monthly Value  Monthly ROI
+0     Copilot            10          20           1500       14900%
+1  CodeWhisperer         19          15           1125        5821%
+2     ChatGPT            20          10            750        3650%
+3      Claude            20          12            900        4400%
+4       Cline             0          15           1125           %
+5      Cursor            20          18           1350        6650%
+
+Conclusion: Even conservative estimates show massive ROI!
+Note: Cline is free, making it infinite ROI - limited only by API costs if using paid LLMs.
+"""
+```
+
+---
+
+**End of Batch 1 (Slides 1-5)**
+
+*Continue to Batch 2 for Code Generation & GitHub Copilot Deep Dive (Slides 6-10)*
+
+---
+
+IMAGE GENERATION PROMPT:
+
+Create a professional university presentation slide image with the following specifications:
+
+DESIGN THEME: Playful academic cartoon + clean university style
+
+COLOR PALETTE:
+- Soft blues (primary)
+- Oranges (accents)
+- Greens (secondary)
+- White background with subtle texture
+
+TYPOGRAPHY:
+- Bold headers in rounded friendly font (like Montserrat or Poppins)
+- Body text in clean sans-serif (like Open Sans)
+- Title at top - large, bold, centered
+- Section headers clearly differentiated
+
+VISUAL STYLE:
+- Illustrated cartoon-style icons (simple, friendly, hand-drawn feel)
+- Simple diagrams where appropriate
+- Light shadows for depth
+- Subtle paper/canvas texture background
+- Clean layout with good spacing
+- Playful but professional
+- Icons should be colorful and engaging
+
+LAYOUT:
+- 16:9 aspect ratio landscape (1536x1024)
+- Title at top center
+- Content well-organized with clear hierarchy
+- Bullet points clean and readable
+- Good white space
+- Professional university quality
+
+REQUIREMENTS:
+- All text from content must be included and readable
+- Professional enough for graduate business school
+- Playful enough to be engaging and memorable
+- Cartoon-style illustrations but sophisticated
+- Clean, organized, easy to read at presentation size
+
+Style reference: Coursera, Khan Academy, or Duolingo - educational, friendly, professional

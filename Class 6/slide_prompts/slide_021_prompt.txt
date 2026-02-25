@@ -1,0 +1,197 @@
+Slide 21 - Playful Academic Cartoon Style
+
+SLIDE CONTENT:
+## Slide 21: Documentation Generation Examples
+
+### Automating Documentation with AI
+
+**Example 1: Function Docstring Generation**
+
+**Before (No Documentation):**
+```python
+def process_customer_orders(customer_id, start_date, end_date, include_cancelled=False):
+    orders = db.query(Order).filter(
+        Order.customer_id == customer_id,
+        Order.date >= start_date,
+        Order.date <= end_date
+    )
+    
+    if not include_cancelled:
+        orders = orders.filter(Order.status != 'cancelled')
+    
+    total = sum(order.amount for order in orders)
+    avg = total / len(orders) if orders else 0
+    
+    return {
+        'orders': orders,
+        'total': total,
+        'average': avg,
+        'count': len(orders)
+    }
+```
+
+**Prompt to AI:**
+```
+Add comprehensive docstring to this function including:
+- Description
+- Args with types
+- Returns with type
+- Examples
+- Raises (if any)
+```
+
+**After (AI-Generated Documentation):**
+```python
+def process_customer_orders(
+    customer_id: str, 
+    start_date: datetime, 
+    end_date: datetime, 
+    include_cancelled: bool = False
+) -> dict:
+    """
+    Process and aggregate customer orders within a date range.
+    
+    Queries the database for all orders belonging to a specific customer
+    within the specified date range, calculates statistics, and returns
+    a summary including order details, total amount, and average order value.
+    
+    Args:
+        customer_id (str): Unique identifier for the customer.
+            Example: "CUST-12345"
+        start_date (datetime): Start of the date range (inclusive).
+            Orders on this date will be included.
+        end_date (datetime): End of the date range (inclusive).
+            Orders on this date will be included.
+        include_cancelled (bool, optional): Whether to include cancelled orders
+            in the results. Defaults to False.
+    
+    Returns:
+        dict: A dictionary containing:
+            - orders (list): List of Order objects matching the criteria
+            - total (float): Sum of all order amounts
+            - average (float): Average order value (0 if no orders)
+            - count (int): Number of orders found
+    
+    Examples:
+        >>> from datetime import datetime
+        >>> result = process_customer_orders(
+        ...     "CUST-12345",
+        ...     datetime(2024, 1, 1),
+        ...     datetime(2024, 1, 31)
+        ... )
+        >>> print(result['total'])
+        1250.75
+        
+        >>> # Include cancelled orders
+        >>> result = process_customer_orders(
+        ...     "CUST-12345",
+        ...     datetime(2024, 1, 1),
+        ...     datetime(2024, 1, 31),
+        ...     include_cancelled=True
+        ... )
+        >>> print(result['count'])
+        15
+    
+    Raises:
+        ValueError: If start_date is after end_date
+        DatabaseError: If database connection fails
+    
+    Note:
+        - The function returns 0 for average if no orders are found
+        - Cancelled orders are excluded by default for revenue calculations
+        - All dates are inclusive (orders on start_date and end_date are included)
+    
+    See Also:
+        get_customer_details(): Retrieve customer information
+        calculate_customer_lifetime_value(): Calculate total customer value
+    """
+    # Validate date range
+    if start_date > end_date:
+        raise ValueError("start_date must be before or equal to end_date")
+    
+    # Query orders
+    orders = db.query(Order).filter(
+        Order.customer_id == customer_id,
+        Order.date >= start_date,
+        Order.date <= end_date
+    )
+    
+    if not include_cancelled:
+        orders = orders.filter(Order.status != 'cancelled')
+    
+    # Calculate statistics
+    orders_list = orders.all()
+    total = sum(order.amount for order in orders_list)
+    avg = total / len(orders_list) if orders_list else 0
+    
+    return {
+        'orders': orders_list,
+        'total': round(total, 2),
+        'average': round(avg, 2),
+        'count': len(orders_list)
+    }
+```
+
+**Example 2: README Generation**
+
+**Prompt:**
+```
+Generate a comprehensive README.md for a Python project with these details:
+- Project: Sales Analytics API
+- Tech: FastAPI, PostgreSQL, Redis
+- Features: Real-time analytics, data visualization, export to Excel/PDF
+- Target users: Business analysts and data scientists
+```
+
+**AI-Generated README.md:**
+
+```markdown
+# Sales Analytics API 
+
+A high-performance REST API for real-time sales analytics, providing business insights through interactive data visualization and flexible export options.
+
+---
+
+IMAGE GENERATION PROMPT:
+
+Create a professional university presentation slide image with the following specifications:
+
+DESIGN THEME: Playful academic cartoon + clean university style
+
+COLOR PALETTE:
+- Soft blues (primary)
+- Oranges (accents)
+- Greens (secondary)
+- White background with subtle texture
+
+TYPOGRAPHY:
+- Bold headers in rounded friendly font (like Montserrat or Poppins)
+- Body text in clean sans-serif (like Open Sans)
+- Title at top - large, bold, centered
+- Section headers clearly differentiated
+
+VISUAL STYLE:
+- Illustrated cartoon-style icons (simple, friendly, hand-drawn feel)
+- Simple diagrams where appropriate
+- Light shadows for depth
+- Subtle paper/canvas texture background
+- Clean layout with good spacing
+- Playful but professional
+- Icons should be colorful and engaging
+
+LAYOUT:
+- 16:9 aspect ratio landscape (1536x1024)
+- Title at top center
+- Content well-organized with clear hierarchy
+- Bullet points clean and readable
+- Good white space
+- Professional university quality
+
+REQUIREMENTS:
+- All text from content must be included and readable
+- Professional enough for graduate business school
+- Playful enough to be engaging and memorable
+- Cartoon-style illustrations but sophisticated
+- Clean, organized, easy to read at presentation size
+
+Style reference: Coursera, Khan Academy, or Duolingo - educational, friendly, professional

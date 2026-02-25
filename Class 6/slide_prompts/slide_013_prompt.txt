@@ -1,0 +1,186 @@
+Slide 13 - Playful Academic Cartoon Style
+
+SLIDE CONTENT:
+## Slide 13: Effective Prompting for ChatGPT/Claude
+
+### Getting Better Code Answers
+
+**Prompt Engineering Principles:**
+
+**Principle 1: Provide Context**
+
+ **Bad Prompt:**
+```
+Write a function to process data
+```
+
+ **Good Prompt:**
+```
+I'm building a sales analytics dashboard using Python and Pandas.
+I need a function that:
+- Takes a CSV file of sales transactions
+- Columns: date, customer_id, product_id, quantity, price, region
+- Calculates monthly revenue by region
+- Returns a DataFrame with columns: month, region, revenue, growth_rate
+- Growth rate should be month-over-month for each region
+
+Please include error handling for missing files and malformed data.
+```
+
+**Principle 2: Specify Requirements**
+
+ **Detailed Requirements:**
+```
+Create a REST API endpoint for user registration with these requirements:
+
+Technology Stack:
+- FastAPI framework
+- PostgreSQL database
+- SQLAlchemy ORM
+- Pydantic for validation
+
+Requirements:
+1. Endpoint: POST /api/v1/users/register
+2. Input: email, password, first_name, last_name
+3. Validation:
+   - Email must be valid format and unique
+   - Password min 8 chars, 1 uppercase, 1 number, 1 special char
+   - Names must be non-empty strings
+4. Security:
+   - Hash password with bcrypt
+   - Return JWT token on success
+5. Error Handling:
+   - 400 for validation errors
+   - 409 for duplicate email
+   - 500 for server errors
+6. Response format:
+   - Success: {user_id, email, token}
+   - Error: {error, details, status_code}
+
+Please include:
+- Complete endpoint code
+- Database model
+- Pydantic schemas
+- Unit tests
+```
+
+**Principle 3: Show Examples**
+
+ **With Examples:**
+```
+I need a function to parse log files and extract errors.
+
+Example log format:
+```
+2024-01-15 10:30:45 INFO User login successful: user123
+2024-01-15 10:31:12 ERROR Database connection failed: timeout after 30s
+2024-01-15 10:31:45 WARNING High memory usage: 85%
+2024-01-15 10:32:01 ERROR API request failed: 500 Internal Server Error
+```
+
+Expected output:
+```python
+[
+    {
+        'timestamp': '2024-01-15 10:31:12',
+        'level': 'ERROR',
+        'message': 'Database connection failed: timeout after 30s'
+    },
+    {
+        'timestamp': '2024-01-15 10:32:01',
+        'level': 'ERROR',
+        'message': 'API request failed: 500 Internal Server Error'
+    }
+]
+```
+
+Please handle different date formats and malformed log lines.
+```
+
+**Principle 4: Iterative Refinement**
+
+First prompt:
+```
+Create a Python class for managing a cache
+```
+
+Response: *Gets basic cache implementation*
+
+Second prompt (refinement):
+```
+Great! Can you enhance this to:
+1. Add TTL (time-to-live) for each cache entry
+2. Implement LRU eviction when max size reached
+3. Add statistics tracking (hits, misses, evictions)
+4. Make it thread-safe
+5. Add optional persistence to Redis
+```
+
+Response: *Gets enhanced version*
+
+Third prompt (further refinement):
+```
+Perfect! Now add:
+1. Type hints for all methods
+2. Comprehensive docstrings
+3. Unit tests with pytest
+4. Example usage in comments
+```
+
+**Principle 5: Ask for Explanations**
+
+```
+Please explain:
+1. Why you chose this approach
+2. Time and space complexity
+3. Potential edge cases
+4. Alternative solutions and trade-offs
+```
+
+---
+
+---
+
+IMAGE GENERATION PROMPT:
+
+Create a professional university presentation slide image with the following specifications:
+
+DESIGN THEME: Playful academic cartoon + clean university style
+
+COLOR PALETTE:
+- Soft blues (primary)
+- Oranges (accents)
+- Greens (secondary)
+- White background with subtle texture
+
+TYPOGRAPHY:
+- Bold headers in rounded friendly font (like Montserrat or Poppins)
+- Body text in clean sans-serif (like Open Sans)
+- Title at top - large, bold, centered
+- Section headers clearly differentiated
+
+VISUAL STYLE:
+- Illustrated cartoon-style icons (simple, friendly, hand-drawn feel)
+- Simple diagrams where appropriate
+- Light shadows for depth
+- Subtle paper/canvas texture background
+- Clean layout with good spacing
+- Playful but professional
+- Icons should be colorful and engaging
+
+LAYOUT:
+- 16:9 aspect ratio landscape (1536x1024)
+- Title at top center
+- Content well-organized with clear hierarchy
+- Bullet points clean and readable
+- Good white space
+- Professional university quality
+
+REQUIREMENTS:
+- All text from content must be included and readable
+- Professional enough for graduate business school
+- Playful enough to be engaging and memorable
+- Cartoon-style illustrations but sophisticated
+- Clean, organized, easy to read at presentation size
+
+Style reference: Coursera, Khan Academy, or Duolingo - educational, friendly, professional

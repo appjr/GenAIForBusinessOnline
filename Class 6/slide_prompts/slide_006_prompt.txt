@@ -1,0 +1,142 @@
+Slide 6 - Playful Academic Cartoon Style
+
+SLIDE CONTENT:
+## Slide 6: GitHub Copilot - Getting Started
+
+### Installation and Setup
+
+**Step 1: Prerequisites**
+```bash
+# Required:
+- GitHub account
+- Visual Studio Code (or supported IDE)
+- Active Copilot subscription ($10/month individual)
+
+# Optional but recommended:
+- Git installed
+- Python 3.8+ installed
+- Node.js for JavaScript projects
+```
+
+**Step 2: Install GitHub Copilot Extension**
+
+1. Open VS Code
+2. Go to Extensions (Cmd+Shift+X on Mac, Ctrl+Shift+X on Windows)
+3. Search for "GitHub Copilot"
+4. Click "Install"
+5. Sign in with your GitHub account
+6. Authorize the extension
+
+**Step 3: Verify Installation**
+
+```python
+# Type this comment in a new Python file:
+# Function to calculate the factorial of a number
+
+# Copilot should suggest:
+def factorial(n):
+    if n == 0 or n == 1:
+        return 1
+    else:
+        return n * factorial(n - 1)
+
+# If you see suggestions appearing, you're ready to go!
+```
+
+**Configuration Options:**
+
+```json
+// In VS Code settings.json
+{
+  // Enable/disable Copilot
+  "github.copilot.enable": {
+    "*": true,
+    "yaml": false,
+    "plaintext": false
+  },
+  
+  // Inline suggestions
+  "editor.inlineSuggest.enabled": true,
+  
+  // Auto-trigger
+  "github.copilot.editor.enableAutoCompletions": true
+}
+```
+
+**Keyboard Shortcuts:**
+
+| Action | Mac | Windows/Linux |
+|--------|-----|---------------|
+| **Accept suggestion** | Tab | Tab |
+| **Reject suggestion** | Esc | Esc |
+| **Next suggestion** | Option+] | Alt+] |
+| **Previous suggestion** | Option+[ | Alt+[ |
+| **Open Copilot** | Option+\ | Alt+\ |
+| **Trigger inline** | Option+Space | Alt+Space |
+
+**Best Practices for Setup:**
+
+1. **Enable Copilot for specific languages:**
+   - Enable for: Python, JavaScript, Java, etc.
+   - Disable for: Config files, secrets, sensitive data
+
+2. **Configure your workspace:**
+   ```bash
+   # Add .gitignore to exclude sensitive files
+   echo "*.env" >> .gitignore
+   echo "secrets.json" >> .gitignore
+   echo ".copilot-ignore" >> .gitignore
+   ```
+
+3. **Security settings:**
+   - Never commit API keys or passwords
+   - Review Copilot suggestions before accepting
+   - Use code scanning tools alongside Copilot
+
+---
+
+---
+
+IMAGE GENERATION PROMPT:
+
+Create a professional university presentation slide image with the following specifications:
+
+DESIGN THEME: Playful academic cartoon + clean university style
+
+COLOR PALETTE:
+- Soft blues (primary)
+- Oranges (accents)
+- Greens (secondary)
+- White background with subtle texture
+
+TYPOGRAPHY:
+- Bold headers in rounded friendly font (like Montserrat or Poppins)
+- Body text in clean sans-serif (like Open Sans)
+- Title at top - large, bold, centered
+- Section headers clearly differentiated
+
+VISUAL STYLE:
+- Illustrated cartoon-style icons (simple, friendly, hand-drawn feel)
+- Simple diagrams where appropriate
+- Light shadows for depth
+- Subtle paper/canvas texture background
+- Clean layout with good spacing
+- Playful but professional
+- Icons should be colorful and engaging
+
+LAYOUT:
+- 16:9 aspect ratio landscape (1536x1024)
+- Title at top center
+- Content well-organized with clear hierarchy
+- Bullet points clean and readable
+- Good white space
+- Professional university quality
+
+REQUIREMENTS:
+- All text from content must be included and readable
+- Professional enough for graduate business school
+- Playful enough to be engaging and memorable
+- Cartoon-style illustrations but sophisticated
+- Clean, organized, easy to read at presentation size
+
+Style reference: Coursera, Khan Academy, or Duolingo - educational, friendly, professional

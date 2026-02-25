@@ -1,0 +1,65 @@
+Slide 23 - Playful Academic Cartoon Style
+Model: gpt-image-1
+URL: Generated as base64 (no URL)
+
+Prompt used:
+Create a professional university presentation slide image with the following specifications:
+
+SLIDE CONTENT:
+##  Features
+
+### Core Capabilities
+- **Real-time Analytics**: Sub-second query response times with Redis caching
+- **Interactive Dashboards**: Dynamic visualizations using Chart.js
+- **Flexible Exports**: Generate reports in Excel, PDF, or JSON formats
+- **Advanced Filtering**: Filter by date range, region, product, customer segment
+- **Trend Analysis**: YoY, MoM, and custom period comparisons
+- **API-First Design**: RESTful API with comprehensive OpenAPI documentation
+
+### Technical Highlights
+-  **Fast**: Redis caching for frequently accessed data
+-  **Secure**: JWT authentication, role-based access control
+-  **Scalable**: Handles millions of transactions
+-  **Tested**: 95%+ code coverage with pytest
+-  **Documented**: Interactive API docs with Swagger UI
+
+DESIGN THEME: Playful academic cartoon + clean university style
+
+COLOR PALETTE:
+- Soft blues (primary)
+- Oranges (accents)
+- Greens (secondary)
+- White background with subtle texture
+
+TYPOGRAPHY:
+- Bold headers in rounded friendly font (like Montserrat or Poppins)
+- Body text in clean sans-serif (like Open Sans)
+- Title at top - large, bold, centered
+- Section headers clearly differentiated
+
+VISUAL STYLE:
+- Illustrated cartoon-style icons (simple, friendly, hand-drawn feel)
+- Simple diagrams where appropriate
+- Light shadows for depth
+- Subtle paper/canvas texture background
+- Clean layout with good spacing
+- Playful but professional
+- Icons should be colorful and engaging
+
+LAYOUT:
+- 16:9 aspect ratio landscape (1536x1024)
+- Title at top center
+- Content well-organized with clear hierarchy
+- Bullet points clean and readable
+- Good white space
+- Professional university quality
+
+REQUIREMENTS:
+- All text from content must be included and readable
+- Professional enough for graduate business school
+- Playful enough to be engaging and memorable
+- Cartoon-style illustrations but sophisticated
+- Clean, organized, easy to read at presentation size
+
+Style reference: Coursera, Khan Academy, or Duolingo - educational, friendly, professional
+
