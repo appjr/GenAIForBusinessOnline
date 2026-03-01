@@ -1,0 +1,530 @@
+#!/usr/bin/env python3
+"""
+Create a complete self-contained HTML file from all Week 7 markdown batches.
+"""
+
+import re
+from pathlib import Path
+
+
+def markdown_to_html(text: str) -> str:
+    """Convert markdown to HTML (simple implementation)."""
+    lines = text.split('\n')
+    html_lines = []
+    in_code_block = False
+    code_lang = ''
+    in_table = False
+    in_list = False
+
+    i = 0
+    while i < len(lines):
+        line = lines[i]
+
+        # Code blocks
+        if line.startswith('```'):
+            if not in_code_block:
+                in_code_block = True
+                code_lang = line[3:].strip() or 'text'
+                html_lines.append(f'<pre><code class="language-{code_lang}">')
+            else:
+                in_code_block = False
+                html_lines.append('</code></pre>')
+            i += 1
+            continue
+
+        if in_code_block:
+            # Escape HTML entities in code
+            escaped = line.replace('&', '&amp;').replace('<', '&lt;').replace('>', '&gt;')
+            html_lines.append(escaped)
+            i += 1
+            continue
+
+        # Tables
+        if '|' in line and line.strip().startswith('|'):
+            if not in_table:
+                in_table = True
+                html_lines.append('<table>')
+                # Header row
+                cells = [c.strip() for c in line.strip().strip('|').split('|')]
+                html_lines.append('<thead><tr>')
+                for cell in cells:
+                    html_lines.append(f'<th>{cell}</th>')
+                html_lines.append('</tr></thead><tbody>')
+                i += 1
+                # Skip separator row
+                if i < len(lines) and re.match(r'[\|\s\-:]+', lines[i]):
+                    i += 1
+            else:
+                cells = [c.strip() for c in line.strip().strip('|').split('|')]
+                html_lines.append('<tr>')
+                for cell in cells:
+                    # Process inline formatting in cells
+                    cell = re.sub(r'\*\*(.+?)\*\*', r'<strong>\1</strong>', cell)
+                    cell = re.sub(r'\*(.+?)\*', r'<em>\1</em>', cell)
+                    cell = re.sub(r'`(.+?)`', r'<code>\1</code>', cell)
+                    html_lines.append(f'<td>{cell}</td>')
+                html_lines.append('</tr>')
+                i += 1
+            continue
+        elif in_table:
+            in_table = False
+            html_lines.append('</tbody></table>')
+
+        # Headings
+        if line.startswith('#### '):
+            html_lines.append(f'<h4>{line[5:]}</h4>')
+        elif line.startswith('### '):
+            html_lines.append(f'<h3>{line[4:]}</h3>')
+        elif line.startswith('## '):
+            slide_text = line[3:]
+            # Create anchor from slide text
+            anchor = re.sub(r'[^a-z0-9]+', '-', slide_text.lower()).strip('-')
+            html_lines.append(f'<h2 id="{anchor}" class="slide-title">{slide_text}</h2>')
+        elif line.startswith('# '):
+            html_lines.append(f'<h1>{line[2:]}</h1>')
+        # Horizontal rule
+        elif line.strip() == '---':
+            html_lines.append('<hr class="slide-divider">')
+        # Unordered lists
+        elif re.match(r'^[\-\*] ', line):
+            if not in_list:
+                in_list = True
+                html_lines.append('<ul>')
+            item = line[2:]
+            # Inline formatting
+            item = re.sub(r'\*\*(.+?)\*\*', r'<strong>\1</strong>', item)
+            item = re.sub(r'\*(.+?)\*', r'<em>\1</em>', item)
+            item = re.sub(r'`(.+?)`', r'<code>\1</code>', item)
+            item = re.sub(r'\[(.+?)\]\((.+?)\)', r'<a href="\2">\1</a>', item)
+            html_lines.append(f'<li>{item}</li>')
+        # Numbered lists
+        elif re.match(r'^\d+\. ', line):
+            if not in_list:
+                in_list = True
+                html_lines.append('<ol>')
+            item = re.sub(r'^\d+\. ', '', line)
+            item = re.sub(r'\*\*(.+?)\*\*', r'<strong>\1</strong>', item)
+            item = re.sub(r'\*(.+?)\*', r'<em>\1</em>', item)
+            item = re.sub(r'`(.+?)`', r'<code>\1</code>', item)
+            html_lines.append(f'<li>{item}</li>')
+        else:
+            # Close lists
+            if in_list:
+                if html_lines and '<ul>' in '\n'.join(html_lines[-10:]):
+                    # Find last opened ul/ol
+                    for j in range(len(html_lines) - 1, -1, -1):
+                        if html_lines[j] == '<ul>':
+                            html_lines.append('</ul>')
+                            break
+                        elif html_lines[j] == '<ol>':
+                            html_lines.append('</ol>')
+                            break
+                in_list = False
+
+            # Blockquotes
+            if line.startswith('> '):
+                content = line[2:]
+                content = re.sub(r'\*\*(.+?)\*\*', r'<strong>\1</strong>', content)
+                html_lines.append(f'<blockquote>{content}</blockquote>')
+            # Empty line = paragraph break
+            elif line.strip() == '':
+                html_lines.append('<br>')
+            # Regular paragraph
+            else:
+                # Inline formatting
+                line = re.sub(r'\*\*(.+?)\*\*', r'<strong>\1</strong>', line)
+                line = re.sub(r'\*(.+?)\*', r'<em>\1</em>', line)
+                line = re.sub(r'`(.+?)`', r'<code>\1</code>', line)
+                line = re.sub(r'\[(.+?)\]\((.+?)\)', r'<a href="\2">\1</a>', line)
+                line = re.sub(r'✅', '<span class="check">✅</span>', line)
+                line = re.sub(r'❌', '<span class="cross">❌</span>', line)
+                html_lines.append(f'<p>{line}</p>')
+
+        i += 1
+
+    # Close any open lists or tables
+    if in_list:
+        html_lines.append('</ul>')
+    if in_table:
+        html_lines.append('</tbody></table>')
+
+    return '\n'.join(html_lines)
+
+
+def create_html_document(batch_contents: list) -> str:
+    """Create complete self-contained HTML document."""
+
+    content_sections = []
+    for i, (title, content) in enumerate(batch_contents, 1):
+        batch_html = f'''
+        <div class="batch" id="batch{i}">
+            <div class="batch-header">
+                <span class="batch-number">Part {i}</span>
+                <h2>{title}</h2>
+            </div>
+            <div class="batch-content">
+                {content}
+            </div>
+        </div>
+        '''
+        content_sections.append(batch_html)
+
+    full_content = '\n'.join(content_sections)
+
+    html_doc = f'''<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Week 7: Text Generation & Chatbots - Complete Course Materials</title>
+    <style>
+        * {{ margin: 0; padding: 0; box-sizing: border-box; }}
+
+        body {{
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.7;
+            color: #1a1a2e;
+            background: linear-gradient(135deg, #16213e 0%, #0f3460 50%, #533483 100%);
+            padding: 20px;
+            min-height: 100vh;
+        }}
+
+        .container {{
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+            overflow: hidden;
+        }}
+
+        header {{
+            background: linear-gradient(135deg, #16213e 0%, #0f3460 50%, #533483 100%);
+            color: white;
+            padding: 50px 40px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }}
+
+        header::before {{
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.05) 0%, transparent 60%);
+        }}
+
+        header h1 {{
+            font-size: 2.4em;
+            font-weight: 800;
+            margin-bottom: 12px;
+            letter-spacing: -0.5px;
+            position: relative;
+        }}
+
+        header .subtitle {{
+            font-size: 1.1em;
+            opacity: 0.85;
+            position: relative;
+        }}
+
+        header .meta {{
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }}
+
+        header .meta span {{
+            background: rgba(255,255,255,0.15);
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            backdrop-filter: blur(10px);
+        }}
+
+        .toc {{
+            background: #f8f9ff;
+            padding: 30px 40px;
+            border-bottom: 2px solid #e8ecff;
+        }}
+
+        .toc h2 {{
+            font-size: 1.1em;
+            color: #533483;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 15px;
+        }}
+
+        .toc ul {{
+            list-style: none;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 8px;
+        }}
+
+        .toc ul li a {{
+            color: #0f3460;
+            text-decoration: none;
+            font-size: 0.9em;
+            padding: 6px 12px;
+            border-radius: 6px;
+            display: block;
+            transition: background 0.2s;
+        }}
+
+        .toc ul li a:hover {{
+            background: #e8ecff;
+        }}
+
+        .batch {{
+            border-bottom: 3px solid #e8ecff;
+        }}
+
+        .batch-header {{
+            background: linear-gradient(90deg, #16213e, #0f3460);
+            color: white;
+            padding: 20px 40px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }}
+
+        .batch-number {{
+            background: rgba(255,255,255,0.2);
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 0.8em;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }}
+
+        .batch-header h2 {{
+            font-size: 1.2em;
+            font-weight: 600;
+        }}
+
+        .batch-content {{
+            padding: 30px 40px;
+        }}
+
+        h1 {{ font-size: 2em; color: #16213e; margin: 24px 0 12px; }}
+        h2.slide-title {{
+            font-size: 1.5em;
+            color: #0f3460;
+            margin: 40px 0 16px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e8ecff;
+        }}
+        h3 {{ font-size: 1.2em; color: #533483; margin: 20px 0 10px; }}
+        h4 {{ font-size: 1em; color: #16213e; margin: 16px 0 8px; font-weight: 600; }}
+
+        p {{ margin: 10px 0; color: #2d3748; }}
+
+        pre {{
+            background: #1a1a2e;
+            color: #e2e8f0;
+            padding: 20px 24px;
+            border-radius: 10px;
+            overflow-x: auto;
+            margin: 16px 0;
+            font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+            font-size: 0.85em;
+            line-height: 1.6;
+            border-left: 4px solid #533483;
+        }}
+
+        code {{
+            background: #f0f0ff;
+            color: #533483;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+            font-size: 0.85em;
+        }}
+
+        pre code {{
+            background: transparent;
+            color: inherit;
+            padding: 0;
+            border-radius: 0;
+            font-size: inherit;
+        }}
+
+        table {{
+            width: 100%;
+            border-collapse: collapse;
+            margin: 16px 0;
+            font-size: 0.9em;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }}
+
+        th {{
+            background: #16213e;
+            color: white;
+            padding: 12px 16px;
+            text-align: left;
+            font-weight: 600;
+        }}
+
+        td {{
+            padding: 10px 16px;
+            border-bottom: 1px solid #e8ecff;
+            color: #2d3748;
+        }}
+
+        tr:nth-child(even) td {{ background: #f8f9ff; }}
+        tr:hover td {{ background: #eef0ff; }}
+
+        ul, ol {{
+            margin: 10px 0 10px 28px;
+            color: #2d3748;
+        }}
+
+        li {{
+            margin: 6px 0;
+            line-height: 1.6;
+        }}
+
+        blockquote {{
+            border-left: 4px solid #533483;
+            padding: 12px 20px;
+            margin: 16px 0;
+            background: #f8f9ff;
+            color: #4a5568;
+            font-style: italic;
+            border-radius: 0 8px 8px 0;
+        }}
+
+        hr.slide-divider {{
+            border: none;
+            border-top: 1px dashed #c3cfe2;
+            margin: 30px 0;
+        }}
+
+        .check {{ color: #38a169; }}
+        .cross {{ color: #e53e3e; }}
+
+        strong {{ color: #16213e; }}
+
+        a {{ color: #0f3460; text-decoration: none; }}
+        a:hover {{ text-decoration: underline; }}
+
+        footer {{
+            background: #16213e;
+            color: rgba(255,255,255,0.7);
+            text-align: center;
+            padding: 24px;
+            font-size: 0.85em;
+        }}
+
+        footer strong {{ color: white; }}
+
+        @media print {{
+            body {{ background: white; padding: 0; }}
+            .container {{ box-shadow: none; border-radius: 0; }}
+            pre {{ border: 1px solid #ddd; }}
+        }}
+
+        @media (max-width: 768px) {{
+            .batch-content {{ padding: 20px; }}
+            header {{ padding: 30px 20px; }}
+            header h1 {{ font-size: 1.6em; }}
+            pre {{ font-size: 0.75em; padding: 14px; }}
+        }}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>💬 Week 7: Text Generation & Chatbots</h1>
+            <p class="subtitle">Building Intelligent Conversational AI for Business</p>
+            <div class="meta">
+                <span>📅 March 4, 2026</span>
+                <span>🎓 BUAN 6v99.SW2 — UTD</span>
+                <span>⏱ 2.5 Hours</span>
+                <span>📊 27 Slides</span>
+            </div>
+        </header>
+
+        <div class="toc">
+            <h2>📋 Table of Contents</h2>
+            <ul>
+                <li><a href="#batch1">Part 1: Text Generation Fundamentals (Slides 1-5)</a></li>
+                <li><a href="#batch2">Part 2: OpenAI, Anthropic APIs & Prompt Engineering (Slides 6-10)</a></li>
+                <li><a href="#batch3">Part 3: RAG, Guardrails & Gradio (Slides 11-15)</a></li>
+                <li><a href="#batch4">Part 4: Business Use Cases, Platforms & Evaluation (Slides 16-20)</a></li>
+                <li><a href="#batch5">Part 5: Ethics, Case Studies, Lab & Takeaways (Slides 21-27)</a></li>
+            </ul>
+        </div>
+
+        {full_content}
+
+        <footer>
+            <strong>BUAN 6v99.SW2 — Generative AI for Business</strong><br>
+            University of Texas at Dallas | Spring 2026 | Professor Antonio Paes<br>
+            Week 7: Text Generation &amp; Chatbots
+        </footer>
+    </div>
+</body>
+</html>'''
+
+    return html_doc
+
+
+def main():
+    script_dir = Path(__file__).parent
+
+    # Load all batch files
+    batch_files = [
+        ("Text Generation Fundamentals — How LLMs Generate Text",
+         "week07-slides-batch1.md"),
+        ("OpenAI & Anthropic APIs, Prompt Engineering & Multi-Turn Chatbots",
+         "week07-slides-batch2.md"),
+        ("RAG, Guardrails & Deploying with Gradio",
+         "week07-slides-batch3.md"),
+        ("Business Use Cases, Platforms, Cost Analysis & Evaluation",
+         "week07-slides-batch4.md"),
+        ("Ethics, Case Studies, Lab Exercises & Key Takeaways",
+         "week07-slides-batch5.md"),
+    ]
+
+    batch_contents = []
+    for title, filename in batch_files:
+        filepath = script_dir / filename
+        if filepath.exists():
+            with open(filepath, 'r', encoding='utf-8') as f:
+                raw_content = f.read()
+            html_content = markdown_to_html(raw_content)
+            batch_contents.append((title, html_content))
+            print(f"✓ Processed {filename}")
+        else:
+            print(f"✗ Missing: {filename}")
+
+    if not batch_contents:
+        print("No batch files found!")
+        return
+
+    # Generate HTML
+    html = create_html_document(batch_contents)
+
+    output_path = script_dir / "Week07_Text_Generation_Chatbots_Complete.html"
+    with open(output_path, 'w', encoding='utf-8') as f:
+        f.write(html)
+
+    size_kb = output_path.stat().st_size / 1024
+    print(f"\n✅ HTML created: {output_path.name}")
+    print(f"   Size: {size_kb:.1f} KB")
+    print(f"   Batches: {len(batch_contents)}")
+
+
+if __name__ == "__main__":
+    main()
