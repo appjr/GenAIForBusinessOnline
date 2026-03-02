@@ -1,4 +1,4 @@
-# Week 7: Text Generation, Chatbots - Slides Batch 1 (Slides 1-5)
+# Week 7: Text Generation, Chatbots - Slides Batch 1 (Slides 1-6)
 
 **Course:** BUAN 6v99.SW2 - Generative AI for Business
 **Date:** March 4, 2026
@@ -66,7 +66,87 @@
 
 ---
 
-## Slide 3: Learning Objectives
+## Slide 3: Environment Setup — Ollama (Free Local LLMs)
+
+### Run AI Models 100% Locally — No API Key, No Cost
+
+**Why Ollama?**
+- Runs entirely on your laptop — no internet required after setup
+- No API key or billing account needed
+- OpenAI-compatible API: code that works with Ollama also works with GPT-4
+
+---
+
+**Step 1 — Install Ollama**
+
+```bash
+# Mac / Linux (one command):
+curl -fsSL https://ollama.com/install.sh | sh
+
+# Mac (Homebrew alternative):
+brew install ollama
+
+# Windows:
+# Download the installer from https://ollama.com/download
+```
+
+---
+
+**Step 2 — Start the Local Server**
+
+```bash
+# Run this in a terminal and keep it open (like a local API server)
+ollama serve
+# Listens on http://localhost:11434
+```
+
+---
+
+**Step 3 — Download Models (one-time)**
+
+```bash
+ollama pull llama3.2    # ~2 GB — fast, good for most tasks
+ollama pull mistral     # ~4 GB — higher quality reasoning
+```
+
+| Model | Size | Speed | Best For |
+|-------|------|-------|----------|
+| `llama3.2` | ~2 GB | Fast | Chatbots, Q&A, everyday tasks |
+| `mistral` | ~4 GB | Medium | Analysis, reasoning, longer text |
+
+---
+
+**Step 4 — Install Python Packages**
+
+```bash
+pip install openai sentence-transformers gradio
+```
+
+---
+
+**Step 5 — Verify Everything Works**
+
+```python
+from openai import OpenAI
+
+client = OpenAI(
+    api_key="ollama",                        # No real key needed
+    base_url="http://localhost:11434/v1"     # Points to local server
+)
+
+response = client.chat.completions.create(
+    model="llama3.2",
+    messages=[{"role": "user", "content": "Say hello!"}]
+)
+print(response.choices[0].message.content)
+# Output: "Hello! How can I help you today?"
+```
+
+**All code examples in this class use this pattern — free, local, no billing.**
+
+---
+
+## Slide 4: Learning Objectives
 
 ### By the End of This Class, You Will:
 
@@ -91,7 +171,7 @@
 
 ---
 
-## Slide 4: How LLMs Generate Text
+## Slide 5: How LLMs Generate Text
 
 ### The Token-by-Token Process
 
@@ -212,7 +292,7 @@ Temperature = 1.8 (Creative/Risky):
 
 ---
 
-## Slide 5: The Chat Completion Format
+## Slide 6: The Chat Completion Format
 
 ### How Modern LLMs Structure Conversations
 
@@ -349,6 +429,6 @@ print(f"\nEstimated cost: $0.00 (Ollama is free/local)")
 
 ---
 
-**End of Batch 1 (Slides 1-5)**
+**End of Batch 1 (Slides 1-6)**
 
-*Continue to Batch 2 for OpenAI API, Anthropic API, and Prompt Engineering (Slides 6-10)*
+*Continue to Batch 2 for OpenAI API, Anthropic API, and Prompt Engineering (Slides 7-11)*
