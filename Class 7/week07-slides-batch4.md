@@ -76,7 +76,7 @@ result = customer_service_roi(
     monthly_tickets=5000,
     automation_rate=0.65,         # 65% of tickets automated
     human_cost_per_ticket=8.50,   # $8.50 per human-handled ticket
-    bot_cost_per_message=0.001    # $0.001 per API call (gpt-4o-mini)
+    bot_cost_per_message=0.0      # $0.00 per API call (Ollama — local/free)
 )
 
 print("Customer Service Chatbot ROI")
@@ -177,7 +177,9 @@ def analyze_document(document_text: str, analysis_type: str = "summary") -> str:
     - "sentiment": Stakeholder sentiment
     - "comparison": Compare with requirements
     """
-    client = OpenAI()
+    from openai import OpenAI
+    # Free: Ollama runs locally — install at ollama.com, then: ollama pull mistral
+    client = OpenAI(api_key="ollama", base_url="http://localhost:11434/v1")
 
     analysis_prompts = {
         "summary": "Provide a 3-bullet executive summary of this document. "
@@ -193,7 +195,7 @@ def analyze_document(document_text: str, analysis_type: str = "summary") -> str:
     prompt = analysis_prompts.get(analysis_type, analysis_prompts["summary"])
 
     response = client.chat.completions.create(
-        model="gpt-4o",  # Use the most capable model for document analysis
+        model="mistral",  # Use a higher-quality local model for document analysis
         messages=[
             {"role": "system", "content": "You are an expert business analyst. "
              "Provide precise, actionable analysis. "
@@ -218,7 +220,8 @@ def analyze_document(document_text: str, analysis_type: str = "summary") -> str:
 import pandas as pd
 from openai import OpenAI
 
-client = OpenAI()
+# Free: Ollama runs locally — install at ollama.com, then: ollama pull llama3.2
+client = OpenAI(api_key="ollama", base_url="http://localhost:11434/v1")
 
 def generate_personalized_emails(customer_data: list[dict]) -> list[dict]:
     """
@@ -255,7 +258,7 @@ Requirements:
 - Keep to 150 words max
 """
         response = client.chat.completions.create(
-            model="gpt-4o-mini",
+            model="llama3.2",
             messages=[
                 {"role": "system", "content": "You are an expert email marketer."},
                 {"role": "user", "content": prompt}
@@ -415,20 +418,22 @@ def calculate_chatbot_cost(
     avg_user_message_tokens: int,
     avg_bot_response_tokens: int,
     system_prompt_tokens: int,
-    model: str = "gpt-4o-mini"
+    model: str = "llama3.2"
 ) -> dict:
     """
     Calculate monthly API costs for a chatbot deployment.
     """
     # Pricing per 1M tokens (approximate, March 2026)
     pricing = {
-        "gpt-4o": {"input": 2.50, "output": 10.00},
-        "gpt-4o-mini": {"input": 0.15, "output": 0.60},
-        "claude-sonnet-4-6": {"input": 3.00, "output": 15.00},
-        "claude-haiku-4-5": {"input": 0.80, "output": 4.00}
+        "llama3.2": {"input": 0.0, "output": 0.0},        # Ollama — free/local
+        "mistral": {"input": 0.0, "output": 0.0},          # Ollama — free/local
+        "gpt-4o": {"input": 2.50, "output": 10.00},        # OpenAI — paid
+        "gpt-4o-mini": {"input": 0.15, "output": 0.60},    # OpenAI — paid
+        "claude-sonnet-4-6": {"input": 3.00, "output": 15.00},  # Anthropic — paid
+        "claude-haiku-4-5": {"input": 0.80, "output": 4.00}     # Anthropic — paid
     }
 
-    rates = pricing.get(model, pricing["gpt-4o-mini"])
+    rates = pricing.get(model, pricing["llama3.2"])
 
     # Each API call includes: system prompt + full history + new message
     # History grows with each turn in conversation
@@ -470,7 +475,7 @@ costs = calculate_chatbot_cost(
     avg_user_message_tokens=50,
     avg_bot_response_tokens=150,
     system_prompt_tokens=300,
-    model="gpt-4o-mini"
+    model="llama3.2"  # Free with Ollama; swap for "gpt-4o-mini" to compare cloud pricing
 )
 
 print("=== Monthly Cost Analysis ===")
@@ -500,11 +505,13 @@ for k, v in costs.items():
 ```python
 class CostOptimizedChatbot:
     """
-    Chatbot with built-in cost optimization strategies.
+    Chatbot with built-in optimization strategies.
+    Uses Ollama locally — cost is always $0, but strategies still apply for latency.
     """
 
     def __init__(self, system_prompt: str):
-        self.client = OpenAI()
+        from openai import OpenAI
+        self.client = OpenAI(api_key="ollama", base_url="http://localhost:11434/v1")
         self.system = system_prompt
         self.history = []
         self.total_cost = 0.0
@@ -547,10 +554,10 @@ class CostOptimizedChatbot:
         self.history.append({"role": "user", "content": user_message})
         self.history.append({"role": "assistant", "content": answer})
 
-        # Track cost
+        # Track cost — $0 for Ollama, but logging token usage is still useful for
+        # latency optimization (fewer tokens = faster responses)
         usage = response.usage
-        model_cost = {"gpt-4o-mini": 0.00000015, "gpt-4o": 0.000005}
-        self.total_cost += usage.total_tokens * model_cost.get(model, 0.00000015)
+        self.total_cost = 0.0  # Ollama is free/local
 
         return answer
 
@@ -563,7 +570,7 @@ class CostOptimizedChatbot:
             len(message) > 200 or
             any(kw in message.lower() for kw in complex_keywords)
         )
-        return "gpt-4o" if is_complex else "gpt-4o-mini"
+        return "mistral" if is_complex else "llama3.2"
 
     def _compress_history(self, history: list) -> list:
         """Summarize old history to save tokens."""
@@ -572,7 +579,7 @@ class CostOptimizedChatbot:
 
         text = "\n".join([f"{m['role']}: {m['content']}" for m in old_messages])
         summary = self.client.chat.completions.create(
-            model="gpt-4o-mini",
+            model="llama3.2",
             messages=[
                 {"role": "system", "content": "Summarize this conversation in 2 sentences."},
                 {"role": "user", "content": text}
@@ -604,7 +611,8 @@ class CostOptimizedChatbot:
 from openai import OpenAI
 import json
 
-client = OpenAI()
+# Free: Ollama runs locally — install at ollama.com, then: ollama pull mistral
+client = OpenAI(api_key="ollama", base_url="http://localhost:11434/v1")
 
 def evaluate_chatbot_response(
     user_question: str,
@@ -646,7 +654,7 @@ Scoring guide:
 """
 
     response = client.chat.completions.create(
-        model="gpt-4o",  # Use best model for evaluation
+        model="mistral",  # Use higher-quality model for evaluation
         messages=[
             {"role": "system", "content": "You are an expert chatbot evaluator. Be critical and precise."},
             {"role": "user", "content": evaluation_prompt}
@@ -736,7 +744,7 @@ class ChatbotMetricsDashboard:
             "csat_score": sum(c['rating'] for c in rated) / len(rated) if rated else None,
             "total_tokens": sum(c['tokens'] for c in recent),
             "avg_tokens_per_conv": int(sum(c['tokens'] for c in recent) / total),
-            "estimated_cost_usd": sum(c['tokens'] for c in recent) * 0.00000015
+            "estimated_cost_usd": 0.0  # Ollama runs locally — no cost
         }
 
 # Example usage with simulated data
@@ -785,7 +793,8 @@ from openai import OpenAI
 import os
 
 app = Flask(__name__)
-client = OpenAI()
+# Free: Ollama runs locally — install at ollama.com, then: ollama pull llama3.2
+client = OpenAI(api_key="ollama", base_url="http://localhost:11434/v1")
 
 # In-memory session store (use Redis in production!)
 sessions = {}
@@ -818,7 +827,7 @@ def chat():
 
     # Call API
     response = client.chat.completions.create(
-        model="gpt-4o-mini",
+        model="llama3.2",
         messages=messages,
         max_tokens=512
     )
@@ -871,7 +880,8 @@ from openai import OpenAI
 app = App(token=os.environ.get("SLACK_BOT_TOKEN"),
           signing_secret=os.environ.get("SLACK_SIGNING_SECRET"))
 
-client = OpenAI()
+# Free: Ollama runs locally — install at ollama.com, then: ollama pull llama3.2
+client = OpenAI(api_key="ollama", base_url="http://localhost:11434/v1")
 conversation_history = {}  # Store by user ID
 
 @app.event("app_mention")
@@ -890,7 +900,7 @@ def handle_mention(event, say, client_slack):
     recent_history = history[-10:]
 
     response = client.chat.completions.create(
-        model="gpt-4o-mini",
+        model="llama3.2",
         messages=[
             {"role": "system", "content": "You are an internal assistant for Acme Corp employees."},
         ] + recent_history

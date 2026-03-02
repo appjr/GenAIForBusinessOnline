@@ -5,56 +5,68 @@
 
 ---
 
-## Slide 6: OpenAI API Deep Dive
+## Slide 6: Ollama — Free Local LLM Inference
 
-### Getting Started with the OpenAI API
+### Running LLMs Locally with Ollama
+
+**Why Ollama?** Ollama runs open-source LLMs **100% on your machine** — no API key, no internet required, no cost.
 
 **Setup:**
 
 ```bash
-# Install the OpenAI Python SDK
-pip install openai
+# Install Ollama (Mac/Linux)
+curl -fsSL https://ollama.com/install.sh | sh
+# On Mac with Homebrew:
+brew install ollama
 
-# Set your API key (never hardcode in code!)
-export OPENAI_API_KEY="sk-..."
+# Start the local server
+ollama serve
+
+# Pull models (one-time download)
+ollama pull llama3.2      # 3B params — fast, great for most tasks (~2 GB)
+ollama pull mistral       # 7B params — higher quality (~4 GB)
 ```
-
-```python
-import openai
-import os
-
-# Initialize client (reads OPENAI_API_KEY from environment)
-client = openai.OpenAI()
-
-# Or explicitly pass the key
-client = openai.OpenAI(api_key=os.environ.get("OPENAI_API_KEY"))
-```
-
-**Current Models (March 2026):**
-
-| Model | Context | Best For | Cost (per 1M tokens) |
-|-------|---------|----------|----------------------|
-| **gpt-4o** | 128K | Best overall, vision | $2.50 in / $10 out |
-| **gpt-4o-mini** | 128K | Fast, cost-effective | $0.15 in / $0.60 out |
-| **o1** | 200K | Complex reasoning | $15 in / $60 out |
-| **o3-mini** | 200K | Reasoning, affordable | $1.10 in / $4.40 out |
-
-**Simple Text Generation:**
 
 ```python
 from openai import OpenAI
 
-client = OpenAI()
+# Free: Ollama is OpenAI-compatible — same code, zero cost, runs locally
+client = OpenAI(
+    api_key="ollama",               # Ollama doesn't require a real key
+    base_url="http://localhost:11434/v1"
+)
+```
+
+**Popular Local Models via Ollama:**
+
+| Model | Size | Best For | Cost |
+|-------|------|----------|------|
+| **llama3.2** | 3B | Fast responses, everyday tasks | **Free** |
+| **mistral** | 7B | High quality, balanced tasks | **Free** |
+| **llama3.1:8b** | 8B | Complex reasoning | **Free** |
+| **gemma2:2b** | 2B | Lightweight, very fast | **Free** |
+
+**Simple Text Generation:**
+
+```python
+import os
+from openai import OpenAI
+
+# Free: Ollama runs locally — install at ollama.com, then: ollama pull llama3.2
+client = OpenAI(
+    api_key="ollama",
+    base_url="http://localhost:11434/v1"
+)
 
 def generate_text(prompt: str, system: str = "You are a helpful assistant.",
-                  model: str = "gpt-4o-mini", temperature: float = 0.7) -> str:
+                  model: str = "llama3.2", temperature: float = 0.7) -> str:
     """
-    Generate text using the OpenAI API.
+    Generate text using Ollama (free, runs locally).
 
     Args:
         prompt: The user's message/question
         system: System prompt defining behavior
-        model: OpenAI model to use
+        model: Ollama model to use
         temperature: Creativity level (0=factual, 1=creative)
 
     Returns:
@@ -89,7 +101,7 @@ def generate_text_streaming(prompt: str, system: str = "You are helpful."):
     Like watching ChatGPT type in real time.
     """
     stream = client.chat.completions.create(
-        model="gpt-4o-mini",
+        model="llama3.2",
         messages=[
             {"role": "system", "content": system},
             {"role": "user", "content": prompt}
@@ -120,11 +132,11 @@ import json
 
 def extract_structured_data(text: str) -> dict:
     """
-    Use OpenAI to extract structured data from unstructured text.
+    Use Ollama to extract structured data from unstructured text.
     Great for parsing emails, resumes, invoices, etc.
     """
     response = client.chat.completions.create(
-        model="gpt-4o-mini",
+        model="llama3.2",
         messages=[
             {
                 "role": "system",
@@ -163,17 +175,21 @@ print(data)
 **Error Handling:**
 
 ```python
+import os
 from openai import OpenAI, APIError, RateLimitError, AuthenticationError
 import time
 
 def robust_generate(prompt: str, max_retries: int = 3) -> str:
     """Generate text with error handling and retry logic."""
-    client = OpenAI()
+    client = OpenAI(
+        api_key="ollama",
+        base_url="http://localhost:11434/v1"
+    )
 
     for attempt in range(max_retries):
         try:
             response = client.chat.completions.create(
-                model="gpt-4o-mini",
+                model="llama3.2",
                 messages=[{"role": "user", "content": prompt}],
                 max_tokens=500
             )
@@ -185,7 +201,7 @@ def robust_generate(prompt: str, max_retries: int = 3) -> str:
             time.sleep(wait)
 
         except AuthenticationError:
-            raise ValueError("Invalid API key. Check your OPENAI_API_KEY.")
+            raise ValueError("Connection error. Make sure Ollama is running: ollama serve")
 
         except APIError as e:
             print(f"API error: {e}. Attempt {attempt + 1}/{max_retries}")
@@ -602,6 +618,7 @@ Call 2 (CORRECT — we send full history):
 **Building a Chatbot Class:**
 
 ```python
+import os
 from openai import OpenAI
 from datetime import datetime
 import json
@@ -612,7 +629,7 @@ class Chatbot:
     Manages message history and provides a clean interface.
     """
 
-    def __init__(self, system_prompt: str, model: str = "gpt-4o-mini",
+    def __init__(self, system_prompt: str, model: str = "llama3.2",
                  temperature: float = 0.7, max_tokens: int = 1024,
                  max_history: int = 20):
         """
@@ -620,13 +637,16 @@ class Chatbot:
 
         Args:
             system_prompt: The chatbot's persona and instructions
-            model: OpenAI model to use
+            model: Ollama model to use (free tier)
             temperature: Response creativity (0-2)
             max_tokens: Maximum tokens per response
             max_history: Maximum messages to keep in history
-                        (older messages are dropped to save cost)
+                        (older messages are dropped to manage context)
         """
-        self.client = OpenAI()
+        self.client = OpenAI(
+            api_key="ollama",
+            base_url="http://localhost:11434/v1"
+        )
         self.system_prompt = system_prompt
         self.model = model
         self.temperature = temperature
@@ -707,7 +727,7 @@ class Chatbot:
         return {
             "messages": len(self.conversation_history),
             "total_tokens": self.total_tokens_used,
-            "estimated_cost_usd": self.total_tokens_used * 0.00000015,  # gpt-4o-mini
+            "estimated_cost_usd": 0.0,  # Ollama runs locally — no cost!
             "duration_minutes": (datetime.now() - self.created_at).seconds / 60
         }
 
@@ -796,8 +816,12 @@ from openai import OpenAI
 class StreamingChatbot:
     """Chatbot with streaming responses."""
 
-    def __init__(self, system_prompt: str, model: str = "gpt-4o-mini"):
-        self.client = OpenAI()
+    def __init__(self, system_prompt: str, model: str = "llama3.2"):
+        self.client = OpenAI(
+            api_key="ollama",
+            base_url="http://localhost:11434/v1"
+        )
+        self.model = model
         self.system = system_prompt
         self.history = []
 
@@ -808,7 +832,7 @@ class StreamingChatbot:
         messages = [{"role": "system", "content": self.system}] + self.history
 
         stream = self.client.chat.completions.create(
-            model=self.model if hasattr(self, 'model') else "gpt-4o-mini",
+            model=self.model,
             messages=messages,
             stream=True
         )
@@ -832,10 +856,15 @@ class StreamingChatbot:
 Let the model call your Python functions to get real-time data!
 
 ```python
+import os
 import json
 from openai import OpenAI
 
-client = OpenAI()
+# Free: Ollama runs locally — install at ollama.com, then: ollama pull llama3.2
+client = OpenAI(
+    api_key="ollama",
+    base_url="http://localhost:11434/v1"
+)
 
 # Define tools the model can call
 tools = [
@@ -909,7 +938,7 @@ def chat_with_tools(user_message: str, history: list) -> str:
 
     # First call: model may request a tool
     response = client.chat.completions.create(
-        model="gpt-4o-mini",
+        model="llama3.2",
         messages=messages,
         tools=tools,
         tool_choice="auto"
@@ -943,7 +972,7 @@ def chat_with_tools(user_message: str, history: list) -> str:
 
         # Second call: model uses tool results to answer
         final_response = client.chat.completions.create(
-            model="gpt-4o-mini",
+            model="llama3.2",
             messages=messages
         )
         answer = final_response.choices[0].message.content
@@ -989,7 +1018,7 @@ def summarize_and_compress(history: list, keep_last: int = 5) -> list:
     ])
 
     summary_response = client.chat.completions.create(
-        model="gpt-4o-mini",
+        model="llama3.2",
         messages=[
             {"role": "system", "content": "Summarize this conversation in 2-3 sentences."},
             {"role": "user", "content": old_text}

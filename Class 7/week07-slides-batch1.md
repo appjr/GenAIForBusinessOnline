@@ -103,7 +103,7 @@ LLMs don't read words — they read *tokens*. A token is roughly 4 characters or
 # Approximate token counting
 import tiktoken
 
-enc = tiktoken.encoding_for_model("gpt-4o")
+enc = tiktoken.get_encoding("cl100k_base")  # Works for all modern LLMs
 
 text = "Hello, I am a large language model generating text."
 tokens = enc.encode(text)
@@ -160,13 +160,17 @@ This process repeats until:
 | **presence_penalty** | -2 to 2 | Encourages new topics | Useful for creative tasks |
 
 ```python
-import openai
+from openai import OpenAI
 
-client = openai.OpenAI(api_key="your-api-key")
+# Free: Ollama runs locally — install at ollama.com, then: ollama pull llama3.2
+client = OpenAI(
+    api_key="ollama",               # Ollama doesn't need a real key
+    base_url="http://localhost:11434/v1"
+)
 
 # Low temperature = consistent, factual
 response_factual = client.chat.completions.create(
-    model="gpt-4o",
+    model="llama3.2",
     messages=[{"role": "user", "content": "What is the capital of France?"}],
     temperature=0.0,   # deterministic
     max_tokens=50
@@ -174,7 +178,7 @@ response_factual = client.chat.completions.create(
 
 # High temperature = creative, varied
 response_creative = client.chat.completions.create(
-    model="gpt-4o",
+    model="llama3.2",
     messages=[{"role": "user", "content": "Write a tagline for a coffee shop."}],
     temperature=1.2,   # more creative
     max_tokens=50
@@ -265,12 +269,16 @@ messages = [
 **Complete API Call Example:**
 
 ```python
-import openai
+from openai import OpenAI
 
-client = openai.OpenAI(api_key="your-api-key")
+# Free: Ollama runs locally — install at ollama.com, then: ollama pull llama3.2
+client = OpenAI(
+    api_key="ollama",
+    base_url="http://localhost:11434/v1"
+)
 
 response = client.chat.completions.create(
-    model="gpt-4o",
+    model="llama3.2",
     messages=[
         {
             "role": "system",
@@ -292,18 +300,15 @@ message = response.choices[0].message
 print("Role:", message.role)       # "assistant"
 print("Content:", message.content)
 
-# Usage statistics (important for cost tracking!)
+# Usage statistics
 usage = response.usage
 print(f"\nTokens used:")
 print(f"  Prompt tokens:     {usage.prompt_tokens}")
 print(f"  Completion tokens: {usage.completion_tokens}")
 print(f"  Total tokens:      {usage.total_tokens}")
 
-# Cost calculation (GPT-4o pricing, approximate)
-prompt_cost = usage.prompt_tokens * 0.0000025  # $2.50 per 1M tokens
-completion_cost = usage.completion_tokens * 0.00001  # $10 per 1M tokens
-total_cost = prompt_cost + completion_cost
-print(f"\nEstimated cost: ${total_cost:.6f}")
+# Cost: $0.00 — Ollama runs locally, no API costs!
+print(f"\nEstimated cost: $0.00 (Ollama is free/local)")
 ```
 
 **Response Structure:**
@@ -314,7 +319,7 @@ print(f"\nEstimated cost: ${total_cost:.6f}")
   "id": "chatcmpl-abc123",
   "object": "chat.completion",
   "created": 1709500000,
-  "model": "gpt-4o-2024-08-06",
+  "model": "llama3.2",
   "choices": [
     {
       "index": 0,

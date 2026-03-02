@@ -125,29 +125,28 @@ for i, chunk in enumerate(chunks, 1):
 **Step 2: Creating Embeddings**
 
 ```python
-from openai import OpenAI
+# pip install sentence-transformers
+from sentence_transformers import SentenceTransformer
 import numpy as np
 
-client = OpenAI()
+# Free, runs locally — no API needed, downloads once (~90 MB)
+embed_model = SentenceTransformer("all-MiniLM-L6-v2")
 
-def get_embedding(text: str, model: str = "text-embedding-3-small") -> list[float]:
+def get_embedding(text: str) -> list[float]:
     """
-    Convert text to a vector embedding.
+    Convert text to a vector embedding using sentence-transformers.
 
     Embeddings capture semantic meaning — similar texts have similar vectors.
-    text-embedding-3-small: 1,536 dimensions, $0.02/1M tokens
-    text-embedding-3-large: 3,072 dimensions, $0.13/1M tokens (more accurate)
+    all-MiniLM-L6-v2: 384 dimensions, runs on CPU, completely free.
 
     Args:
         text: Text to embed
-        model: Embedding model name
 
     Returns:
         List of floats representing the text's meaning in vector space
     """
     text = text.replace("\n", " ")  # Clean up whitespace
-    response = client.embeddings.create(input=[text], model=model)
-    return response.data[0].embedding
+    return embed_model.encode(text, normalize_embeddings=True).tolist()
 
 def cosine_similarity(vec1: list, vec2: list) -> float:
     """Calculate similarity between two embeddings (0-1, higher = more similar)."""
@@ -229,8 +228,11 @@ class RAGChatbot:
     """A chatbot that answers questions using your documents."""
 
     def __init__(self, system_prompt: str, vector_store: SimpleVectorStore,
-                 model: str = "gpt-4o-mini"):
-        self.client = OpenAI()
+                 model: str = "llama3.2"):
+        self.client = OpenAI(
+            api_key="ollama",
+            base_url="http://localhost:11434/v1"
+        )
         self.system_prompt = system_prompt
         self.store = vector_store
         self.model = model
@@ -344,11 +346,11 @@ for q in questions:
 **ChromaDB Example:**
 
 ```python
-# pip install chromadb
+# pip install chromadb sentence-transformers
 import chromadb
-from openai import OpenAI
+from sentence_transformers import SentenceTransformer
 
-client = OpenAI()
+embed_model = SentenceTransformer("all-MiniLM-L6-v2")  # Free, runs locally
 chroma_client = chromadb.PersistentClient(path="./chroma_db")  # Saved to disk!
 
 # Get or create a collection (like a table)
@@ -358,14 +360,8 @@ collection = chroma_client.get_or_create_collection(
 )
 
 def add_to_chroma(texts: list[str], ids: list[str], metadata: list[dict] = None):
-    """Add documents to ChromaDB with auto-embedding."""
-    # Get embeddings from OpenAI
-    embeddings = []
-    for text in texts:
-        response = client.embeddings.create(
-            input=[text], model="text-embedding-3-small"
-        )
-        embeddings.append(response.data[0].embedding)
+    """Add documents to ChromaDB with free local embeddings."""
+    embeddings = embed_model.encode(texts, normalize_embeddings=True).tolist()
 
     collection.upsert(
         ids=ids,
@@ -377,11 +373,7 @@ def add_to_chroma(texts: list[str], ids: list[str], metadata: list[dict] = None)
 
 def query_chroma(question: str, n_results: int = 3) -> list[dict]:
     """Search ChromaDB for relevant documents."""
-    # Embed the query
-    response = client.embeddings.create(
-        input=[question], model="text-embedding-3-small"
-    )
-    query_embedding = response.data[0].embedding
+    query_embedding = embed_model.encode(question, normalize_embeddings=True).tolist()
 
     # Search
     results = collection.query(
@@ -494,7 +486,7 @@ Without guardrails, your chatbot can:
 
 ```python
 import re
-from openai import OpenAI
+from openai import OpenAI  # noqa — used for the chatbot below
 
 BLOCKED_TOPICS = [
     "competitor prices", "confidential", "secret", "internal only",
@@ -600,50 +592,51 @@ def filter_sensitive_output(response: str) -> str:
 
 # Apply to all bot responses
 def secure_generate(prompt: str) -> str:
-    client = OpenAI()
+    client = OpenAI(api_key="ollama", base_url="http://localhost:11434/v1")
     response = client.chat.completions.create(
-        model="gpt-4o-mini",
+        model="llama3.2",
         messages=[{"role": "user", "content": prompt}]
     )
     raw_response = response.choices[0].message.content
     return filter_sensitive_output(raw_response)
 ```
 
-**Moderation API (OpenAI's Safety Check):**
+**Local Content Safety Check (Keyword-Based):**
 
 ```python
+# Note: OpenAI has a cloud moderation API, but for fully local/free use,
+# a keyword-based guardrail is a practical alternative:
+
+HARMFUL_KEYWORDS = [
+    "how to make a bomb", "suicide methods", "hack into",
+    "illegal drugs how to", "self-harm instructions"
+]
+
 def check_content_safety(text: str) -> dict:
     """
-    Use OpenAI's free moderation endpoint to check for harmful content.
-    Returns categories and whether content was flagged.
+    Simple local safety check using keyword matching.
+    For production, consider using a dedicated moderation model.
     """
-    client = OpenAI()
-    response = client.moderations.create(input=text)
-    result = response.results[0]
-
-    flagged_categories = [
-        cat for cat, flagged in result.categories.model_dump().items()
-        if flagged
-    ]
+    text_lower = text.lower()
+    flagged_keywords = [kw for kw in HARMFUL_KEYWORDS if kw in text_lower]
 
     return {
-        "is_flagged": result.flagged,
-        "flagged_categories": flagged_categories,
-        "scores": {k: round(v, 4) for k, v in result.category_scores.model_dump().items()}
+        "is_flagged": len(flagged_keywords) > 0,
+        "flagged_keywords": flagged_keywords,
+        "recommendation": "Block and log" if flagged_keywords else "Safe to proceed"
     }
 
 # Test it
 test_messages = [
     "What's a good recipe for chocolate cake?",  # Safe
-    "How do I help someone who is feeling suicidal?",  # Will show self-harm category
+    "How do I help someone who is feeling suicidal?",  # Partially flagged
 ]
 
 for msg in test_messages:
     result = check_content_safety(msg)
-    print(f"Message: '{msg[:50]}...'")
+    print(f"Message: '{msg[:50]}'")
     print(f"  Flagged: {result['is_flagged']}")
-    if result['flagged_categories']:
-        print(f"  Categories: {result['flagged_categories']}")
+    print(f"  Recommendation: {result['recommendation']}")
     print()
 ```
 
@@ -671,7 +664,11 @@ pip install gradio openai
 import gradio as gr
 from openai import OpenAI
 
-client = OpenAI()
+# Free: Ollama runs locally — install at ollama.com, then: ollama pull llama3.2
+client = OpenAI(
+    api_key="ollama",
+    base_url="http://localhost:11434/v1"
+)
 
 # System prompt for our demo bot
 SYSTEM_PROMPT = """You are Aria, a friendly AI assistant for TechShop.
@@ -698,9 +695,9 @@ def chat(message: str, history: list) -> str:
 
     messages.append({"role": "user", "content": message})
 
-    # Call the API
+    # Call the local Ollama API
     response = client.chat.completions.create(
-        model="gpt-4o-mini",
+        model="llama3.2",
         messages=messages,
         temperature=0.5,
         max_tokens=512
@@ -729,7 +726,11 @@ demo.launch(share=True)  # share=True creates a public URL!
 import gradio as gr
 from openai import OpenAI
 
-client = OpenAI()
+# Free: Ollama runs locally — install at ollama.com, then: ollama pull llama3.2
+client = OpenAI(
+    api_key="ollama",
+    base_url="http://localhost:11434/v1"
+)
 
 def chat_with_system(message, history, system_prompt, temperature, model):
     """More flexible chat function with configurable settings."""
@@ -770,9 +771,9 @@ with gr.Blocks(title="Chatbot Builder", theme=gr.themes.Soft()) as demo:
                 info="Define your bot's personality and rules"
             )
             model_dropdown = gr.Dropdown(
-                choices=["gpt-4o-mini", "gpt-4o"],
-                value="gpt-4o-mini",
-                label="Model"
+                choices=["llama3.2", "mistral", "llama3.1:8b"],
+                value="llama3.2",
+                label="Model (Ollama — local)"
             )
             temp_slider = gr.Slider(
                 minimum=0, maximum=2, value=0.7, step=0.1,
@@ -822,10 +823,11 @@ demo.launch(server_port=7860, share=False)  # share=True for public URL
 
 # requirements.txt:
 gradio>=4.0
-openai>=1.0
+openai>=1.0  # For OpenAI-compatible API calls
 
+# Note: For HF Spaces with a cloud API (e.g., Groq free tier):
 # 4. Set your API key in Space Settings → Variables
-# OPENAI_API_KEY=sk-...
+# GROQ_API_KEY=gsk_...  ← get free key at console.groq.com
 
 # Your chatbot is now live at:
 # https://huggingface.co/spaces/YOUR_USERNAME/YOUR_SPACE_NAME
