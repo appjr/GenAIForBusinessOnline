@@ -422,7 +422,7 @@
 # Approximate token counting
 import tiktoken
 
-enc = tiktoken.encoding_for_model("gpt-4o")
+enc = tiktoken.get_encoding("cl100k_base")  # Works for all modern LLMs
 
 text = "Hello, I am a large language model generating text."
 tokens = enc.encode(text)
@@ -512,13 +512,17 @@ Model predicts again:
 </tbody></table>
 <br>
 <pre><code class="language-python">
-import openai
+from openai import OpenAI
 
-client = openai.OpenAI(api_key="your-api-key")
+# Free: Ollama runs locally — install at ollama.com, then: ollama pull llama3.2
+client = OpenAI(
+    api_key="ollama",               # Ollama doesn't need a real key
+    base_url="http://localhost:11434/v1"
+)
 
 # Low temperature = consistent, factual
 response_factual = client.chat.completions.create(
-    model="gpt-4o",
+    model="llama3.2",
     messages=[{"role": "user", "content": "What is the capital of France?"}],
     temperature=0.0,   # deterministic
     max_tokens=50
@@ -526,7 +530,7 @@ response_factual = client.chat.completions.create(
 
 # High temperature = creative, varied
 response_creative = client.chat.completions.create(
-    model="gpt-4o",
+    model="llama3.2",
     messages=[{"role": "user", "content": "Write a tagline for a coffee shop."}],
     temperature=1.2,   # more creative
     max_tokens=50
@@ -619,12 +623,16 @@ messages = [
 <p><strong>Complete API Call Example:</strong></p>
 <br>
 <pre><code class="language-python">
-import openai
+from openai import OpenAI
 
-client = openai.OpenAI(api_key="your-api-key")
+# Free: Ollama runs locally — install at ollama.com, then: ollama pull llama3.2
+client = OpenAI(
+    api_key="ollama",
+    base_url="http://localhost:11434/v1"
+)
 
 response = client.chat.completions.create(
-    model="gpt-4o",
+    model="llama3.2",
     messages=[
         {
             "role": "system",
@@ -646,18 +654,15 @@ message = response.choices[0].message
 print("Role:", message.role)       # "assistant"
 print("Content:", message.content)
 
-# Usage statistics (important for cost tracking!)
+# Usage statistics
 usage = response.usage
 print(f"\nTokens used:")
 print(f"  Prompt tokens:     {usage.prompt_tokens}")
 print(f"  Completion tokens: {usage.completion_tokens}")
 print(f"  Total tokens:      {usage.total_tokens}")
 
-# Cost calculation (GPT-4o pricing, approximate)
-prompt_cost = usage.prompt_tokens * 0.0000025  # $2.50 per 1M tokens
-completion_cost = usage.completion_tokens * 0.00001  # $10 per 1M tokens
-total_cost = prompt_cost + completion_cost
-print(f"\nEstimated cost: ${total_cost:.6f}")
+# Cost: $0.00 — Ollama runs locally, no API costs!
+print(f"\nEstimated cost: $0.00 (Ollama is free/local)")
 </code></pre>
 <br>
 <p><strong>Response Structure:</strong></p>
@@ -668,7 +673,7 @@ print(f"\nEstimated cost: ${total_cost:.6f}")
   "id": "chatcmpl-abc123",
   "object": "chat.completion",
   "created": 1709500000,
-  "model": "gpt-4o-2024-08-06",
+  "model": "llama3.2",
   "choices": [
     {
       "index": 0,
@@ -740,82 +745,94 @@ print(f"\nEstimated cost: ${total_cost:.6f}")
 <br>
 <hr class="slide-divider">
 <br>
-<h2 id="slide-6-openai-api-deep-dive" class="slide-title">Slide 6: OpenAI API Deep Dive</h2>
+<h2 id="slide-6-ollama-free-local-llm-inference" class="slide-title">Slide 6: Ollama — Free Local LLM Inference</h2>
 <br>
-<h3>Getting Started with the OpenAI API</h3>
+<h3>Running LLMs Locally with Ollama</h3>
+<br>
+<p><strong>Why Ollama?</strong> Ollama runs open-source LLMs <strong>100% on your machine</strong> — no API key, no internet required, no cost.</p>
 <br>
 <p><strong>Setup:</strong></p>
 <br>
 <pre><code class="language-bash">
-# Install the OpenAI Python SDK
-pip install openai
+# Install Ollama (Mac/Linux)
+curl -fsSL https://ollama.com/install.sh | sh
+# On Mac with Homebrew:
+brew install ollama
 
-# Set your API key (never hardcode in code!)
-export OPENAI_API_KEY="sk-..."
+# Start the local server
+ollama serve
+
+# Pull models (one-time download)
+ollama pull llama3.2      # 3B params — fast, great for most tasks (~2 GB)
+ollama pull mistral       # 7B params — higher quality (~4 GB)
 </code></pre>
 <br>
 <pre><code class="language-python">
-import openai
-import os
+from openai import OpenAI
 
-# Initialize client (reads OPENAI_API_KEY from environment)
-client = openai.OpenAI()
-
-# Or explicitly pass the key
-client = openai.OpenAI(api_key=os.environ.get("OPENAI_API_KEY"))
+# Free: Ollama is OpenAI-compatible — same code, zero cost, runs locally
+client = OpenAI(
+    api_key="ollama",               # Ollama doesn't require a real key
+    base_url="http://localhost:11434/v1"
+)
 </code></pre>
 <br>
-<p><strong>Current Models (March 2026):</strong></p>
+<p><strong>Popular Local Models via Ollama:</strong></p>
 <br>
 <table>
 <thead><tr>
 <th>Model</th>
-<th>Context</th>
+<th>Size</th>
 <th>Best For</th>
-<th>Cost (per 1M tokens)</th>
+<th>Cost</th>
 </tr></thead><tbody>
 <tr>
-<td><strong>gpt-4o</strong></td>
-<td>128K</td>
-<td>Best overall, vision</td>
-<td>$2.50 in / $10 out</td>
+<td><strong>llama3.2</strong></td>
+<td>3B</td>
+<td>Fast responses, everyday tasks</td>
+<td><strong>Free</strong></td>
 </tr>
 <tr>
-<td><strong>gpt-4o-mini</strong></td>
-<td>128K</td>
-<td>Fast, cost-effective</td>
-<td>$0.15 in / $0.60 out</td>
+<td><strong>mistral</strong></td>
+<td>7B</td>
+<td>High quality, balanced tasks</td>
+<td><strong>Free</strong></td>
 </tr>
 <tr>
-<td><strong>o1</strong></td>
-<td>200K</td>
+<td><strong>llama3.1:8b</strong></td>
+<td>8B</td>
 <td>Complex reasoning</td>
-<td>$15 in / $60 out</td>
+<td><strong>Free</strong></td>
 </tr>
 <tr>
-<td><strong>o3-mini</strong></td>
-<td>200K</td>
-<td>Reasoning, affordable</td>
-<td>$1.10 in / $4.40 out</td>
+<td><strong>gemma2:2b</strong></td>
+<td>2B</td>
+<td>Lightweight, very fast</td>
+<td><strong>Free</strong></td>
 </tr>
 </tbody></table>
 <br>
 <p><strong>Simple Text Generation:</strong></p>
 <br>
 <pre><code class="language-python">
+import os
 from openai import OpenAI
 
-client = OpenAI()
+# Free: Ollama runs locally — install at ollama.com, then: ollama pull llama3.2
+client = OpenAI(
+    api_key="ollama",
+    base_url="http://localhost:11434/v1"
+)
 
 def generate_text(prompt: str, system: str = "You are a helpful assistant.",
-                  model: str = "gpt-4o-mini", temperature: float = 0.7) -&gt; str:
+                  model: str = "llama3.2", temperature: float = 0.7) -&gt; str:
     """
-    Generate text using the OpenAI API.
+    Generate text using Ollama (free, runs locally).
 
     Args:
         prompt: The user's message/question
         system: System prompt defining behavior
-        model: OpenAI model to use
+        model: Ollama model to use
         temperature: Creativity level (0=factual, 1=creative)
 
     Returns:
@@ -850,7 +867,7 @@ def generate_text_streaming(prompt: str, system: str = "You are helpful."):
     Like watching ChatGPT type in real time.
     """
     stream = client.chat.completions.create(
-        model="gpt-4o-mini",
+        model="llama3.2",
         messages=[
             {"role": "system", "content": system},
             {"role": "user", "content": prompt}
@@ -881,11 +898,11 @@ import json
 
 def extract_structured_data(text: str) -&gt; dict:
     """
-    Use OpenAI to extract structured data from unstructured text.
+    Use Ollama to extract structured data from unstructured text.
     Great for parsing emails, resumes, invoices, etc.
     """
     response = client.chat.completions.create(
-        model="gpt-4o-mini",
+        model="llama3.2",
         messages=[
             {
                 "role": "system",
@@ -924,17 +941,21 @@ print(data)
 <p><strong>Error Handling:</strong></p>
 <br>
 <pre><code class="language-python">
+import os
 from openai import OpenAI, APIError, RateLimitError, AuthenticationError
 import time
 
 def robust_generate(prompt: str, max_retries: int = 3) -&gt; str:
     """Generate text with error handling and retry logic."""
-    client = OpenAI()
+    client = OpenAI(
+        api_key="ollama",
+        base_url="http://localhost:11434/v1"
+    )
 
     for attempt in range(max_retries):
         try:
             response = client.chat.completions.create(
-                model="gpt-4o-mini",
+                model="llama3.2",
                 messages=[{"role": "user", "content": prompt}],
                 max_tokens=500
             )
@@ -946,7 +967,7 @@ def robust_generate(prompt: str, max_retries: int = 3) -&gt; str:
             time.sleep(wait)
 
         except AuthenticationError:
-            raise ValueError("Invalid API key. Check your OPENAI_API_KEY.")
+            raise ValueError("Connection error. Make sure Ollama is running: ollama serve")
 
         except APIError as e:
             print(f"API error: {e}. Attempt {attempt + 1}/{max_retries}")
@@ -1423,6 +1444,7 @@ Call 2 (CORRECT — we send full history):
 <p><strong>Building a Chatbot Class:</strong></p>
 <br>
 <pre><code class="language-python">
+import os
 from openai import OpenAI
 from datetime import datetime
 import json
@@ -1433,7 +1455,7 @@ class Chatbot:
     Manages message history and provides a clean interface.
     """
 
-    def __init__(self, system_prompt: str, model: str = "gpt-4o-mini",
+    def __init__(self, system_prompt: str, model: str = "llama3.2",
                  temperature: float = 0.7, max_tokens: int = 1024,
                  max_history: int = 20):
         """
@@ -1441,13 +1463,16 @@ class Chatbot:
 
         Args:
             system_prompt: The chatbot's persona and instructions
-            model: OpenAI model to use
+            model: Ollama model to use (free tier)
             temperature: Response creativity (0-2)
             max_tokens: Maximum tokens per response
             max_history: Maximum messages to keep in history
-                        (older messages are dropped to save cost)
+                        (older messages are dropped to manage context)
         """
-        self.client = OpenAI()
+        self.client = OpenAI(
+            api_key="ollama",
+            base_url="http://localhost:11434/v1"
+        )
         self.system_prompt = system_prompt
         self.model = model
         self.temperature = temperature
@@ -1528,7 +1553,7 @@ class Chatbot:
         return {
             "messages": len(self.conversation_history),
             "total_tokens": self.total_tokens_used,
-            "estimated_cost_usd": self.total_tokens_used * 0.00000015,  # gpt-4o-mini
+            "estimated_cost_usd": 0.0,  # Ollama runs locally — no cost!
             "duration_minutes": (datetime.now() - self.created_at).seconds / 60
         }
 
@@ -1617,8 +1642,12 @@ from openai import OpenAI
 class StreamingChatbot:
     """Chatbot with streaming responses."""
 
-    def __init__(self, system_prompt: str, model: str = "gpt-4o-mini"):
-        self.client = OpenAI()
+    def __init__(self, system_prompt: str, model: str = "llama3.2"):
+        self.client = OpenAI(
+            api_key="ollama",
+            base_url="http://localhost:11434/v1"
+        )
+        self.model = model
         self.system = system_prompt
         self.history = []
 
@@ -1629,7 +1658,7 @@ class StreamingChatbot:
         messages = [{"role": "system", "content": self.system}] + self.history
 
         stream = self.client.chat.completions.create(
-            model=self.model if hasattr(self, 'model') else "gpt-4o-mini",
+            model=self.model,
             messages=messages,
             stream=True
         )
@@ -1653,10 +1682,15 @@ class StreamingChatbot:
 <p>Let the model call your Python functions to get real-time data!</p>
 <br>
 <pre><code class="language-python">
+import os
 import json
 from openai import OpenAI
 
-client = OpenAI()
+# Free: Ollama runs locally — install at ollama.com, then: ollama pull llama3.2
+client = OpenAI(
+    api_key="ollama",
+    base_url="http://localhost:11434/v1"
+)
 
 # Define tools the model can call
 tools = [
@@ -1730,7 +1764,7 @@ def chat_with_tools(user_message: str, history: list) -&gt; str:
 
     # First call: model may request a tool
     response = client.chat.completions.create(
-        model="gpt-4o-mini",
+        model="llama3.2",
         messages=messages,
         tools=tools,
         tool_choice="auto"
@@ -1764,7 +1798,7 @@ def chat_with_tools(user_message: str, history: list) -&gt; str:
 
         # Second call: model uses tool results to answer
         final_response = client.chat.completions.create(
-            model="gpt-4o-mini",
+            model="llama3.2",
             messages=messages
         )
         answer = final_response.choices[0].message.content
@@ -1810,7 +1844,7 @@ def summarize_and_compress(history: list, keep_last: int = 5) -&gt; list:
     ])
 
     summary_response = client.chat.completions.create(
-        model="gpt-4o-mini",
+        model="llama3.2",
         messages=[
             {"role": "system", "content": "Summarize this conversation in 2-3 sentences."},
             {"role": "user", "content": old_text}
@@ -1972,29 +2006,28 @@ for i, chunk in enumerate(chunks, 1):
 <p><strong>Step 2: Creating Embeddings</strong></p>
 <br>
 <pre><code class="language-python">
-from openai import OpenAI
+# pip install sentence-transformers
+from sentence_transformers import SentenceTransformer
 import numpy as np
 
-client = OpenAI()
+# Free, runs locally — no API needed, downloads once (~90 MB)
+embed_model = SentenceTransformer("all-MiniLM-L6-v2")
 
-def get_embedding(text: str, model: str = "text-embedding-3-small") -&gt; list[float]:
+def get_embedding(text: str) -&gt; list[float]:
     """
-    Convert text to a vector embedding.
+    Convert text to a vector embedding using sentence-transformers.
 
     Embeddings capture semantic meaning — similar texts have similar vectors.
-    text-embedding-3-small: 1,536 dimensions, $0.02/1M tokens
-    text-embedding-3-large: 3,072 dimensions, $0.13/1M tokens (more accurate)
+    all-MiniLM-L6-v2: 384 dimensions, runs on CPU, completely free.
 
     Args:
         text: Text to embed
-        model: Embedding model name
 
     Returns:
         List of floats representing the text's meaning in vector space
     """
     text = text.replace("\n", " ")  # Clean up whitespace
-    response = client.embeddings.create(input=[text], model=model)
-    return response.data[0].embedding
+    return embed_model.encode(text, normalize_embeddings=True).tolist()
 
 def cosine_similarity(vec1: list, vec2: list) -&gt; float:
     """Calculate similarity between two embeddings (0-1, higher = more similar)."""
@@ -2076,8 +2109,11 @@ class RAGChatbot:
     """A chatbot that answers questions using your documents."""
 
     def __init__(self, system_prompt: str, vector_store: SimpleVectorStore,
-                 model: str = "gpt-4o-mini"):
-        self.client = OpenAI()
+                 model: str = "llama3.2"):
+        self.client = OpenAI(
+            api_key="ollama",
+            base_url="http://localhost:11434/v1"
+        )
         self.system_prompt = system_prompt
         self.store = vector_store
         self.model = model
@@ -2222,11 +2258,11 @@ for q in questions:
 <p><strong>ChromaDB Example:</strong></p>
 <br>
 <pre><code class="language-python">
-# pip install chromadb
+# pip install chromadb sentence-transformers
 import chromadb
-from openai import OpenAI
+from sentence_transformers import SentenceTransformer
 
-client = OpenAI()
+embed_model = SentenceTransformer("all-MiniLM-L6-v2")  # Free, runs locally
 chroma_client = chromadb.PersistentClient(path="./chroma_db")  # Saved to disk!
 
 # Get or create a collection (like a table)
@@ -2236,14 +2272,8 @@ collection = chroma_client.get_or_create_collection(
 )
 
 def add_to_chroma(texts: list[str], ids: list[str], metadata: list[dict] = None):
-    """Add documents to ChromaDB with auto-embedding."""
-    # Get embeddings from OpenAI
-    embeddings = []
-    for text in texts:
-        response = client.embeddings.create(
-            input=[text], model="text-embedding-3-small"
-        )
-        embeddings.append(response.data[0].embedding)
+    """Add documents to ChromaDB with free local embeddings."""
+    embeddings = embed_model.encode(texts, normalize_embeddings=True).tolist()
 
     collection.upsert(
         ids=ids,
@@ -2255,11 +2285,7 @@ def add_to_chroma(texts: list[str], ids: list[str], metadata: list[dict] = None)
 
 def query_chroma(question: str, n_results: int = 3) -&gt; list[dict]:
     """Search ChromaDB for relevant documents."""
-    # Embed the query
-    response = client.embeddings.create(
-        input=[question], model="text-embedding-3-small"
-    )
-    query_embedding = response.data[0].embedding
+    query_embedding = embed_model.encode(question, normalize_embeddings=True).tolist()
 
     # Search
     results = collection.query(
@@ -2374,7 +2400,7 @@ def build_knowledge_base_from_files(file_paths: list[str]) -&gt; SimpleVectorSto
 <br>
 <pre><code class="language-python">
 import re
-from openai import OpenAI
+from openai import OpenAI  # noqa — used for the chatbot below
 
 BLOCKED_TOPICS = [
     "competitor prices", "confidential", "secret", "internal only",
@@ -2480,50 +2506,51 @@ def filter_sensitive_output(response: str) -&gt; str:
 
 # Apply to all bot responses
 def secure_generate(prompt: str) -&gt; str:
-    client = OpenAI()
+    client = OpenAI(api_key="ollama", base_url="http://localhost:11434/v1")
     response = client.chat.completions.create(
-        model="gpt-4o-mini",
+        model="llama3.2",
         messages=[{"role": "user", "content": prompt}]
     )
     raw_response = response.choices[0].message.content
     return filter_sensitive_output(raw_response)
 </code></pre>
 <br>
-<p><strong>Moderation API (OpenAI's Safety Check):</strong></p>
+<p><strong>Local Content Safety Check (Keyword-Based):</strong></p>
 <br>
 <pre><code class="language-python">
+# Note: OpenAI has a cloud moderation API, but for fully local/free use,
+# a keyword-based guardrail is a practical alternative:
+
+HARMFUL_KEYWORDS = [
+    "how to make a bomb", "suicide methods", "hack into",
+    "illegal drugs how to", "self-harm instructions"
+]
+
 def check_content_safety(text: str) -&gt; dict:
     """
-    Use OpenAI's free moderation endpoint to check for harmful content.
-    Returns categories and whether content was flagged.
+    Simple local safety check using keyword matching.
+    For production, consider using a dedicated moderation model.
     """
-    client = OpenAI()
-    response = client.moderations.create(input=text)
-    result = response.results[0]
-
-    flagged_categories = [
-        cat for cat, flagged in result.categories.model_dump().items()
-        if flagged
-    ]
+    text_lower = text.lower()
+    flagged_keywords = [kw for kw in HARMFUL_KEYWORDS if kw in text_lower]
 
     return {
-        "is_flagged": result.flagged,
-        "flagged_categories": flagged_categories,
-        "scores": {k: round(v, 4) for k, v in result.category_scores.model_dump().items()}
+        "is_flagged": len(flagged_keywords) &gt; 0,
+        "flagged_keywords": flagged_keywords,
+        "recommendation": "Block and log" if flagged_keywords else "Safe to proceed"
     }
 
 # Test it
 test_messages = [
     "What's a good recipe for chocolate cake?",  # Safe
-    "How do I help someone who is feeling suicidal?",  # Will show self-harm category
+    "How do I help someone who is feeling suicidal?",  # Partially flagged
 ]
 
 for msg in test_messages:
     result = check_content_safety(msg)
-    print(f"Message: '{msg[:50]}...'")
+    print(f"Message: '{msg[:50]}'")
     print(f"  Flagged: {result['is_flagged']}")
-    if result['flagged_categories']:
-        print(f"  Categories: {result['flagged_categories']}")
+    print(f"  Recommendation: {result['recommendation']}")
     print()
 </code></pre>
 <br>
@@ -2553,7 +2580,11 @@ pip install gradio openai
 import gradio as gr
 from openai import OpenAI
 
-client = OpenAI()
+# Free: Ollama runs locally — install at ollama.com, then: ollama pull llama3.2
+client = OpenAI(
+    api_key="ollama",
+    base_url="http://localhost:11434/v1"
+)
 
 # System prompt for our demo bot
 SYSTEM_PROMPT = """You are Aria, a friendly AI assistant for TechShop.
@@ -2580,9 +2611,9 @@ def chat(message: str, history: list) -&gt; str:
 
     messages.append({"role": "user", "content": message})
 
-    # Call the API
+    # Call the local Ollama API
     response = client.chat.completions.create(
-        model="gpt-4o-mini",
+        model="llama3.2",
         messages=messages,
         temperature=0.5,
         max_tokens=512
@@ -2611,7 +2642,11 @@ demo.launch(share=True)  # share=True creates a public URL!
 import gradio as gr
 from openai import OpenAI
 
-client = OpenAI()
+# Free: Ollama runs locally — install at ollama.com, then: ollama pull llama3.2
+client = OpenAI(
+    api_key="ollama",
+    base_url="http://localhost:11434/v1"
+)
 
 def chat_with_system(message, history, system_prompt, temperature, model):
     """More flexible chat function with configurable settings."""
@@ -2652,9 +2687,9 @@ with gr.Blocks(title="Chatbot Builder", theme=gr.themes.Soft()) as demo:
                 info="Define your bot's personality and rules"
             )
             model_dropdown = gr.Dropdown(
-                choices=["gpt-4o-mini", "gpt-4o"],
-                value="gpt-4o-mini",
-                label="Model"
+                choices=["llama3.2", "mistral", "llama3.1:8b"],
+                value="llama3.2",
+                label="Model (Ollama — local)"
             )
             temp_slider = gr.Slider(
                 minimum=0, maximum=2, value=0.7, step=0.1,
@@ -2704,10 +2739,11 @@ demo.launch(server_port=7860, share=False)  # share=True for public URL
 
 # requirements.txt:
 gradio&gt;=4.0
-openai&gt;=1.0
+openai&gt;=1.0  # For OpenAI-compatible API calls
 
+# Note: For HF Spaces with a cloud API (e.g., Groq free tier):
 # 4. Set your API key in Space Settings → Variables
-# OPENAI_API_KEY=sk-...
+# GROQ_API_KEY=gsk_...  ← get free key at console.groq.com
 
 # Your chatbot is now live at:
 # https://huggingface.co/spaces/YOUR_USERNAME/YOUR_SPACE_NAME
@@ -2821,7 +2857,7 @@ result = customer_service_roi(
     monthly_tickets=5000,
     automation_rate=0.65,         # 65% of tickets automated
     human_cost_per_ticket=8.50,   # $8.50 per human-handled ticket
-    bot_cost_per_message=0.001    # $0.001 per API call (gpt-4o-mini)
+    bot_cost_per_message=0.0      # $0.00 per API call (Ollama — local/free)
 )
 
 print("Customer Service Chatbot ROI")
@@ -2922,7 +2958,9 @@ def analyze_document(document_text: str, analysis_type: str = "summary") -&gt; s
     - "sentiment": Stakeholder sentiment
     - "comparison": Compare with requirements
     """
-    client = OpenAI()
+    from openai import OpenAI
+    # Free: Ollama runs locally — install at ollama.com, then: ollama pull mistral
+    client = OpenAI(api_key="ollama", base_url="http://localhost:11434/v1")
 
     analysis_prompts = {
         "summary": "Provide a 3-bullet executive summary of this document. "
@@ -2938,7 +2976,7 @@ def analyze_document(document_text: str, analysis_type: str = "summary") -&gt; s
     prompt = analysis_prompts.get(analysis_type, analysis_prompts["summary"])
 
     response = client.chat.completions.create(
-        model="gpt-4o",  # Use the most capable model for document analysis
+        model="mistral",  # Use a higher-quality local model for document analysis
         messages=[
             {"role": "system", "content": "You are an expert business analyst. "
              "Provide precise, actionable analysis. "
@@ -2963,7 +3001,8 @@ def analyze_document(document_text: str, analysis_type: str = "summary") -&gt; s
 import pandas as pd
 from openai import OpenAI
 
-client = OpenAI()
+# Free: Ollama runs locally — install at ollama.com, then: ollama pull llama3.2
+client = OpenAI(api_key="ollama", base_url="http://localhost:11434/v1")
 
 def generate_personalized_emails(customer_data: list[dict]) -&gt; list[dict]:
     """
@@ -3000,7 +3039,7 @@ Requirements:
 - Keep to 150 words max
 """
         response = client.chat.completions.create(
-            model="gpt-4o-mini",
+            model="llama3.2",
             messages=[
                 {"role": "system", "content": "You are an expert email marketer."},
                 {"role": "user", "content": prompt}
@@ -3210,20 +3249,22 @@ def calculate_chatbot_cost(
     avg_user_message_tokens: int,
     avg_bot_response_tokens: int,
     system_prompt_tokens: int,
-    model: str = "gpt-4o-mini"
+    model: str = "llama3.2"
 ) -&gt; dict:
     """
     Calculate monthly API costs for a chatbot deployment.
     """
     # Pricing per 1M tokens (approximate, March 2026)
     pricing = {
-        "gpt-4o": {"input": 2.50, "output": 10.00},
-        "gpt-4o-mini": {"input": 0.15, "output": 0.60},
-        "claude-sonnet-4-6": {"input": 3.00, "output": 15.00},
-        "claude-haiku-4-5": {"input": 0.80, "output": 4.00}
+        "llama3.2": {"input": 0.0, "output": 0.0},        # Ollama — free/local
+        "mistral": {"input": 0.0, "output": 0.0},          # Ollama — free/local
+        "gpt-4o": {"input": 2.50, "output": 10.00},        # OpenAI — paid
+        "gpt-4o-mini": {"input": 0.15, "output": 0.60},    # OpenAI — paid
+        "claude-sonnet-4-6": {"input": 3.00, "output": 15.00},  # Anthropic — paid
+        "claude-haiku-4-5": {"input": 0.80, "output": 4.00}     # Anthropic — paid
     }
 
-    rates = pricing.get(model, pricing["gpt-4o-mini"])
+    rates = pricing.get(model, pricing["llama3.2"])
 
     # Each API call includes: system prompt + full history + new message
     # History grows with each turn in conversation
@@ -3265,7 +3306,7 @@ costs = calculate_chatbot_cost(
     avg_user_message_tokens=50,
     avg_bot_response_tokens=150,
     system_prompt_tokens=300,
-    model="gpt-4o-mini"
+    model="llama3.2"  # Free with Ollama; swap for "gpt-4o-mini" to compare cloud pricing
 )
 
 print("=== Monthly Cost Analysis ===")
@@ -3295,11 +3336,13 @@ for k, v in costs.items():
 <pre><code class="language-python">
 class CostOptimizedChatbot:
     """
-    Chatbot with built-in cost optimization strategies.
+    Chatbot with built-in optimization strategies.
+    Uses Ollama locally — cost is always $0, but strategies still apply for latency.
     """
 
     def __init__(self, system_prompt: str):
-        self.client = OpenAI()
+        from openai import OpenAI
+        self.client = OpenAI(api_key="ollama", base_url="http://localhost:11434/v1")
         self.system = system_prompt
         self.history = []
         self.total_cost = 0.0
@@ -3342,10 +3385,10 @@ class CostOptimizedChatbot:
         self.history.append({"role": "user", "content": user_message})
         self.history.append({"role": "assistant", "content": answer})
 
-        # Track cost
+        # Track cost — $0 for Ollama, but logging token usage is still useful for
+        # latency optimization (fewer tokens = faster responses)
         usage = response.usage
-        model_cost = {"gpt-4o-mini": 0.00000015, "gpt-4o": 0.000005}
-        self.total_cost += usage.total_tokens * model_cost.get(model, 0.00000015)
+        self.total_cost = 0.0  # Ollama is free/local
 
         return answer
 
@@ -3358,7 +3401,7 @@ class CostOptimizedChatbot:
             len(message) &gt; 200 or
             any(kw in message.lower() for kw in complex_keywords)
         )
-        return "gpt-4o" if is_complex else "gpt-4o-mini"
+        return "mistral" if is_complex else "llama3.2"
 
     def _compress_history(self, history: list) -&gt; list:
         """Summarize old history to save tokens."""
@@ -3367,7 +3410,7 @@ class CostOptimizedChatbot:
 
         text = "\n".join([f"{m['role']}: {m['content']}" for m in old_messages])
         summary = self.client.chat.completions.create(
-            model="gpt-4o-mini",
+            model="llama3.2",
             messages=[
                 {"role": "system", "content": "Summarize this conversation in 2 sentences."},
                 {"role": "user", "content": text}
@@ -3399,7 +3442,8 @@ class CostOptimizedChatbot:
 from openai import OpenAI
 import json
 
-client = OpenAI()
+# Free: Ollama runs locally — install at ollama.com, then: ollama pull mistral
+client = OpenAI(api_key="ollama", base_url="http://localhost:11434/v1")
 
 def evaluate_chatbot_response(
     user_question: str,
@@ -3441,7 +3485,7 @@ Scoring guide:
 """
 
     response = client.chat.completions.create(
-        model="gpt-4o",  # Use best model for evaluation
+        model="mistral",  # Use higher-quality model for evaluation
         messages=[
             {"role": "system", "content": "You are an expert chatbot evaluator. Be critical and precise."},
             {"role": "user", "content": evaluation_prompt}
@@ -3531,7 +3575,7 @@ class ChatbotMetricsDashboard:
             "csat_score": sum(c['rating'] for c in rated) / len(rated) if rated else None,
             "total_tokens": sum(c['tokens'] for c in recent),
             "avg_tokens_per_conv": int(sum(c['tokens'] for c in recent) / total),
-            "estimated_cost_usd": sum(c['tokens'] for c in recent) * 0.00000015
+            "estimated_cost_usd": 0.0  # Ollama runs locally — no cost
         }
 
 # Example usage with simulated data
@@ -3616,7 +3660,8 @@ from openai import OpenAI
 import os
 
 app = Flask(__name__)
-client = OpenAI()
+# Free: Ollama runs locally — install at ollama.com, then: ollama pull llama3.2
+client = OpenAI(api_key="ollama", base_url="http://localhost:11434/v1")
 
 # In-memory session store (use Redis in production!)
 sessions = {}
@@ -3649,7 +3694,7 @@ def chat():
 
     # Call API
     response = client.chat.completions.create(
-        model="gpt-4o-mini",
+        model="llama3.2",
         messages=messages,
         max_tokens=512
     )
@@ -3702,7 +3747,8 @@ from openai import OpenAI
 app = App(token=os.environ.get("SLACK_BOT_TOKEN"),
           signing_secret=os.environ.get("SLACK_SIGNING_SECRET"))
 
-client = OpenAI()
+# Free: Ollama runs locally — install at ollama.com, then: ollama pull llama3.2
+client = OpenAI(api_key="ollama", base_url="http://localhost:11434/v1")
 conversation_history = {}  # Store by user ID
 
 @app.event("app_mention")
@@ -3721,7 +3767,7 @@ def handle_mention(event, say, client_slack):
     recent_history = history[-10:]
 
     response = client.chat.completions.create(
-        model="gpt-4o-mini",
+        model="llama3.2",
         messages=[
             {"role": "system", "content": "You are an internal assistant for Acme Corp employees."},
         ] + recent_history
@@ -3872,9 +3918,10 @@ CRITICAL RULES about information accuracy:
 # Strategy 3: Confidence signals
 def generate_with_confidence_check(prompt: str) -&gt; str:
     """Ask the model to flag uncertain responses."""
-    client = OpenAI()
+    from openai import OpenAI
+    client = OpenAI(api_key="ollama", base_url="http://localhost:11434/v1")
     response = client.chat.completions.create(
-        model="gpt-4o-mini",
+        model="llama3.2",
         messages=[
             {"role": "system", "content": """
 Answer the question. If you are NOT fully confident in any part of your answer,
@@ -4257,17 +4304,23 @@ for m in common_mistakes:
 <br>
 <pre><code class="language-python">
 # Run this in a Jupyter notebook or Python file
-# Make sure to: pip install openai
+# Prerequisites:
+#   1. Install Ollama: curl -fsSL https://ollama.com/install.sh | sh
+#   2. Start server:   ollama serve
+#   3. Pull model:     ollama pull llama3.2
+#   4. Install SDK:    pip install openai
 
-import openai
-import os
+from openai import OpenAI
 
-# Set your API key
-client = openai.OpenAI(api_key="YOUR_API_KEY_HERE")
+# Free: Ollama runs locally — no API key needed
+client = OpenAI(
+    api_key="ollama",
+    base_url="http://localhost:11434/v1"
+)
 
 # Make your first call!
 response = client.chat.completions.create(
-    model="gpt-4o-mini",
+    model="llama3.2",
     messages=[
         {"role": "system", "content": "You are a helpful assistant."},
         {"role": "user", "content": "Tell me one fascinating fact about Texas."}
@@ -4277,7 +4330,7 @@ response = client.chat.completions.create(
 
 print(response.choices[0].message.content)
 print(f"\nTokens used: {response.usage.total_tokens}")
-print(f"Est. cost: ${response.usage.total_tokens * 0.00000015:.6f}")
+print(f"Est. cost: $0.00 (Ollama is free/local)")
 </code></pre>
 <br>
 <hr class="slide-divider">
@@ -4400,7 +4453,11 @@ for q in test_questions:
 import gradio as gr
 from openai import OpenAI
 
-client = OpenAI()
+# Free: Ollama runs locally — install at ollama.com, then: ollama pull llama3.2
+client = OpenAI(
+    api_key="ollama",
+    base_url="http://localhost:11434/v1"
+)
 
 # Use your system prompt from Exercise 2
 SYSTEM = YOUR_SYSTEM_PROMPT  # from above
@@ -4413,7 +4470,7 @@ def chat(message, history):
     messages.append({"role": "user", "content": message})
 
     response = client.chat.completions.create(
-        model="gpt-4o-mini", messages=messages, max_tokens=300)
+        model="llama3.2", messages=messages, max_tokens=300)
     return response.choices[0].message.content
 
 # Launch!
@@ -4467,7 +4524,7 @@ Application 5: Legal Document Summarizer
 <pre><code class="language-python">
 # The core tech behind every example above
 core_stack = {
-    "LLM": "OpenAI GPT-4o-mini or Anthropic Claude Haiku (cost-effective)",
+    "LLM": "Ollama (local/free: llama3.2, mistral) or Anthropic Claude Haiku (cloud, paid)",
     "Knowledge Base": "ChromaDB (local) or Pinecone (cloud) for RAG",
     "UI": "Gradio (quick demo) or React (production)",
     "Backend": "FastAPI or Flask REST API",
@@ -4491,15 +4548,17 @@ core_stack = {
 
 # Example: Customer shows photo of broken product
 def handle_image_complaint(image_path: str, user_message: str) -&gt; str:
-    """Process a complaint with an attached image."""
+    """Process a complaint with an attached image.
+    Note: Vision requires a multimodal model. For local use, try 'llava' via Ollama.
+    For best results, use GPT-4o (OpenAI) or Claude Sonnet (Anthropic).
+    """
     import base64
+    from openai import OpenAI
 
-    with open(image_path, "rb") as f:
-        image_data = base64.b64encode(f.read()).decode()
-
-    client = OpenAI()
+    # Vision example using GPT-4o (requires OpenAI API key):
+    client = OpenAI()  # uses OPENAI_API_KEY env var
     response = client.chat.completions.create(
-        model="gpt-4o",
+        model="gpt-4o",  # or use "llava" with Ollama for local vision
         messages=[{
             "role": "user",
             "content": [
@@ -4613,6 +4672,31 @@ Reference their history when relevant.
 <br>
 <hr class="slide-divider">
 <br>
+<p><strong>📋 Your Action Plan:</strong></p>
+<br>
+<p><strong>This Week:</strong></p>
+<ul>
+<li>[ ] Set up OpenAI API account and make your first call</li>
+<li>[ ] Build the customer service chatbot from Exercise 2</li>
+<li>[ ] Share it via Gradio with a teammate for feedback</li>
+</ul>
+<br>
+<p><strong>This Month:</strong></p>
+<ul>
+<li>[ ] Identify a chatbot opportunity in your workplace or business</li>
+<li>[ ] Build a RAG chatbot with 10-20 documents from that domain</li>
+<li>[ ] Measure baseline metrics (response time, satisfaction)</li>
+</ul>
+<br>
+<p><strong>This Quarter:</strong></p>
+<ul>
+<li>[ ] Deploy a production chatbot for a real use case</li>
+<li>[ ] Track KPIs: resolution rate, cost savings, user satisfaction</li>
+<li>[ ] Present results to your team or stakeholders</li>
+</ul>
+<br>
+<hr class="slide-divider">
+<br>
 <p><strong>📚 Resources:</strong></p>
 <br>
 <p><strong>APIs & Documentation:</strong></p>
@@ -4645,6 +4729,67 @@ Reference their history when relevant.
 <br>
 <hr class="slide-divider">
 <br>
+<p><strong>🎓 Week 7 Homework Assignment:</strong></p>
+<br>
+<p><strong>Build a Chatbot for a Real Business Need</strong></p>
+<br>
+<p><strong>Deliverables:</strong></p>
+<ol>
+<li><strong>A working chatbot</strong> with a clear business use case</li>
+<li><strong>System prompt</strong> (document your design decisions)</li>
+<li><strong>Knowledge base</strong> (at least 10 documents/chunks for RAG)</li>
+<li><strong>Gradio demo</strong> (shareable URL or screenshot/video)</li>
+<li><strong>Brief writeup</strong> (1-2 pages):</li>
+<p>   - What problem does it solve?</p>
+<p>   - Who is the target user?</p>
+<p>   - What guardrails did you implement?</p>
+<p>   - How would you measure success in production?</p>
+<p>   - What would you do differently with more time?</p>
+<br>
+<p><strong>Grading:</strong></p>
+<ul>
+<li>Working chatbot with appropriate persona: 30%</li>
+<li>RAG integration with relevant knowledge base: 25%</li>
+<li>Guardrails and safety considerations: 20%</li>
+<li>Gradio deployment: 10%</li>
+<li>Business case writeup: 15%</li>
+</ul>
+<br>
+<p><strong>Bonus:</strong> Integrate function calling to connect to a real API (weather, stocks, etc.)</p>
+<br>
+<p><strong>Submit:</strong> Zip file with Python code + writeup PDF via eLearning by next Wednesday 3:59pm</p>
+<br>
+<hr class="slide-divider">
+<br>
+<p><strong>💬 Q&A Session</strong></p>
+<br>
+<p><strong>Common Questions:</strong></p>
+<br>
+<ol>
+<li>"How do I keep my API key secret when sharing code?"</li>
+<p>   → Use environment variables. Never put keys in code. Use .env files + python-dotenv.</p>
+<br>
+<ol>
+<li>"Which model should I use for my project?"</li>
+<p>   → Start with llama3.2 (free via Ollama). Move to mistral for higher quality.</p>
+<p>     For production with cloud APIs, gpt-4o-mini is cost-effective; gpt-4o for demanding tasks.</p>
+<br>
+<ol>
+<li>"How do I handle conversations in multiple languages?"</li>
+<p>   → Just add to system prompt: "Respond in the same language the user writes in."</p>
+<p>   → GPT-4o and Claude handle 50+ languages natively.</p>
+<br>
+<ol>
+<li>"What if my bot hallucinates?"</li>
+<p>   → Add RAG for factual domains. Add disclaimers. Test extensively.</p>
+<br>
+<ol>
+<li>"How do I scale this to 100,000 users?"</li>
+<p>   → Add Redis for session storage, async API calls, and rate limiting.</p>
+<p>   → Monitor costs and add caching for common questions.</p>
+<br>
+<hr class="slide-divider">
+<br>
 <p><strong>🙏 Thank You!</strong></p>
 <br>
 <p><strong>Remember:</strong></p>
@@ -4654,7 +4799,18 @@ Reference their history when relevant.
 <br>
 <hr class="slide-divider">
 <br>
+<p><strong>Next Week (Class 8): Student Presentations</strong></p>
+<ul>
+<li>Each team presents their class project</li>
+<li>10 minutes per team + 5 minutes Q&A</li>
+<li>Make sure your demo is ready!</li>
+</ul>
+<br>
+<hr class="slide-divider">
+<br>
 <p><strong>End of Week 7: Text Generation, Chatbots</strong></p>
+<br>
+<p><em>All slide content complete (Slides 1-27 across 5 batches)</em></p>
 <br>
             </div>
         </div>

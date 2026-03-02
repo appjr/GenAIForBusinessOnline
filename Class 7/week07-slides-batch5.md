@@ -65,9 +65,10 @@ CRITICAL RULES about information accuracy:
 # Strategy 3: Confidence signals
 def generate_with_confidence_check(prompt: str) -> str:
     """Ask the model to flag uncertain responses."""
-    client = OpenAI()
+    from openai import OpenAI
+    client = OpenAI(api_key="ollama", base_url="http://localhost:11434/v1")
     response = client.chat.completions.create(
-        model="gpt-4o-mini",
+        model="llama3.2",
         messages=[
             {"role": "system", "content": """
 Answer the question. If you are NOT fully confident in any part of your answer,
@@ -439,17 +440,23 @@ for m in common_mistakes:
 
 ```python
 # Run this in a Jupyter notebook or Python file
-# Make sure to: pip install openai
+# Prerequisites:
+#   1. Install Ollama: curl -fsSL https://ollama.com/install.sh | sh
+#   2. Start server:   ollama serve
+#   3. Pull model:     ollama pull llama3.2
+#   4. Install SDK:    pip install openai
 
-import openai
-import os
+from openai import OpenAI
 
-# Set your API key
-client = openai.OpenAI(api_key="YOUR_API_KEY_HERE")
+# Free: Ollama runs locally — no API key needed
+client = OpenAI(
+    api_key="ollama",
+    base_url="http://localhost:11434/v1"
+)
 
 # Make your first call!
 response = client.chat.completions.create(
-    model="gpt-4o-mini",
+    model="llama3.2",
     messages=[
         {"role": "system", "content": "You are a helpful assistant."},
         {"role": "user", "content": "Tell me one fascinating fact about Texas."}
@@ -459,7 +466,7 @@ response = client.chat.completions.create(
 
 print(response.choices[0].message.content)
 print(f"\nTokens used: {response.usage.total_tokens}")
-print(f"Est. cost: ${response.usage.total_tokens * 0.00000015:.6f}")
+print(f"Est. cost: $0.00 (Ollama is free/local)")
 ```
 
 ---
@@ -582,7 +589,11 @@ for q in test_questions:
 import gradio as gr
 from openai import OpenAI
 
-client = OpenAI()
+# Free: Ollama runs locally — install at ollama.com, then: ollama pull llama3.2
+client = OpenAI(
+    api_key="ollama",
+    base_url="http://localhost:11434/v1"
+)
 
 # Use your system prompt from Exercise 2
 SYSTEM = YOUR_SYSTEM_PROMPT  # from above
@@ -595,7 +606,7 @@ def chat(message, history):
     messages.append({"role": "user", "content": message})
 
     response = client.chat.completions.create(
-        model="gpt-4o-mini", messages=messages, max_tokens=300)
+        model="llama3.2", messages=messages, max_tokens=300)
     return response.choices[0].message.content
 
 # Launch!
@@ -649,7 +660,7 @@ Application 5: Legal Document Summarizer
 ```python
 # The core tech behind every example above
 core_stack = {
-    "LLM": "OpenAI GPT-4o-mini or Anthropic Claude Haiku (cost-effective)",
+    "LLM": "Ollama (local/free: llama3.2, mistral) or Anthropic Claude Haiku (cloud, paid)",
     "Knowledge Base": "ChromaDB (local) or Pinecone (cloud) for RAG",
     "UI": "Gradio (quick demo) or React (production)",
     "Backend": "FastAPI or Flask REST API",
@@ -673,15 +684,17 @@ core_stack = {
 
 # Example: Customer shows photo of broken product
 def handle_image_complaint(image_path: str, user_message: str) -> str:
-    """Process a complaint with an attached image."""
+    """Process a complaint with an attached image.
+    Note: Vision requires a multimodal model. For local use, try 'llava' via Ollama.
+    For best results, use GPT-4o (OpenAI) or Claude Sonnet (Anthropic).
+    """
     import base64
+    from openai import OpenAI
 
-    with open(image_path, "rb") as f:
-        image_data = base64.b64encode(f.read()).decode()
-
-    client = OpenAI()
+    # Vision example using GPT-4o (requires OpenAI API key):
+    client = OpenAI()  # uses OPENAI_API_KEY env var
     response = client.chat.completions.create(
-        model="gpt-4o",
+        model="gpt-4o",  # or use "llava" with Ollama for local vision
         messages=[{
             "role": "user",
             "content": [
@@ -783,6 +796,25 @@ Reference their history when relevant.
 
 ---
 
+**📋 Your Action Plan:**
+
+**This Week:**
+- [ ] Set up OpenAI API account and make your first call
+- [ ] Build the customer service chatbot from Exercise 2
+- [ ] Share it via Gradio with a teammate for feedback
+
+**This Month:**
+- [ ] Identify a chatbot opportunity in your workplace or business
+- [ ] Build a RAG chatbot with 10-20 documents from that domain
+- [ ] Measure baseline metrics (response time, satisfaction)
+
+**This Quarter:**
+- [ ] Deploy a production chatbot for a real use case
+- [ ] Track KPIs: resolution rate, cost savings, user satisfaction
+- [ ] Present results to your team or stakeholders
+
+---
+
 **📚 Resources:**
 
 **APIs & Documentation:**
@@ -807,6 +839,59 @@ Reference their history when relevant.
 
 ---
 
+**🎓 Week 7 Homework Assignment:**
+
+**Build a Chatbot for a Real Business Need**
+
+**Deliverables:**
+1. **A working chatbot** with a clear business use case
+2. **System prompt** (document your design decisions)
+3. **Knowledge base** (at least 10 documents/chunks for RAG)
+4. **Gradio demo** (shareable URL or screenshot/video)
+5. **Brief writeup** (1-2 pages):
+   - What problem does it solve?
+   - Who is the target user?
+   - What guardrails did you implement?
+   - How would you measure success in production?
+   - What would you do differently with more time?
+
+**Grading:**
+- Working chatbot with appropriate persona: 30%
+- RAG integration with relevant knowledge base: 25%
+- Guardrails and safety considerations: 20%
+- Gradio deployment: 10%
+- Business case writeup: 15%
+
+**Bonus:** Integrate function calling to connect to a real API (weather, stocks, etc.)
+
+**Submit:** Zip file with Python code + writeup PDF via eLearning by next Wednesday 3:59pm
+
+---
+
+**💬 Q&A Session**
+
+**Common Questions:**
+
+1. "How do I keep my API key secret when sharing code?"
+   → Use environment variables. Never put keys in code. Use .env files + python-dotenv.
+
+2. "Which model should I use for my project?"
+   → Start with llama3.2 (free via Ollama). Move to mistral for higher quality.
+     For production with cloud APIs, gpt-4o-mini is cost-effective; gpt-4o for demanding tasks.
+
+3. "How do I handle conversations in multiple languages?"
+   → Just add to system prompt: "Respond in the same language the user writes in."
+   → GPT-4o and Claude handle 50+ languages natively.
+
+4. "What if my bot hallucinates?"
+   → Add RAG for factual domains. Add disclaimers. Test extensively.
+
+5. "How do I scale this to 100,000 users?"
+   → Add Redis for session storage, async API calls, and rate limiting.
+   → Monitor costs and add caching for common questions.
+
+---
+
 **🙏 Thank You!**
 
 **Remember:**
@@ -816,4 +901,13 @@ Reference their history when relevant.
 
 ---
 
+**Next Week (Class 8): Student Presentations**
+- Each team presents their class project
+- 10 minutes per team + 5 minutes Q&A
+- Make sure your demo is ready!
+
+---
+
 **End of Week 7: Text Generation, Chatbots**
+
+*All slide content complete (Slides 1-27 across 5 batches)*
