@@ -783,25 +783,6 @@ Reference their history when relevant.
 
 ---
 
-**📋 Your Action Plan:**
-
-**This Week:**
-- [ ] Set up OpenAI API account and make your first call
-- [ ] Build the customer service chatbot from Exercise 2
-- [ ] Share it via Gradio with a teammate for feedback
-
-**This Month:**
-- [ ] Identify a chatbot opportunity in your workplace or business
-- [ ] Build a RAG chatbot with 10-20 documents from that domain
-- [ ] Measure baseline metrics (response time, satisfaction)
-
-**This Quarter:**
-- [ ] Deploy a production chatbot for a real use case
-- [ ] Track KPIs: resolution rate, cost savings, user satisfaction
-- [ ] Present results to your team or stakeholders
-
----
-
 **📚 Resources:**
 
 **APIs & Documentation:**
@@ -826,58 +807,6 @@ Reference their history when relevant.
 
 ---
 
-**🎓 Week 7 Homework Assignment:**
-
-**Build a Chatbot for a Real Business Need**
-
-**Deliverables:**
-1. **A working chatbot** with a clear business use case
-2. **System prompt** (document your design decisions)
-3. **Knowledge base** (at least 10 documents/chunks for RAG)
-4. **Gradio demo** (shareable URL or screenshot/video)
-5. **Brief writeup** (1-2 pages):
-   - What problem does it solve?
-   - Who is the target user?
-   - What guardrails did you implement?
-   - How would you measure success in production?
-   - What would you do differently with more time?
-
-**Grading:**
-- Working chatbot with appropriate persona: 30%
-- RAG integration with relevant knowledge base: 25%
-- Guardrails and safety considerations: 20%
-- Gradio deployment: 10%
-- Business case writeup: 15%
-
-**Bonus:** Integrate function calling to connect to a real API (weather, stocks, etc.)
-
-**Submit:** Zip file with Python code + writeup PDF via eLearning by next Wednesday 3:59pm
-
----
-
-**💬 Q&A Session**
-
-**Common Questions:**
-
-1. "How do I keep my API key secret when sharing code?"
-   → Use environment variables. Never put keys in code. Use .env files + python-dotenv.
-
-2. "Which model should I use for my project?"
-   → Start with gpt-4o-mini. Move to gpt-4o only if quality isn't meeting your bar.
-
-3. "How do I handle conversations in multiple languages?"
-   → Just add to system prompt: "Respond in the same language the user writes in."
-   → GPT-4o and Claude handle 50+ languages natively.
-
-4. "What if my bot hallucinates?"
-   → Add RAG for factual domains. Add disclaimers. Test extensively.
-
-5. "How do I scale this to 100,000 users?"
-   → Add Redis for session storage, async API calls, and rate limiting.
-   → Monitor costs and add caching for common questions.
-
----
-
 **🙏 Thank You!**
 
 **Remember:**
@@ -887,13 +816,4 @@ Reference their history when relevant.
 
 ---
 
-**Next Week (Class 8): Student Presentations**
-- Each team presents their class project
-- 10 minutes per team + 5 minutes Q&A
-- Make sure your demo is ready!
-
----
-
 **End of Week 7: Text Generation, Chatbots**
-
-*All slide content complete (Slides 1-27 across 5 batches)*
