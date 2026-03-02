@@ -300,7 +300,7 @@
                 <h2>Text Generation Fundamentals — How LLMs Generate Text</h2>
             </div>
             <div class="batch-content">
-                <h1>Week 7: Text Generation, Chatbots - Slides Batch 1 (Slides 1-5)</h1>
+                <h1>Week 7: Text Generation, Chatbots - Slides Batch 1 (Slides 1-6)</h1>
 <br>
 <p><strong>Course:</strong> BUAN 6v99.SW2 - Generative AI for Business</p>
 <p><strong>Date:</strong> March 4, 2026</p>
@@ -381,7 +381,105 @@
 <br>
 <hr class="slide-divider">
 <br>
-<h2 id="slide-3-learning-objectives" class="slide-title">Slide 3: Learning Objectives</h2>
+<h2 id="slide-3-environment-setup-ollama-free-local-llms" class="slide-title">Slide 3: Environment Setup — Ollama (Free Local LLMs)</h2>
+<br>
+<h3>Run AI Models 100% Locally — No API Key, No Cost</h3>
+<br>
+<p><strong>Why Ollama?</strong></p>
+<ul>
+<li>Runs entirely on your laptop — no internet required after setup</li>
+<li>No API key or billing account needed</li>
+<li>OpenAI-compatible API: code that works with Ollama also works with GPT-4</li>
+</ul>
+<br>
+<hr class="slide-divider">
+<br>
+<p><strong>Step 1 — Install Ollama</strong></p>
+<br>
+<pre><code class="language-bash">
+# Mac / Linux (one command):
+curl -fsSL https://ollama.com/install.sh | sh
+
+# Mac (Homebrew alternative):
+brew install ollama
+
+# Windows:
+# Download the installer from https://ollama.com/download
+</code></pre>
+<br>
+<hr class="slide-divider">
+<br>
+<p><strong>Step 2 — Start the Local Server</strong></p>
+<br>
+<pre><code class="language-bash">
+# Run this in a terminal and keep it open (like a local API server)
+ollama serve
+# Listens on http://localhost:11434
+</code></pre>
+<br>
+<hr class="slide-divider">
+<br>
+<p><strong>Step 3 — Download Models (one-time)</strong></p>
+<br>
+<pre><code class="language-bash">
+ollama pull llama3.2    # ~2 GB — fast, good for most tasks
+ollama pull mistral     # ~4 GB — higher quality reasoning
+</code></pre>
+<br>
+<table>
+<thead><tr>
+<th>Model</th>
+<th>Size</th>
+<th>Speed</th>
+<th>Best For</th>
+</tr></thead><tbody>
+<tr>
+<td><code>llama3.2</code></td>
+<td>~2 GB</td>
+<td>Fast</td>
+<td>Chatbots, Q&A, everyday tasks</td>
+</tr>
+<tr>
+<td><code>mistral</code></td>
+<td>~4 GB</td>
+<td>Medium</td>
+<td>Analysis, reasoning, longer text</td>
+</tr>
+</tbody></table>
+<br>
+<hr class="slide-divider">
+<br>
+<p><strong>Step 4 — Install Python Packages</strong></p>
+<br>
+<pre><code class="language-bash">
+pip install openai sentence-transformers gradio
+</code></pre>
+<br>
+<hr class="slide-divider">
+<br>
+<p><strong>Step 5 — Verify Everything Works</strong></p>
+<br>
+<pre><code class="language-python">
+from openai import OpenAI
+
+client = OpenAI(
+    api_key="ollama",                        # No real key needed
+    base_url="http://localhost:11434/v1"     # Points to local server
+)
+
+response = client.chat.completions.create(
+    model="llama3.2",
+    messages=[{"role": "user", "content": "Say hello!"}]
+)
+print(response.choices[0].message.content)
+# Output: "Hello! How can I help you today?"
+</code></pre>
+<br>
+<p><strong>All code examples in this class use this pattern — free, local, no billing.</strong></p>
+<br>
+<hr class="slide-divider">
+<br>
+<h2 id="slide-4-learning-objectives" class="slide-title">Slide 4: Learning Objectives</h2>
 <br>
 <h3>By the End of This Class, You Will:</h3>
 <br>
@@ -410,7 +508,7 @@
 <br>
 <hr class="slide-divider">
 <br>
-<h2 id="slide-4-how-llms-generate-text" class="slide-title">Slide 4: How LLMs Generate Text</h2>
+<h2 id="slide-5-how-llms-generate-text" class="slide-title">Slide 5: How LLMs Generate Text</h2>
 <br>
 <h3>The Token-by-Token Process</h3>
 <br>
@@ -564,7 +662,7 @@ Temperature = 1.8 (Creative/Risky):
 <br>
 <hr class="slide-divider">
 <br>
-<h2 id="slide-5-the-chat-completion-format" class="slide-title">Slide 5: The Chat Completion Format</h2>
+<h2 id="slide-6-the-chat-completion-format" class="slide-title">Slide 6: The Chat Completion Format</h2>
 <br>
 <h3>How Modern LLMs Structure Conversations</h3>
 <br>
@@ -724,9 +822,9 @@ print(f"\nEstimated cost: $0.00 (Ollama is free/local)")
 <br>
 <hr class="slide-divider">
 <br>
-<p><strong>End of Batch 1 (Slides 1-5)</strong></p>
+<p><strong>End of Batch 1 (Slides 1-6)</strong></p>
 <br>
-<p><em>Continue to Batch 2 for OpenAI API, Anthropic API, and Prompt Engineering (Slides 6-10)</em></p>
+<p><em>Continue to Batch 2 for OpenAI API, Anthropic API, and Prompt Engineering (Slides 7-11)</em></p>
 <br>
             </div>
         </div>
