@@ -261,6 +261,21 @@
             pre { border: 1px solid #ddd; }
         }
 
+        .slide-image {
+            margin: 0 0 24px 0;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.18);
+            line-height: 0;
+        }
+
+        .slide-image img {
+            width: 100%;
+            height: auto;
+            display: block;
+            border-radius: 12px;
+        }
+
         @media (max-width: 768px) {
             .batch-content { padding: 20px; }
             header { padding: 30px 20px; }
@@ -309,6 +324,7 @@
 <hr class="slide-divider">
 <br>
 <h2 id="slide-1-week-7-title-slide" class="slide-title">Slide 1: Week 7 Title Slide</h2>
+<div class="slide-image"><img src="images/slide_001_final.png" alt="Slide 1: Week 7 Title Slide" loading="lazy"></div>
 <br>
 <h3>Text Generation & Chatbots: Building Intelligent Conversational AI</h3>
 <br>
@@ -339,6 +355,7 @@
 <hr class="slide-divider">
 <br>
 <h2 id="slide-2-today-s-agenda" class="slide-title">Slide 2: Today's Agenda</h2>
+<div class="slide-image"><img src="images/slide_002_final.png" alt="Slide 2: Today's Agenda" loading="lazy"></div>
 <br>
 <h3>Class Overview</h3>
 <br>
@@ -382,6 +399,7 @@
 <hr class="slide-divider">
 <br>
 <h2 id="slide-3-environment-setup-ollama-free-local-llms" class="slide-title">Slide 3: Environment Setup — Ollama (Free Local LLMs)</h2>
+<div class="slide-image"><img src="images/slide_003_final.png" alt="Slide 3: Environment Setup — Ollama (Free Local LLMs)" loading="lazy"></div>
 <br>
 <h3>Run AI Models 100% Locally — No API Key, No Cost</h3>
 <br>
@@ -480,6 +498,7 @@ print(response.choices[0].message.content)
 <hr class="slide-divider">
 <br>
 <h2 id="slide-4-learning-objectives" class="slide-title">Slide 4: Learning Objectives</h2>
+<div class="slide-image"><img src="images/slide_004_final.png" alt="Slide 4: Learning Objectives" loading="lazy"></div>
 <br>
 <h3>By the End of This Class, You Will:</h3>
 <br>
@@ -509,6 +528,7 @@ print(response.choices[0].message.content)
 <hr class="slide-divider">
 <br>
 <h2 id="slide-5-how-llms-generate-text" class="slide-title">Slide 5: How LLMs Generate Text</h2>
+<div class="slide-image"><img src="images/slide_005_final.png" alt="Slide 5: How LLMs Generate Text" loading="lazy"></div>
 <br>
 <h3>The Token-by-Token Process</h3>
 <br>
@@ -663,6 +683,7 @@ Temperature = 1.8 (Creative/Risky):
 <hr class="slide-divider">
 <br>
 <h2 id="slide-6-the-chat-completion-format" class="slide-title">Slide 6: The Chat Completion Format</h2>
+<div class="slide-image"><img src="images/slide_006_final.png" alt="Slide 6: The Chat Completion Format" loading="lazy"></div>
 <br>
 <h3>How Modern LLMs Structure Conversations</h3>
 <br>
@@ -844,6 +865,7 @@ print(f"\nEstimated cost: $0.00 (Ollama is free/local)")
 <hr class="slide-divider">
 <br>
 <h2 id="slide-6-ollama-free-local-llm-inference" class="slide-title">Slide 6: Ollama — Free Local LLM Inference</h2>
+<div class="slide-image"><img src="images/slide_007_final.png" alt="Slide 6: Ollama — Free Local LLM Inference" loading="lazy"></div>
 <br>
 <h3>Running LLMs Locally with Ollama</h3>
 <br>
@@ -1078,6 +1100,7 @@ def robust_generate(prompt: str, max_retries: int = 3) -&gt; str:
 <hr class="slide-divider">
 <br>
 <h2 id="slide-7-anthropic-api-claude" class="slide-title">Slide 7: Anthropic API (Claude)</h2>
+<div class="slide-image"><img src="images/slide_008_final.png" alt="Slide 7: Anthropic API (Claude)" loading="lazy"></div>
 <br>
 <h3>Building with Claude</h3>
 <br>
@@ -1331,6 +1354,7 @@ def analyze_image(image_path: str, question: str) -&gt; str:
 <hr class="slide-divider">
 <br>
 <h2 id="slide-8-prompt-engineering-for-chatbots" class="slide-title">Slide 8: Prompt Engineering for Chatbots</h2>
+<div class="slide-image"><img src="images/slide_009_final.png" alt="Slide 8: Prompt Engineering for Chatbots" loading="lazy"></div>
 <br>
 <h3>Designing Effective System Prompts</h3>
 <br>
@@ -1516,6 +1540,7 @@ End each response with: "For personal medical advice, consult your doctor."
 <hr class="slide-divider">
 <br>
 <h2 id="slide-9-building-a-multi-turn-chatbot" class="slide-title">Slide 9: Building a Multi-Turn Chatbot</h2>
+<div class="slide-image"><img src="images/slide_010_final.png" alt="Slide 9: Building a Multi-Turn Chatbot" loading="lazy"></div>
 <br>
 <h3>Managing Conversation History</h3>
 <br>
@@ -1729,6 +1754,7 @@ def run_interactive_chatbot():
 <hr class="slide-divider">
 <br>
 <h2 id="slide-10-advanced-chatbot-features" class="slide-title">Slide 10: Advanced Chatbot Features</h2>
+<div class="slide-image"><img src="images/slide_011_final.png" alt="Slide 10: Advanced Chatbot Features" loading="lazy"></div>
 <br>
 <h3>Streaming, Function Calling & Memory Strategies</h3>
 <br>
@@ -1984,6 +2010,7 @@ def summarize_and_compress(history: list, keep_last: int = 5) -&gt; list:
 <hr class="slide-divider">
 <br>
 <h2 id="slide-11-chatbot-architecture-patterns" class="slide-title">Slide 11: Chatbot Architecture Patterns</h2>
+<div class="slide-image"><img src="images/slide_012_final.png" alt="Slide 11: Chatbot Architecture Patterns" loading="lazy"></div>
 <br>
 <h3>Break Time: 10 Minutes ☕</h3>
 <br>
@@ -1992,6 +2019,7 @@ def summarize_and_compress(history: list, keep_last: int = 5) -&gt; list:
 <hr class="slide-divider">
 <br>
 <h2 id="slide-12-retrieval-augmented-generation-rag" class="slide-title">Slide 12: Retrieval-Augmented Generation (RAG)</h2>
+<div class="slide-image"><img src="images/slide_013_final.png" alt="Slide 12: Retrieval-Augmented Generation (RAG)" loading="lazy"></div>
 <br>
 <h3>Teaching Your Chatbot About Your Business</h3>
 <br>
@@ -2309,6 +2337,7 @@ for q in questions:
 <hr class="slide-divider">
 <br>
 <h2 id="slide-13-advanced-rag-with-chromadb" class="slide-title">Slide 13: Advanced RAG with ChromaDB</h2>
+<div class="slide-image"><img src="images/slide_014_final.png" alt="Slide 13: Advanced RAG with ChromaDB" loading="lazy"></div>
 <br>
 <h3>Production-Ready Vector Storage</h3>
 <br>
@@ -2480,6 +2509,7 @@ def build_knowledge_base_from_files(file_paths: list[str]) -&gt; SimpleVectorSto
 <hr class="slide-divider">
 <br>
 <h2 id="slide-14-chatbot-personas-guardrails" class="slide-title">Slide 14: Chatbot Personas & Guardrails</h2>
+<div class="slide-image"><img src="images/slide_015_final.png" alt="Slide 14: Chatbot Personas & Guardrails" loading="lazy"></div>
 <br>
 <h3>Keeping Your Chatbot Safe and On-Brand</h3>
 <br>
@@ -2655,6 +2685,7 @@ for msg in test_messages:
 <hr class="slide-divider">
 <br>
 <h2 id="slide-15-building-a-gradio-chatbot-ui" class="slide-title">Slide 15: Building a Gradio Chatbot UI</h2>
+<div class="slide-image"><img src="images/slide_016_final.png" alt="Slide 15: Building a Gradio Chatbot UI" loading="lazy"></div>
 <br>
 <h3>From Code to Shareable Web App in Minutes</h3>
 <br>
@@ -2885,6 +2916,7 @@ Cost to host: $0 (HF Spaces free tier)
 <hr class="slide-divider">
 <br>
 <h2 id="slide-16-business-chatbot-use-cases" class="slide-title">Slide 16: Business Chatbot Use Cases</h2>
+<div class="slide-image"><img src="images/slide_017_final.png" alt="Slide 16: Business Chatbot Use Cases" loading="lazy"></div>
 <br>
 <h3>Where Chatbots Create Real Value</h3>
 <br>
@@ -3158,6 +3190,7 @@ Requirements:
 <hr class="slide-divider">
 <br>
 <h2 id="slide-17-enterprise-chatbot-platforms" class="slide-title">Slide 17: Enterprise Chatbot Platforms</h2>
+<div class="slide-image"><img src="images/slide_018_final.png" alt="Slide 17: Enterprise Chatbot Platforms" loading="lazy"></div>
 <br>
 <h3>When to Build vs. Buy</h3>
 <br>
@@ -3335,6 +3368,7 @@ Pricing: Pay only for API tokens used (~$0.001-0.01 per conversation)
 <hr class="slide-divider">
 <br>
 <h2 id="slide-18-chatbot-cost-analysis" class="slide-title">Slide 18: Chatbot Cost Analysis</h2>
+<div class="slide-image"><img src="images/slide_019_final.png" alt="Slide 18: Chatbot Cost Analysis" loading="lazy"></div>
 <br>
 <h3>Understanding and Optimizing API Costs</h3>
 <br>
@@ -3522,6 +3556,7 @@ class CostOptimizedChatbot:
 <hr class="slide-divider">
 <br>
 <h2 id="slide-19-evaluating-chatbot-quality" class="slide-title">Slide 19: Evaluating Chatbot Quality</h2>
+<div class="slide-image"><img src="images/slide_020_final.png" alt="Slide 19: Evaluating Chatbot Quality" loading="lazy"></div>
 <br>
 <h3>How to Measure What Matters</h3>
 <br>
@@ -3747,6 +3782,7 @@ for k, v in summary.items():
 <hr class="slide-divider">
 <br>
 <h2 id="slide-20-integrating-chatbots-into-business-systems" class="slide-title">Slide 20: Integrating Chatbots into Business Systems</h2>
+<div class="slide-image"><img src="images/slide_021_final.png" alt="Slide 20: Integrating Chatbots into Business Systems" loading="lazy"></div>
 <br>
 <h3>Real-World Architecture Patterns</h3>
 <br>
@@ -3957,6 +3993,7 @@ def handle_mention(event, say, client_slack):
 <hr class="slide-divider">
 <br>
 <h2 id="slide-21-ethics-responsible-chatbot-design" class="slide-title">Slide 21: Ethics & Responsible Chatbot Design</h2>
+<div class="slide-image"><img src="images/slide_022_final.png" alt="Slide 21: Ethics & Responsible Chatbot Design" loading="lazy"></div>
 <br>
 <h3>Building AI You Can Be Proud Of</h3>
 <br>
@@ -4150,6 +4187,7 @@ SPECIAL USER PROTECTION PROTOCOLS:
 <hr class="slide-divider">
 <br>
 <h2 id="slide-22-real-world-case-studies" class="slide-title">Slide 22: Real-World Case Studies</h2>
+<div class="slide-image"><img src="images/slide_023_final.png" alt="Slide 22: Real-World Case Studies" loading="lazy"></div>
 <br>
 <h3>Success Stories & Lessons Learned</h3>
 <br>
@@ -4301,6 +4339,7 @@ small_biz_chatbot = {
 <hr class="slide-divider">
 <br>
 <h2 id="slide-23-best-practices-cheat-sheet" class="slide-title">Slide 23: Best Practices Cheat Sheet</h2>
+<div class="slide-image"><img src="images/slide_024_final.png" alt="Slide 23: Best Practices Cheat Sheet" loading="lazy"></div>
 <br>
 <h3>The Rules of Building Great Chatbots</h3>
 <br>
@@ -4395,6 +4434,7 @@ for m in common_mistakes:
 <hr class="slide-divider">
 <br>
 <h2 id="slide-24-hands-on-lab-exercises" class="slide-title">Slide 24: Hands-On Lab Exercises</h2>
+<div class="slide-image"><img src="images/slide_025_final.png" alt="Slide 24: Hands-On Lab Exercises" loading="lazy"></div>
 <br>
 <h3>Build Your Own Chatbot!</h3>
 <br>
@@ -4582,6 +4622,7 @@ gr.ChatInterface(
 <hr class="slide-divider">
 <br>
 <h2 id="slide-25-real-business-application-gallery" class="slide-title">Slide 25: Real Business Application Gallery</h2>
+<div class="slide-image"><img src="images/slide_026_final.png" alt="Slide 25: Real Business Application Gallery" loading="lazy"></div>
 <br>
 <h3>What You Can Build With Today's Skills</h3>
 <br>
@@ -4635,6 +4676,7 @@ core_stack = {
 <hr class="slide-divider">
 <br>
 <h2 id="slide-26-industry-trends-what-s-next" class="slide-title">Slide 26: Industry Trends & What's Next</h2>
+<div class="slide-image"><img src="images/slide_027_final.png" alt="Slide 26: Industry Trends & What's Next" loading="lazy"></div>
 <br>
 <h3>The Future of Chatbots & Text Generation</h3>
 <br>
@@ -4727,6 +4769,7 @@ Reference their history when relevant.
 <hr class="slide-divider">
 <br>
 <h2 id="slide-27-key-takeaways-resources-homework" class="slide-title">Slide 27: Key Takeaways, Resources & Homework</h2>
+<div class="slide-image"><img src="images/slide_028_final.png" alt="Slide 27: Key Takeaways, Resources & Homework" loading="lazy"></div>
 <br>
 <h3>Summary & Next Steps</h3>
 <br>
