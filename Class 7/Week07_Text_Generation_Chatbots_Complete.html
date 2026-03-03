@@ -3309,59 +3309,139 @@ Pricing: Pay only for API tokens used (~$0.001-0.01 per conversation)
 <table>
 <thead><tr>
 <th>Platform</th>
-<th>Ease of Setup</th>
-<th>AI Quality</th>
-<th>Cost</th>
+<th>Setup Difficulty</th>
+<th>AI / NLU Quality</th>
+<th>Starting Cost</th>
+<th>Voice Support</th>
+<th>Multi-Language</th>
+<th>Key Integrations</th>
 <th>Scalability</th>
 <th>Best For</th>
 </tr></thead><tbody>
 <tr>
-<td><strong>Dialogflow</strong></td>
-<td>Medium</td>
-<td>Good</td>
-<td>Medium</td>
-<td>High</td>
-<td>Contact centers</td>
+<td><strong>Dialogflow CX</strong> <em>(Google)</em></td>
+<td>⭐⭐⭐ Medium</td>
+<td>⭐⭐⭐⭐ Good</td>
+<td>Free tier → $0.007/text req</td>
+<td>✅ Yes (telephony)</td>
+<td>✅ 30+ languages</td>
+<td>Google Cloud, BigQuery, Twilio</td>
+<td>⭐⭐⭐⭐⭐ Enterprise</td>
+<td>Contact centers, voice bots, Google ecosystem</td>
 </tr>
 <tr>
-<td><strong>Amazon Lex</strong></td>
-<td>Hard</td>
-<td>Good</td>
-<td>Medium</td>
-<td>High</td>
-<td>AWS/Voice</td>
+<td><strong>Amazon Lex</strong> <em>(AWS)</em></td>
+<td>⭐⭐ Hard</td>
+<td>⭐⭐⭐ Good</td>
+<td>$0.004/text req, $0.008/voice</td>
+<td>✅ Yes (Connect)</td>
+<td>✅ Yes</td>
+<td>Lambda, S3, Connect, Kendra</td>
+<td>⭐⭐⭐⭐⭐ Enterprise</td>
+<td>AWS customers, contact centers, Alexa-style bots</td>
 </tr>
 <tr>
-<td><strong>MS Copilot Studio</strong></td>
-<td>Easy</td>
-<td>Good</td>
-<td>Medium</td>
-<td>High</td>
-<td>Microsoft shops</td>
+<td><strong>Azure Copilot Studio</strong> <em>(Microsoft)</em></td>
+<td>⭐⭐⭐⭐ Easy</td>
+<td>⭐⭐⭐⭐ Good (Azure OpenAI)</td>
+<td>Free base + $200/mo Pro</td>
+<td>✅ Teams voice</td>
+<td>✅ Yes</td>
+<td>M365, Teams, SharePoint, Power Automate</td>
+<td>⭐⭐⭐⭐⭐ Enterprise</td>
+<td>Microsoft shops, internal HR/IT bots, Teams</td>
 </tr>
 <tr>
-<td><strong>Custom (OpenAI)</strong></td>
-<td>Hard</td>
-<td>Excellent</td>
-<td>Variable</td>
-<td>DIY</td>
-<td>Developers</td>
+<td><strong>Custom Build</strong> <em>(OpenAI / Anthropic API)</em></td>
+<td>⭐⭐ Hard</td>
+<td>⭐⭐⭐⭐⭐ Excellent</td>
+<td>~$0.001–0.01/conversation</td>
+<td>🔧 Custom (Whisper + TTS)</td>
+<td>✅ Model-dependent</td>
+<td>Any API, Slack, CRM, DB</td>
+<td>⭐⭐⭐ DIY infra</td>
+<td>Unique use cases, developers, max quality/control</td>
 </tr>
 <tr>
-<td><strong>Intercom</strong></td>
-<td>Easy</td>
-<td>Good</td>
-<td>High</td>
-<td>High</td>
-<td>Sales/Support</td>
+<td><strong>Ollama</strong> <em>(Local / Free)</em></td>
+<td>⭐⭐⭐ Medium</td>
+<td>⭐⭐⭐⭐ Good (llama3.2, mistral)</td>
+<td><strong>$0 — 100% free</strong></td>
+<td>❌ No</td>
+<td>✅ Model-dependent</td>
+<td>Any local app or API</td>
+<td>⭐⭐ Single machine</td>
+<td>Privacy-first, dev/testing, no-cost prototyping</td>
+</tr>
+<tr>
+<td><strong>Intercom Fin</strong></td>
+<td>⭐⭐⭐⭐ Easy</td>
+<td>⭐⭐⭐⭐ Good (OpenAI-powered)</td>
+<td>$74+/mo + $0.99/resolution</td>
+<td>❌ No</td>
+<td>✅ Limited</td>
+<td>Stripe, Salesforce, HubSpot, Zendesk</td>
+<td>⭐⭐⭐⭐ High</td>
+<td>SaaS customer support, sales chat, e-commerce</td>
 </tr>
 <tr>
 <td><strong>Tidio</strong></td>
-<td>Very Easy</td>
-<td>Basic</td>
-<td>Low</td>
-<td>Medium</td>
-<td>Small businesses</td>
+<td>⭐⭐⭐⭐⭐ Very Easy</td>
+<td>⭐⭐⭐ Basic</td>
+<td>Free → $29+/mo</td>
+<td>❌ No</td>
+<td>✅ Limited</td>
+<td>Shopify, WooCommerce, WordPress</td>
+<td>⭐⭐⭐ Medium</td>
+<td>Small businesses, e-commerce, quick deployment</td>
+</tr>
+<tr>
+<td><strong>Zendesk AI</strong></td>
+<td>⭐⭐⭐⭐ Easy</td>
+<td>⭐⭐⭐⭐ Good</td>
+<td>$55+/agent/mo</td>
+<td>❌ No</td>
+<td>✅ Yes</td>
+<td>Salesforce, JIRA, Slack, email</td>
+<td>⭐⭐⭐⭐⭐ Enterprise</td>
+<td>Customer support teams, ticketing, help desks</td>
+</tr>
+</tbody></table>
+<br>
+<p><strong>How to Choose:</strong></p>
+<br>
+<table>
+<thead><tr>
+<th>Your Situation</th>
+<th>Recommended Path</th>
+</tr></thead><tbody>
+<tr>
+<td>Learning / prototyping</td>
+<td><strong>Ollama</strong> (free, local, no limits)</td>
+</tr>
+<tr>
+<td>Small business, no developers</td>
+<td><strong>Tidio</strong> or <strong>Intercom</strong></td>
+</tr>
+<tr>
+<td>Microsoft 365 company</td>
+<td><strong>Azure Copilot Studio</strong></td>
+</tr>
+<tr>
+<td>AWS infrastructure already</td>
+<td><strong>Amazon Lex</strong></td>
+</tr>
+<tr>
+<td>High-volume phone support</td>
+<td><strong>Dialogflow CX</strong></td>
+</tr>
+<tr>
+<td>Need best AI quality + full control</td>
+<td><strong>Custom build</strong> (OpenAI / Anthropic)</td>
+</tr>
+<tr>
+<td>Customer support SaaS team</td>
+<td><strong>Zendesk AI</strong> or <strong>Intercom Fin</strong></td>
 </tr>
 </tbody></table>
 <br>
