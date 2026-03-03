@@ -394,14 +394,28 @@ Pricing: Pay only for API tokens used (~$0.001-0.01 per conversation)
 
 **Platform Comparison Matrix:**
 
-| Platform | Ease of Setup | AI Quality | Cost | Scalability | Best For |
-|----------|---------------|------------|------|-------------|----------|
-| **Dialogflow** | Medium | Good | Medium | High | Contact centers |
-| **Amazon Lex** | Hard | Good | Medium | High | AWS/Voice |
-| **MS Copilot Studio** | Easy | Good | Medium | High | Microsoft shops |
-| **Custom (OpenAI)** | Hard | Excellent | Variable | DIY | Developers |
-| **Intercom** | Easy | Good | High | High | Sales/Support |
-| **Tidio** | Very Easy | Basic | Low | Medium | Small businesses |
+| Platform | Setup Difficulty | AI / NLU Quality | Starting Cost | Voice Support | Multi-Language | Key Integrations | Scalability | Best For |
+|----------|-----------------|------------------|---------------|---------------|----------------|------------------|-------------|----------|
+| **Dialogflow CX** *(Google)* | ⭐⭐⭐ Medium | ⭐⭐⭐⭐ Good | Free tier → $0.007/text req | ✅ Yes (telephony) | ✅ 30+ languages | Google Cloud, BigQuery, Twilio | ⭐⭐⭐⭐⭐ Enterprise | Contact centers, voice bots, Google ecosystem |
+| **Amazon Lex** *(AWS)* | ⭐⭐ Hard | ⭐⭐⭐ Good | $0.004/text req, $0.008/voice | ✅ Yes (Connect) | ✅ Yes | Lambda, S3, Connect, Kendra | ⭐⭐⭐⭐⭐ Enterprise | AWS customers, contact centers, Alexa-style bots |
+| **Azure Copilot Studio** *(Microsoft)* | ⭐⭐⭐⭐ Easy | ⭐⭐⭐⭐ Good (Azure OpenAI) | Free base + $200/mo Pro | ✅ Teams voice | ✅ Yes | M365, Teams, SharePoint, Power Automate | ⭐⭐⭐⭐⭐ Enterprise | Microsoft shops, internal HR/IT bots, Teams |
+| **Custom Build** *(OpenAI / Anthropic API)* | ⭐⭐ Hard | ⭐⭐⭐⭐⭐ Excellent | ~$0.001–0.01/conversation | 🔧 Custom (Whisper + TTS) | ✅ Model-dependent | Any API, Slack, CRM, DB | ⭐⭐⭐ DIY infra | Unique use cases, developers, max quality/control |
+| **Ollama** *(Local / Free)* | ⭐⭐⭐ Medium | ⭐⭐⭐⭐ Good (llama3.2, mistral) | **$0 — 100% free** | ❌ No | ✅ Model-dependent | Any local app or API | ⭐⭐ Single machine | Privacy-first, dev/testing, no-cost prototyping |
+| **Intercom Fin** | ⭐⭐⭐⭐ Easy | ⭐⭐⭐⭐ Good (OpenAI-powered) | $74+/mo + $0.99/resolution | ❌ No | ✅ Limited | Stripe, Salesforce, HubSpot, Zendesk | ⭐⭐⭐⭐ High | SaaS customer support, sales chat, e-commerce |
+| **Tidio** | ⭐⭐⭐⭐⭐ Very Easy | ⭐⭐⭐ Basic | Free → $29+/mo | ❌ No | ✅ Limited | Shopify, WooCommerce, WordPress | ⭐⭐⭐ Medium | Small businesses, e-commerce, quick deployment |
+| **Zendesk AI** | ⭐⭐⭐⭐ Easy | ⭐⭐⭐⭐ Good | $55+/agent/mo | ❌ No | ✅ Yes | Salesforce, JIRA, Slack, email | ⭐⭐⭐⭐⭐ Enterprise | Customer support teams, ticketing, help desks |
+
+**How to Choose:**
+
+| Your Situation | Recommended Path |
+|----------------|-----------------|
+| Learning / prototyping | **Ollama** (free, local, no limits) |
+| Small business, no developers | **Tidio** or **Intercom** |
+| Microsoft 365 company | **Azure Copilot Studio** |
+| AWS infrastructure already | **Amazon Lex** |
+| High-volume phone support | **Dialogflow CX** |
+| Need best AI quality + full control | **Custom build** (OpenAI / Anthropic) |
+| Customer support SaaS team | **Zendesk AI** or **Intercom Fin** |
 
 ---
 
