@@ -1,0 +1,2340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Week 8: The World of Large Language Models - Complete Course Materials</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.7;
+            color: #1a1a2e;
+            background: linear-gradient(135deg, #16213e 0%, #0f3460 50%, #533483 100%);
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+            overflow: hidden;
+        }
+
+        header {
+            background: linear-gradient(135deg, #16213e 0%, #0f3460 50%, #533483 100%);
+            color: white;
+            padding: 50px 40px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.05) 0%, transparent 60%);
+        }
+
+        header h1 {
+            font-size: 2.4em;
+            font-weight: 800;
+            margin-bottom: 12px;
+            letter-spacing: -0.5px;
+            position: relative;
+        }
+
+        header .subtitle {
+            font-size: 1.1em;
+            opacity: 0.85;
+            position: relative;
+        }
+
+        header .meta {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        header .meta span {
+            background: rgba(255,255,255,0.15);
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            backdrop-filter: blur(10px);
+        }
+
+        .toc {
+            background: #f8f9ff;
+            padding: 30px 40px;
+            border-bottom: 2px solid #e8ecff;
+        }
+
+        .toc h2 {
+            font-size: 1.1em;
+            color: #533483;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 15px;
+        }
+
+        .toc ul {
+            list-style: none;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 8px;
+        }
+
+        .toc ul li a {
+            color: #0f3460;
+            text-decoration: none;
+            font-size: 0.9em;
+            padding: 6px 12px;
+            border-radius: 6px;
+            display: block;
+            transition: background 0.2s;
+        }
+
+        .toc ul li a:hover {
+            background: #e8ecff;
+        }
+
+        .batch {
+            border-bottom: 3px solid #e8ecff;
+        }
+
+        .batch-header {
+            background: linear-gradient(90deg, #16213e, #0f3460);
+            color: white;
+            padding: 20px 40px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .batch-number {
+            background: rgba(255,255,255,0.2);
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 0.8em;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .batch-header h2 {
+            font-size: 1.2em;
+            font-weight: 600;
+        }
+
+        .batch-content {
+            padding: 30px 40px;
+        }
+
+        h1 { font-size: 2em; color: #16213e; margin: 24px 0 12px; }
+        h2.slide-title {
+            font-size: 1.5em;
+            color: #0f3460;
+            margin: 40px 0 16px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e8ecff;
+        }
+        h3 { font-size: 1.2em; color: #533483; margin: 20px 0 10px; }
+        h4 { font-size: 1em; color: #16213e; margin: 16px 0 8px; font-weight: 600; }
+
+        p { margin: 10px 0; color: #2d3748; }
+
+        pre {
+            background: #1a1a2e;
+            color: #e2e8f0;
+            padding: 20px 24px;
+            border-radius: 10px;
+            overflow-x: auto;
+            margin: 16px 0;
+            font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+            font-size: 0.85em;
+            line-height: 1.6;
+            border-left: 4px solid #533483;
+        }
+
+        code {
+            background: #f0f0ff;
+            color: #533483;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+            font-size: 0.85em;
+        }
+
+        pre code {
+            background: transparent;
+            color: inherit;
+            padding: 0;
+            border-radius: 0;
+            font-size: inherit;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 16px 0;
+            font-size: 0.9em;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        th {
+            background: #16213e;
+            color: white;
+            padding: 12px 16px;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        td {
+            padding: 10px 16px;
+            border-bottom: 1px solid #e8ecff;
+            color: #2d3748;
+        }
+
+        tr:nth-child(even) td { background: #f8f9ff; }
+        tr:hover td { background: #eef0ff; }
+
+        ul, ol {
+            margin: 10px 0 10px 28px;
+            color: #2d3748;
+        }
+
+        li {
+            margin: 6px 0;
+            line-height: 1.6;
+        }
+
+        blockquote {
+            border-left: 4px solid #533483;
+            padding: 12px 20px;
+            margin: 16px 0;
+            background: #f8f9ff;
+            color: #4a5568;
+            font-style: italic;
+            border-radius: 0 8px 8px 0;
+        }
+
+        hr.slide-divider {
+            border: none;
+            border-top: 1px dashed #c3cfe2;
+            margin: 30px 0;
+        }
+
+        .check { color: #38a169; }
+        .cross { color: #e53e3e; }
+
+        strong { color: #16213e; }
+
+        a { color: #0f3460; text-decoration: none; }
+        a:hover { text-decoration: underline; }
+
+        footer {
+            background: #16213e;
+            color: rgba(255,255,255,0.7);
+            text-align: center;
+            padding: 24px;
+            font-size: 0.85em;
+        }
+
+        footer strong { color: white; }
+
+        @media print {
+            body { background: white; padding: 0; }
+            .container { box-shadow: none; border-radius: 0; }
+            pre { border: 1px solid #ddd; }
+        }
+
+        .slide-image {
+            margin: 0 0 24px 0;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.18);
+            line-height: 0;
+        }
+
+        .slide-image img {
+            width: 100%;
+            height: auto;
+            display: block;
+            border-radius: 12px;
+        }
+
+        @media (max-width: 768px) {
+            .batch-content { padding: 20px; }
+            header { padding: 30px 20px; }
+            header h1 { font-size: 1.6em; }
+            pre { font-size: 0.75em; padding: 14px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🤖 Week 8: The World of Large Language Models</h1>
+            <p class="subtitle">Building Intelligent Conversational AI for Business</p>
+            <div class="meta">
+                <span>📅 March 4, 2026</span>
+                <span>🎓 BUAN 6v99.SW2 — UTD</span>
+                <span>⏱ 2.5 Hours</span>
+                <span>📊 27 Slides</span>
+            </div>
+        </header>
+
+        <div class="toc">
+            <h2>📋 Table of Contents</h2>
+            <ul>
+                <li><a href="#batch1">Part 1: Opening & LLM History (Slides 1-6)</a></li>
+                <li><a href="#batch2">Part 2: Top Paid LLMs (Slides 7-12)</a></li>
+                <li><a href="#batch3">Part 3: Free & Open-Source LLMs (Slides 13-18)</a></li>
+                <li><a href="#batch4">Part 4: Tools Ecosystem (Slides 19-24)</a></li>
+                <li><a href="#batch5">Part 5: Use Cases & Wrap-up (Slides 25-30)</a></li>
+            </ul>
+        </div>
+
+        
+        <div class="batch" id="batch1">
+            <div class="batch-header">
+                <span class="batch-number">Part 1</span>
+                <h2>Opening & LLM History — From the Transformer to Today</h2>
+            </div>
+            <div class="batch-content">
+                <h1>Week 08 — The World of Large Language Models</h1>
+<h1>Batch 1 of 5: Opening + History (Slides 1–6)</h1>
+<h1>Course: BUAN 6v99 — Generative AI for Business | UTDallas Spring 2026</h1>
+<br>
+<hr class="slide-divider">
+<br>
+<h2 id="slide-1-the-world-of-large-language-models" class="slide-title">Slide 1: The World of Large Language Models</h2>
+<br>
+<h3>BUAN 6v99 — Generative AI for Business</h3>
+<h3>Class 8 | University of Texas at Dallas | Spring 2026</h3>
+<br>
+<p><strong>Professor:</strong> Antonio de Pádua Paes Jr.</p>
+<br>
+<hr class="slide-divider">
+<br>
+<blockquote>*"Language is the interface between human intelligence and machine intelligence.</blockquote>
+<blockquote>Large Language Models are making that interface seamless."*</blockquote>
+<br>
+<p><strong>Today's journey:</strong></p>
+<ul>
+<li>From a 2017 research paper → to tools reshaping every industry</li>
+<li>Understanding the players, the tools, and how to choose the right one for your business</li>
+</ul>
+<br>
+<hr class="slide-divider">
+<br>
+<h2 id="slide-2-today-s-agenda" class="slide-title">Slide 2: Today's Agenda</h2>
+<br>
+<h3>Class Overview — 2 Hours</h3>
+<br>
+<table>
+<thead><tr>
+<th>#</th>
+<th>Section</th>
+<th>Time</th>
+</tr></thead><tbody>
+<tr>
+<td>1</td>
+<td>What is an LLM? — Foundation</td>
+<td>10 min</td>
+</tr>
+<tr>
+<td>2</td>
+<td>The History of LLMs — From 2017 to Today</td>
+<td>25 min</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Top Paid LLMs — ChatGPT, Claude, Gemini, Perplexity</td>
+<td>20 min</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Free & Open-Source LLMs — Llama, Mistral, Ollama</td>
+<td>20 min</td>
+</tr>
+<tr>
+<td>5</td>
+<td>The Tools Ecosystem — What's Built on Top</td>
+<td>25 min</td>
+</tr>
+<tr>
+<td>6</td>
+<td>Use Cases — Choosing the Right LLM for Your Business</td>
+<td>20 min</td>
+</tr>
+</tbody></table>
+<br>
+<p><strong>Wrap-up:</strong> Key takeaways + 8 hands-on exercises you'll complete this week</p>
+<br>
+<hr class="slide-divider">
+<br>
+<h2 id="slide-3-what-is-a-large-language-model" class="slide-title">Slide 3: What Is a Large Language Model?</h2>
+<br>
+<h3>The Foundation</h3>
+<br>
+<p>A <strong>Large Language Model (LLM)</strong> is an AI system trained on massive amounts of text data to understand and generate human language.</p>
+<br>
+<p><strong>Three defining characteristics:</strong></p>
+<br>
+<table>
+<thead><tr>
+<th>Characteristic</th>
+<th>What it means</th>
+</tr></thead><tbody>
+<tr>
+<td><strong>Large</strong></td>
+<td>Billions to trillions of parameters (weights learned during training)</td>
+</tr>
+<tr>
+<td><strong>Language</strong></td>
+<td>Operates on text — reads, understands, generates, translates, summarizes</td>
+</tr>
+<tr>
+<td><strong>Model</strong></td>
+<td>A mathematical system that predicts what text should come next</td>
+</tr>
+</tbody></table>
+<br>
+<p><strong>How it works (simplified):</strong></p>
+<blockquote>You give it text → it predicts the most likely continuation → that's its "answer"</blockquote>
+<br>
+<p><strong>Why it matters for business:</strong></p>
+<ul>
+<li>Can perform tasks that previously required expensive human expertise</li>
+<li>Writing, analysis, coding, research, customer service — all at scale</li>
+<li>No programming knowledge required to use</li>
+</ul>
+<br>
+<hr class="slide-divider">
+<br>
+<h2 id="slide-4-the-history-of-llms-2017-2019-the-spark" class="slide-title">Slide 4: The History of LLMs — 2017–2019: The Spark</h2>
+<br>
+<h3>The Transformer Revolution</h3>
+<br>
+<p><strong>2017 — "Attention Is All You Need"</strong> <em>(Google Brain)</em></p>
+<ul>
+<li>A landmark research paper introducing the <strong>Transformer architecture</strong></li>
+<li>Key innovation: <strong>self-attention</strong> — the model learns which words relate to which other words in a sentence</li>
+<li>Replaced older RNN/LSTM approaches that struggled with long sequences</li>
+<li>Every major LLM today is built on this architecture</li>
+</ul>
+<br>
+<p><strong>2018 — BERT</strong> <em>(Google)</em></p>
+<ul>
+<li>Bidirectional Encoder Representations from Transformers</li>
+<li>First model to read text in both directions simultaneously</li>
+<li>Revolutionized search engines — Google still uses it today</li>
+<li>Not a generator — designed for understanding, not producing text</li>
+</ul>
+<br>
+<p><strong>2018 — GPT-1</strong> <em>(OpenAI)</em></p>
+<ul>
+<li>Generative Pre-trained Transformer — 117 million parameters</li>
+<li>Could generate coherent paragraphs for the first time</li>
+<li>Proof of concept: pre-training on large text corpora works</li>
+</ul>
+<br>
+<p><strong>2019 — GPT-2</strong> <em>(OpenAI)</em></p>
+<ul>
+<li>1.5 billion parameters — 10× bigger than GPT-1</li>
+<li>So capable OpenAI initially refused to release it publicly ("too dangerous")</li>
+<li>Could write convincing news articles, stories, and code</li>
+</ul>
+<br>
+<hr class="slide-divider">
+<br>
+<h2 id="slide-5-the-history-of-llms-2020-2022-the-scaling-era" class="slide-title">Slide 5: The History of LLMs — 2020–2022: The Scaling Era</h2>
+<br>
+<h3>When Size Became a Superpower</h3>
+<br>
+<p><strong>2020 — GPT-3</strong> <em>(OpenAI)</em></p>
+<ul>
+<li><strong>175 billion parameters</strong> — a 100× leap from GPT-2</li>
+<li>Introduced <strong>few-shot learning</strong>: give it 3 examples in your prompt and it learns the task</li>
+<li>Showed emergent abilities — capabilities nobody programmed directly (translation, math, code)</li>
+<li>Powered early ChatGPT prototypes and sparked the AI startup boom</li>
+</ul>
+<br>
+<p><strong>2021 — Codex</strong> <em>(OpenAI)</em></p>
+<ul>
+<li>GPT-3 fine-tuned on code → became the engine behind GitHub Copilot</li>
+<li>First time AI could meaningfully assist professional software developers</li>
+</ul>
+<br>
+<p><strong>2021 — DALL-E 1 & 2</strong> <em>(OpenAI)</em></p>
+<ul>
+<li>Proved LLM-style training could generate images from text descriptions</li>
+<li>Launched the multimodal AI era</li>
+</ul>
+<br>
+<p><strong>2022 — InstructGPT / RLHF</strong></p>
+<ul>
+<li>OpenAI introduced <strong>Reinforcement Learning from Human Feedback (RLHF)</strong></li>
+<li>Instead of just predicting text, models learned to follow instructions and be helpful</li>
+<li>This was the breakthrough that made LLMs usable by non-experts</li>
+</ul>
+<br>
+<p><strong>2022 — ChatGPT (Nov 30)</strong> <em>(OpenAI)</em></p>
+<ul>
+<li>First public consumer LLM product built on GPT-3.5</li>
+<li><strong>1 million users in 5 days</strong> — fastest product adoption in history</li>
+<li>Changed the public conversation about AI forever</li>
+</ul>
+<br>
+<hr class="slide-divider">
+<br>
+<h2 id="slide-6-the-history-of-llms-2023-2025-the-modern-era" class="slide-title">Slide 6: The History of LLMs — 2023–2025: The Modern Era</h2>
+<br>
+<h3>Competition, Open Source & Multimodal AI</h3>
+<br>
+<p><strong>2023 — The Year of LLMs</strong></p>
+<br>
+<table>
+<thead><tr>
+<th>Event</th>
+<th>Impact</th>
+</tr></thead><tbody>
+<tr>
+<td>GPT-4 (OpenAI, Mar 2023)</td>
+<td>Passed bar exam, SAT — near-human expert performance</td>
+</tr>
+<tr>
+<td>Claude 1 & 2 (Anthropic)</td>
+<td>Safety-focused alternative; 100K token context window</td>
+</tr>
+<tr>
+<td>Google Bard → Gemini</td>
+<td>Google's response to ChatGPT; integrated into Workspace</td>
+</tr>
+<tr>
+<td>Llama 1 & 2 (Meta, Jul 2023)</td>
+<td>Open-source weights released — anyone could run LLMs locally</td>
+</tr>
+<tr>
+<td>Mistral 7B (Sep 2023)</td>
+<td>Small but powerful European open-source model</td>
+</tr>
+</tbody></table>
+<br>
+<p><strong>2024 — Multimodal & Reasoning</strong></p>
+<br>
+<table>
+<thead><tr>
+<th>Event</th>
+<th>Impact</th>
+</tr></thead><tbody>
+<tr>
+<td>GPT-4o (OpenAI)</td>
+<td>Voice + vision + text in real-time — "Her" moment</td>
+</tr>
+<tr>
+<td>Claude 3 Opus/Sonnet/Haiku</td>
+<td>Outperformed GPT-4 on many benchmarks</td>
+</tr>
+<tr>
+<td>Gemini Ultra 1.0</td>
+<td>Google's most capable model; native multimodal</td>
+</tr>
+<tr>
+<td>Llama 3 (Meta)</td>
+<td>Open-source nearly matching proprietary models</td>
+</tr>
+<tr>
+<td>o1 / o3 (OpenAI)</td>
+<td>"Thinking" models — reasoning before answering</td>
+</tr>
+</tbody></table>
+<br>
+<p><strong>2025 — Where We Are Today</strong></p>
+<ul>
+<li><strong>Agents</strong>: LLMs take actions, not just answer questions</li>
+<li><strong>Local models</strong>: Run state-of-the-art AI on a laptop (Ollama, LM Studio)</li>
+<li><strong>Specialization</strong>: Models fine-tuned for medicine, law, finance, coding</li>
+<li><strong>Price collapse</strong>: What cost $20 in 2023 costs $0.10 today</li>
+</ul>
+<br>
+<hr class="slide-divider">
+<br>
+            </div>
+        </div>
+        
+
+        <div class="batch" id="batch2">
+            <div class="batch-header">
+                <span class="batch-number">Part 2</span>
+                <h2>Top Paid LLMs — ChatGPT, Claude, Gemini & Perplexity</h2>
+            </div>
+            <div class="batch-content">
+                <h1>Week 08 — The World of Large Language Models</h1>
+<h1>Batch 2 of 5: Top Paid LLMs (Slides 7–12)</h1>
+<h1>Course: BUAN 6v99 — Generative AI for Business | UTDallas Spring 2026</h1>
+<br>
+<hr class="slide-divider">
+<br>
+<h2 id="slide-7-the-llm-market-map" class="slide-title">Slide 7: The LLM Market Map</h2>
+<br>
+<h3>Navigating the Landscape</h3>
+<br>
+<pre><code class="language-text">
+                    PROPRIETARY (Closed Source)
+                           │
+          ┌────────────────┼────────────────┐
+          │                │                │
+       OpenAI           Anthropic        Google
+       ChatGPT           Claude           Gemini
+       GPT-4o             │             Perplexity
+          │         PAID  │  FREE          │
+──────────┼───────────────┼────────────────┼──────────
+          │               │                │
+       Groq API        Mistral          Meta AI
+       (Llama)         (open wts)       (Llama 3)
+       Ollama           Gemma            Phi-3
+          │                │                │
+          └────────────────┼────────────────┘
+                           │
+                    OPEN SOURCE (Open Weights)
+</code></pre>
+<br>
+<p><strong>Four quadrants to know:</strong></p>
+<ul>
+<li><strong>Paid + Proprietary</strong> — Most capable, easiest to use, subscription cost</li>
+<li><strong>Free Tier + Proprietary</strong> — Limited usage, API keys required</li>
+<li><strong>Open Weights</strong> — Download and run anywhere, privacy-first</li>
+<li><strong>Self-hosted</strong> — Full control, requires infrastructure</li>
+</ul>
+<br>
+<hr class="slide-divider">
+<br>
+<h2 id="slide-8-openai-chatgpt" class="slide-title">Slide 8: OpenAI / ChatGPT</h2>
+<br>
+<h3>The Market Leader</h3>
+<br>
+<p><strong>Company:</strong> OpenAI (founded 2015, San Francisco)</p>
+<p><strong>Backed by:</strong> Microsoft ($13B investment), other VCs</p>
+<br>
+<p><strong>Current models (2025):</strong></p>
+<br>
+<table>
+<thead><tr>
+<th>Model</th>
+<th>Best For</th>
+<th>Context Window</th>
+<th>Speed</th>
+</tr></thead><tbody>
+<tr>
+<td>GPT-4o</td>
+<td>General tasks, vision, voice</td>
+<td>128K tokens</td>
+<td>Fast</td>
+</tr>
+<tr>
+<td>o3 / o3-mini</td>
+<td>Complex reasoning, math, science</td>
+<td>128K tokens</td>
+<td>Slow (thinks longer)</td>
+</tr>
+<tr>
+<td>GPT-4.5</td>
+<td>Creative tasks, nuanced writing</td>
+<td>128K tokens</td>
+<td>Fast</td>
+</tr>
+</tbody></table>
+<br>
+<p><strong>Pricing (approximate):</strong></p>
+<ul>
+<li><strong>Free tier:</strong> ChatGPT with GPT-4o-mini, limited GPT-4o</li>
+<li><strong>ChatGPT Plus:</strong> $20/month — full GPT-4o access, image generation</li>
+<li><strong>ChatGPT Pro:</strong> $200/month — o1 Pro, unlimited usage</li>
+<li><strong>API:</strong> Pay per token (~$2.50–$15 per million input tokens)</li>
+</ul>
+<br>
+<p><strong>Key strengths:</strong></p>
+<ul>
+<li>Largest ecosystem (GPT Store, plugins, integrations)</li>
+<li>Best multimodal capabilities (text, image, voice, video)</li>
+<li>Widest enterprise adoption and third-party support</li>
+</ul>
+<br>
+<p><strong>Watch out for:</strong> Privacy — your data may train future models (without Enterprise plan)</p>
+<br>
+<hr class="slide-divider">
+<br>
+<h2 id="slide-9-anthropic-claude" class="slide-title">Slide 9: Anthropic / Claude</h2>
+<br>
+<h3>The Thoughtful Alternative</h3>
+<br>
+<p><strong>Company:</strong> Anthropic (founded 2021 by ex-OpenAI team)</p>
+<p><strong>Backed by:</strong> Amazon ($4B), Google ($300M), other investors</p>
+<p><strong>Mission:</strong> AI safety and reliability at the frontier</p>
+<br>
+<p><strong>Current models (2025):</strong></p>
+<br>
+<table>
+<thead><tr>
+<th>Model</th>
+<th>Best For</th>
+<th>Context Window</th>
+<th>Speed</th>
+</tr></thead><tbody>
+<tr>
+<td>Claude 4 Opus</td>
+<td>Deep analysis, complex reasoning</td>
+<td>200K tokens</td>
+<td>Medium</td>
+</tr>
+<tr>
+<td>Claude 4 Sonnet</td>
+<td>Balanced: capable + fast + affordable</td>
+<td>200K tokens</td>
+<td>Fast</td>
+</tr>
+<tr>
+<td>Claude 3.5 Haiku</td>
+<td>Quick tasks, high-volume applications</td>
+<td>200K tokens</td>
+<td>Very fast</td>
+</tr>
+</tbody></table>
+<br>
+<p><strong>Pricing (approximate):</strong></p>
+<ul>
+<li><strong>Free tier:</strong> Claude.ai — limited daily messages</li>
+<li><strong>Claude Pro:</strong> $20/month — priority access, 5× more usage</li>
+<li><strong>Claude Team:</strong> $30/user/month — shared workspace, Projects</li>
+<li><strong>API:</strong> $3–$15 per million input tokens</li>
+</ul>
+<br>
+<p><strong>Key strengths:</strong></p>
+<ul>
+<li><strong>Longest context window</strong> — 200K tokens (≈150,000 words — entire books)</li>
+<li><strong>Best for long documents</strong> — contracts, research papers, codebases</li>
+<li><strong>Superior instruction following</strong> — does exactly what you ask</li>
+<li><strong>Safety-focused</strong> — less likely to produce harmful outputs</li>
+<li><strong>Projects</strong> — persistent memory across conversations</li>
+</ul>
+<br>
+<p><strong>Watch out for:</strong> Smaller ecosystem vs. OpenAI; fewer native integrations</p>
+<br>
+<hr class="slide-divider">
+<br>
+<h2 id="slide-10-google-gemini" class="slide-title">Slide 10: Google Gemini</h2>
+<br>
+<h3>The Integrated Giant</h3>
+<br>
+<p><strong>Company:</strong> Google DeepMind (division of Alphabet)</p>
+<p><strong>Advantage:</strong> Deep integration with Google Workspace (Docs, Sheets, Gmail)</p>
+<br>
+<p><strong>Current models (2025):</strong></p>
+<br>
+<table>
+<thead><tr>
+<th>Model</th>
+<th>Best For</th>
+<th>Context Window</th>
+<th>Speed</th>
+</tr></thead><tbody>
+<tr>
+<td>Gemini Ultra</td>
+<td>Most complex tasks, research</td>
+<td>1M tokens</td>
+<td>Slow</td>
+</tr>
+<tr>
+<td>Gemini Pro 1.5</td>
+<td>Balanced everyday tasks</td>
+<td>1M tokens</td>
+<td>Medium</td>
+</tr>
+<tr>
+<td>Gemini Flash</td>
+<td>High speed, cost-efficient</td>
+<td>1M tokens</td>
+<td>Very fast</td>
+</tr>
+<tr>
+<td>Gemini Nano</td>
+<td>On-device, mobile (Pixel phones)</td>
+<td>Small</td>
+<td>Ultra fast</td>
+</tr>
+</tbody></table>
+<br>
+<p><strong>Pricing (approximate):</strong></p>
+<ul>
+<li><strong>Free tier:</strong> Gemini.google.com — Gemini Pro access</li>
+<li><strong>Google One AI Premium:</strong> $20/month — Gemini Ultra + Workspace AI features</li>
+<li><strong>Workspace Business:</strong> $30/user/month — Gemini in all Google apps</li>
+<li><strong>API:</strong> Via Google AI Studio (free tier available) or Vertex AI</li>
+</ul>
+<br>
+<p><strong>Key strengths:</strong></p>
+<ul>
+<li><strong>1 million token context window</strong> — largest of any mainstream model</li>
+<li><strong>Native multimodal</strong> — built for text, images, audio, video simultaneously</li>
+<li><strong>Google ecosystem lock-in</strong> — works seamlessly in Gmail, Docs, Drive</li>
+<li><strong>NotebookLM</strong> — extraordinary tool for research and learning</li>
+<li><strong>Real-time search</strong> — can access current web information</li>
+</ul>
+<br>
+<p><strong>Watch out for:</strong> Still catching up to OpenAI/Anthropic on pure text reasoning tasks</p>
+<br>
+<hr class="slide-divider">
+<br>
+<h2 id="slide-11-perplexity-ai" class="slide-title">Slide 11: Perplexity AI</h2>
+<br>
+<h3>Search Reimagined</h3>
+<br>
+<p><strong>Company:</strong> Perplexity AI (founded 2022, San Francisco)</p>
+<p><strong>Backed by:</strong> Amazon, NVIDIA, Jeff Bezos (personal)</p>
+<p><strong>Category:</strong> AI-powered search engine, not a traditional chatbot</p>
+<br>
+<p><strong>What makes it different:</strong></p>
+<blockquote>"Every answer comes with sources. Every claim is verifiable."</blockquote>
+<br>
+<p><strong>Current models:</strong></p>
+<ul>
+<li>Uses multiple LLMs under the hood (GPT-4o, Claude, Sonar — their own model)</li>
+<li>Automatically selects the best model for each query type</li>
+</ul>
+<br>
+<p><strong>Pricing:</strong></p>
+<ul>
+<li><strong>Free tier:</strong> Unlimited searches, limited Pro searches per day</li>
+<li><strong>Perplexity Pro:</strong> $20/month — unlimited Pro searches, image generation, file uploads</li>
+</ul>
+<br>
+<p><strong>Key strengths:</strong></p>
+<br>
+<table>
+<thead><tr>
+<th>Feature</th>
+<th>Why It Matters</th>
+</tr></thead><tbody>
+<tr>
+<td><strong>Always up-to-date</strong></td>
+<td>Searches the web in real time — no knowledge cutoff</td>
+</tr>
+<tr>
+<td><strong>Source citations</strong></td>
+<td>Every answer links to original sources</td>
+</tr>
+<tr>
+<td><strong>Research mode</strong></td>
+<td>Deep multi-step research on complex topics</td>
+</tr>
+<tr>
+<td><strong>Academic mode</strong></td>
+<td>Searches peer-reviewed papers (PubMed, arXiv)</td>
+</tr>
+<tr>
+<td><strong>Business use</strong></td>
+<td>Market research, competitor analysis, trend tracking</td>
+</tr>
+</tbody></table>
+<br>
+<p><strong>Best used for:</strong> Market research, fact-checking, current events, academic research</p>
+<p><strong>Not ideal for:</strong> Creative writing, long-form generation, conversational tasks</p>
+<br>
+<hr class="slide-divider">
+<br>
+<h2 id="slide-12-paid-llms-business-comparison" class="slide-title">Slide 12: Paid LLMs — Business Comparison</h2>
+<br>
+<h3>Choosing the Right Paid Tool</h3>
+<br>
+<table>
+<thead><tr>
+<th></th>
+<th>**ChatGPT (OpenAI)**</th>
+<th>**Claude (Anthropic)**</th>
+<th>**Gemini (Google)**</th>
+<th>**Perplexity**</th>
+</tr></thead><tbody>
+<tr>
+<td><strong>Best For</strong></td>
+<td>General tasks, images, voice</td>
+<td>Long docs, analysis, coding</td>
+<td>Google Workspace users</td>
+<td>Research, fact-checking</td>
+</tr>
+<tr>
+<td><strong>Context Window</strong></td>
+<td>128K tokens</td>
+<td>200K tokens</td>
+<td>1M tokens</td>
+<td>Real-time web</td>
+</tr>
+<tr>
+<td><strong>Starting Price</strong></td>
+<td>$20/month</td>
+<td>$20/month</td>
+<td>$20/month</td>
+<td>$20/month</td>
+</tr>
+<tr>
+<td><strong>Free Tier</strong></td>
+<td>Yes (limited)</td>
+<td>Yes (limited)</td>
+<td>Yes (limited)</td>
+<td>Yes (good)</td>
+</tr>
+<tr>
+<td><strong>Key Strength</strong></td>
+<td>Ecosystem, multimodal</td>
+<td>Long context, precision</td>
+<td>Google integration</td>
+<td>Real-time accuracy</td>
+</tr>
+<tr>
+<td><strong>Weakness</strong></td>
+<td>Privacy (standard plan)</td>
+<td>Smaller ecosystem</td>
+<td>Text reasoning</td>
+<td>Not for creation</td>
+</tr>
+<tr>
+<td><strong>Privacy</strong></td>
+<td>⚠️ Trains on data</td>
+<td>✅ No training by default</td>
+<td>⚠️ Google data</td>
+<td>✅ Sources cited</td>
+</tr>
+<tr>
+<td><strong>Enterprise Plan</strong></td>
+<td>Yes ($30/user)</td>
+<td>Yes ($30/user)</td>
+<td>Yes ($30/user)</td>
+<td>Yes ($40/user)</td>
+</tr>
+</tbody></table>
+<br>
+<p><strong>Quick decision guide:</strong></p>
+<ul>
+<li>📄 <strong>Long document analysis</strong> → Claude (200K context)</li>
+<li>🖼️ <strong>Images + voice + video</strong> → ChatGPT (GPT-4o)</li>
+<li>📊 <strong>Google Workspace heavy user</strong> → Gemini</li>
+<li>🔍 <strong>Research + current events</strong> → Perplexity</li>
+<li>🧮 <strong>Complex math/science reasoning</strong> → OpenAI o3</li>
+</ul>
+<br>
+<hr class="slide-divider">
+<br>
+            </div>
+        </div>
+        
+
+        <div class="batch" id="batch3">
+            <div class="batch-header">
+                <span class="batch-number">Part 3</span>
+                <h2>Free & Open-Source LLMs — Llama, Mistral, Groq & Ollama</h2>
+            </div>
+            <div class="batch-content">
+                <h1>Week 08 — The World of Large Language Models</h1>
+<h1>Batch 3 of 5: Free & Open-Source LLMs (Slides 13–18)</h1>
+<h1>Course: BUAN 6v99 — Generative AI for Business | UTDallas Spring 2026</h1>
+<br>
+<hr class="slide-divider">
+<br>
+<h2 id="slide-13-what-does-free-really-mean" class="slide-title">Slide 13: What Does "Free" Really Mean?</h2>
+<br>
+<h3>Three Very Different Things</h3>
+<br>
+<p><strong>1. Free API Tier</strong> (Still proprietary, just free up to a limit)</p>
+<ul>
+<li>Examples: Gemini API free tier, Claude.ai free plan, OpenAI free tier</li>
+<li>The company still owns the model</li>
+<li>Usage limits apply — rate limits, message caps</li>
+<li>Your data may still be used for training</li>
+</ul>
+<br>
+<p><strong>2. Open-Weight Models</strong> (The model weights are public — you can download them)</p>
+<ul>
+<li>Examples: Meta Llama 3, Mistral 7B, Google Gemma</li>
+<li>Download the model and run it yourself — on your computer or cloud</li>
+<li>No API calls, no per-token cost after download</li>
+<li>Full control: fine-tune it, modify it, deploy it privately</li>
+<li>Requires technical setup and computing resources</li>
+</ul>
+<br>
+<p><strong>3. Free Hosted Interfaces</strong> (Open-weight models run on someone else's server)</p>
+<ul>
+<li>Examples: Ollama (local), Groq (cloud), Hugging Face Spaces</li>
+<li>You get the free open model but without the setup hassle</li>
+<li>Fastest path to running Llama, Mistral, etc.</li>
+</ul>
+<br>
+<p><strong>Why this matters for business:</strong></p>
+<br>
+<table>
+<thead><tr>
+<th>Concern</th>
+<th>Free API Tier</th>
+<th>Open-Weight</th>
+<th>Free Hosted</th>
+</tr></thead><tbody>
+<tr>
+<td>Data Privacy</td>
+<td>⚠️ Shared with provider</td>
+<td>✅ 100% private</td>
+<td>✅ Mostly private</td>
+</tr>
+<tr>
+<td>Cost at Scale</td>
+<td>Paid beyond limits</td>
+<td>Infra cost only</td>
+<td>Free or very cheap</td>
+</tr>
+<tr>
+<td>Customization</td>
+<td>❌ Limited</td>
+<td>✅ Full fine-tuning</td>
+<td>Limited</td>
+</tr>
+<tr>
+<td>Setup Effort</td>
+<td>None</td>
+<td>High</td>
+<td>Low</td>
+</tr>
+</tbody></table>
+<br>
+<hr class="slide-divider">
+<br>
+<h2 id="slide-14-meta-llama-3-open-source-champion" class="slide-title">Slide 14: Meta Llama 3 — Open Source Champion</h2>
+<br>
+<h3>The People's LLM</h3>
+<br>
+<p><strong>Company:</strong> Meta AI (Facebook's parent company)</p>
+<p><strong>Released:</strong> Llama 3.1 (July 2024), Llama 3.2/3.3 (late 2024)</p>
+<p><strong>License:</strong> Open weights — free to download, use, and modify</p>
+<br>
+<p><strong>Model variants:</strong></p>
+<br>
+<table>
+<thead><tr>
+<th>Model</th>
+<th>Parameters</th>
+<th>Best For</th>
+<th>Can Run On</th>
+</tr></thead><tbody>
+<tr>
+<td>Llama 3.2 1B / 3B</td>
+<td>1–3 billion</td>
+<td>Mobile, edge devices</td>
+<td>Phones, Raspberry Pi</td>
+</tr>
+<tr>
+<td>Llama 3.2 11B / 90B</td>
+<td>11–90 billion</td>
+<td>General tasks, vision</td>
+<td>Gaming PC, Mac M3</td>
+</tr>
+<tr>
+<td>Llama 3.1 405B</td>
+<td>405 billion</td>
+<td>Near-GPT-4 quality</td>
+<td>Data center / cloud</td>
+</tr>
+</tbody></table>
+<br>
+<p><strong>Where to access Llama 3:</strong></p>
+<br>
+<table>
+<thead><tr>
+<th>Platform</th>
+<th>Cost</th>
+<th>Privacy</th>
+<th>Ease of Use</th>
+</tr></thead><tbody>
+<tr>
+<td>Meta.ai</td>
+<td>Free</td>
+<td>Meta sees it</td>
+<td>Very easy</td>
+</tr>
+<tr>
+<td>Ollama (local)</td>
+<td>Free</td>
+<td>100% private</td>
+<td>Easy</td>
+</tr>
+<tr>
+<td>Groq</td>
+<td>Free tier</td>
+<td>Groq sees it</td>
+<td>Easy (API)</td>
+</tr>
+<tr>
+<td>Amazon Bedrock</td>
+<td>Pay per use</td>
+<td>Your AWS account</td>
+<td>Medium</td>
+</tr>
+<tr>
+<td>Hugging Face</td>
+<td>Free / paid</td>
+<td>Shared</td>
+<td>Medium</td>
+</tr>
+</tbody></table>
+<br>
+<p><strong>Business case for Llama:</strong></p>
+<ul>
+<li>Zero per-token cost at scale (huge savings for high-volume apps)</li>
+<li>Full data privacy — sensitive business data never leaves your servers</li>
+<li>Can be fine-tuned on your company's data and terminology</li>
+</ul>
+<br>
+<hr class="slide-divider">
+<br>
+<h2 id="slide-15-mistral-ai-the-european-challenger" class="slide-title">Slide 15: Mistral AI — The European Challenger</h2>
+<br>
+<h3>Quality Over Size</h3>
+<br>
+<p><strong>Company:</strong> Mistral AI (founded 2023, Paris, France)</p>
+<p><strong>Backed by:</strong> Andreessen Horowitz, Lightspeed, NVIDIA</p>
+<p><strong>Philosophy:</strong> Efficient, powerful models that punch above their weight</p>
+<br>
+<p><strong>Why Mistral matters:</strong></p>
+<blockquote>Mistral 7B outperformed Llama 2 13B on every benchmark — at half the size</blockquote>
+<br>
+<p><strong>Model family:</strong></p>
+<br>
+<table>
+<thead><tr>
+<th>Model</th>
+<th>Parameters</th>
+<th>Type</th>
+<th>Best For</th>
+</tr></thead><tbody>
+<tr>
+<td>Mistral 7B</td>
+<td>7B</td>
+<td>Open-weight</td>
+<td>Fast, lightweight tasks</td>
+</tr>
+<tr>
+<td>Mixtral 8x7B</td>
+<td>45B active (MoE)</td>
+<td>Open-weight</td>
+<td>High quality at lower cost</td>
+</tr>
+<tr>
+<td>Mistral Small</td>
+<td>—</td>
+<td>API</td>
+<td>Cost-efficient API usage</td>
+</tr>
+<tr>
+<td>Mistral Large</td>
+<td>—</td>
+<td>API</td>
+<td>Complex reasoning, code</td>
+</tr>
+<tr>
+<td>Codestral</td>
+<td>—</td>
+<td>API</td>
+<td>Code generation (all languages)</td>
+</tr>
+</tbody></table>
+<br>
+<p><strong>MoE — Mixture of Experts (Mixtral):</strong></p>
+<blockquote>Instead of using all 45B parameters for every token, Mixtral activates only the 2 most relevant "expert" sub-networks → GPT-3.5 quality at a fraction of the compute cost</blockquote>
+<br>
+<p><strong>Pricing:</strong></p>
+<ul>
+<li>Open-weight models: <strong>Free</strong> (download and run yourself)</li>
+<li>Mistral API: Free tier available; paid tiers from ~$0.002/1K tokens</li>
+<li>La Plateforme (enterprise): Custom pricing</li>
+</ul>
+<br>
+<p><strong>European advantage:</strong> GDPR-compliant by design; data stored in EU — important for European businesses and regulated industries</p>
+<br>
+<hr class="slide-divider">
+<br>
+<h2 id="slide-16-google-gemma-microsoft-phi-3" class="slide-title">Slide 16: Google Gemma & Microsoft Phi-3</h2>
+<br>
+<h3>Small Models, Big Impact</h3>
+<br>
+<hr class="slide-divider">
+<br>
+<h3>Google Gemma</h3>
+<br>
+<p><strong>Released:</strong> February 2024 | <strong>Type:</strong> Open weights</p>
+<p><strong>Built by:</strong> Google DeepMind — same team as Gemini</p>
+<br>
+<table>
+<thead><tr>
+<th>Model</th>
+<th>Parameters</th>
+<th>Special Feature</th>
+</tr></thead><tbody>
+<tr>
+<td>Gemma 2B</td>
+<td>2 billion</td>
+<td>Runs on phones and laptops</td>
+</tr>
+<tr>
+<td>Gemma 7B</td>
+<td>7 billion</td>
+<td>Strong general performance</td>
+</tr>
+<tr>
+<td>Gemma 2 (9B/27B)</td>
+<td>9–27B</td>
+<td>State-of-the-art for its size</td>
+</tr>
+<tr>
+<td>CodeGemma</td>
+<td>7B</td>
+<td>Optimized for code</td>
+</tr>
+</tbody></table>
+<br>
+<p><strong>Best for:</strong> Developers who want Google-quality AI embedded in their own apps, on-device AI (no internet required)</p>
+<br>
+<hr class="slide-divider">
+<br>
+<h3>Microsoft Phi-3</h3>
+<br>
+<p><strong>Released:</strong> April 2024 | <strong>Type:</strong> Open weights (MIT license)</p>
+<p><strong>Key insight:</strong> Train on high-quality "textbook-like" data rather than raw internet text</p>
+<br>
+<table>
+<thead><tr>
+<th>Model</th>
+<th>Parameters</th>
+<th>Context</th>
+<th>Remarkable fact</th>
+</tr></thead><tbody>
+<tr>
+<td>Phi-3 Mini</td>
+<td>3.8B</td>
+<td>128K</td>
+<td>Fits on a phone, beats GPT-3.5</td>
+</tr>
+<tr>
+<td>Phi-3 Small</td>
+<td>7B</td>
+<td>128K</td>
+<td>Better than Mixtral 8x7B on reasoning</td>
+</tr>
+<tr>
+<td>Phi-3 Medium</td>
+<td>14B</td>
+<td>128K</td>
+<td>Approaches GPT-4 on some benchmarks</td>
+</tr>
+</tbody></table>
+<br>
+<p><strong>Why small models matter for business:</strong></p>
+<ul>
+<li>Run on-device → <strong>no internet connection needed</strong> (field workers, secure environments)</li>
+<li><strong>Zero latency</strong> — response in milliseconds</li>
+<li><strong>No per-call cost</strong> — deploy once, use forever</li>
+<li><strong>Compliance-friendly</strong> — data never leaves the device</li>
+</ul>
+<br>
+<hr class="slide-divider">
+<br>
+<h2 id="slide-17-groq-ollama-speed-and-privacy" class="slide-title">Slide 17: Groq & Ollama — Speed and Privacy</h2>
+<br>
+<h3>Supercharging Open-Source Models</h3>
+<br>
+<hr class="slide-divider">
+<br>
+<h3>Groq — Inference at the Speed of Thought</h3>
+<br>
+<p><strong>What it is:</strong> A cloud platform that runs open-source models at extraordinary speed using custom LPU (Language Processing Unit) chips</p>
+<br>
+<p><strong>Speed comparison:</strong></p>
+<table>
+<thead><tr>
+<th>Platform</th>
+<th>Tokens/second</th>
+<th>Llama 3.1 70B</th>
+</tr></thead><tbody>
+<tr>
+<td>OpenAI API</td>
+<td>~60 t/s</td>
+<td>(GPT-4o)</td>
+</tr>
+<tr>
+<td>Standard cloud GPU</td>
+<td>~40 t/s</td>
+<td></td>
+</tr>
+<tr>
+<td><strong>Groq</strong></td>
+<td><strong>~250–800 t/s</strong></td>
+<td>✅</td>
+</tr>
+</tbody></table>
+<br>
+<p><strong>Models available:</strong> Llama 3.1/3.3, Mixtral, Gemma, Whisper (audio)</p>
+<p><strong>Pricing:</strong> Free tier (rate-limited), paid from $0.05–$0.79 per million tokens</p>
+<p><strong>Best for:</strong> Real-time apps, voice interfaces, high-throughput pipelines</p>
+<br>
+<hr class="slide-divider">
+<br>
+<h3>Ollama — Your Private AI on Your Laptop</h3>
+<br>
+<p><strong>What it is:</strong> A free tool to run LLMs locally on your Mac, Windows, or Linux machine</p>
+<br>
+<p><strong>How simple it is:</strong></p>
+<pre><code class="language-text">
+Install Ollama → ollama pull llama3.2 → ollama run llama3.2
+</code></pre>
+<br>
+<p><strong>Supported models:</strong> Llama 3, Mistral, Phi-3, Gemma, CodeLlama, Qwen, and 100+ more</p>
+<p><strong>Hardware needed:</strong> Mac M1/M2/M3 or GPU-equipped PC (8GB+ RAM minimum)</p>
+<p><strong>Cost:</strong> 100% free — no API keys, no internet required after download</p>
+<br>
+<p><strong>Business use cases:</strong></p>
+<ul>
+<li><strong>Sensitive data analysis</strong> — HR files, legal documents, financials — stays on your machine</li>
+<li><strong>Offline environments</strong> — manufacturing floors, field operations, classified settings</li>
+<li><strong>Prototype fast</strong> — test AI features locally before committing to cloud costs</li>
+</ul>
+<br>
+<hr class="slide-divider">
+<br>
+<h2 id="slide-18-free-open-source-llms-business-comparison" class="slide-title">Slide 18: Free & Open-Source LLMs — Business Comparison</h2>
+<br>
+<h3>The Free Tier Decision Matrix</h3>
+<br>
+<table>
+<thead><tr>
+<th></th>
+<th>**Llama 3 (Meta)**</th>
+<th>**Mistral/Mixtral**</th>
+<th>**Gemma (Google)**</th>
+<th>**Phi-3 (Microsoft)**</th>
+<th>**Groq**</th>
+<th>**Ollama**</th>
+</tr></thead><tbody>
+<tr>
+<td><strong>Access Method</strong></td>
+<td>Download / API</td>
+<td>Download / API</td>
+<td>Download / API</td>
+<td>Download / API</td>
+<td>Cloud API</td>
+<td>Local install</td>
+</tr>
+<tr>
+<td><strong>Best For</strong></td>
+<td>General tasks</td>
+<td>Efficient reasoning</td>
+<td>On-device AI</td>
+<td>Small + smart</td>
+<td>Speed-critical</td>
+<td>Privacy-first</td>
+</tr>
+<tr>
+<td><strong>Privacy Level</strong></td>
+<td>✅ If self-hosted</td>
+<td>✅ If self-hosted</td>
+<td>✅ If self-hosted</td>
+<td>✅ On-device</td>
+<td>⚠️ Groq cloud</td>
+<td>✅ 100% local</td>
+</tr>
+<tr>
+<td><strong>Cost</strong></td>
+<td>Free weights</td>
+<td>Free weights</td>
+<td>Free weights</td>
+<td>Free weights</td>
+<td>Free tier</td>
+<td>100% free</td>
+</tr>
+<tr>
+<td><strong>Setup Effort</strong></td>
+<td>Medium</td>
+<td>Medium</td>
+<td>Medium</td>
+<td>Medium</td>
+<td>Low (API)</td>
+<td>Low</td>
+</tr>
+<tr>
+<td><strong>Min. Hardware</strong></td>
+<td>8GB RAM</td>
+<td>8GB RAM</td>
+<td>4GB RAM</td>
+<td>4GB RAM</td>
+<td>None</td>
+<td>8GB RAM</td>
+</tr>
+<tr>
+<td><strong>Fine-tunable</strong></td>
+<td>✅ Yes</td>
+<td>✅ Yes</td>
+<td>✅ Yes</td>
+<td>✅ Yes</td>
+<td>❌ No</td>
+<td>✅ Yes</td>
+</tr>
+</tbody></table>
+<br>
+<p><strong>When to choose open-source over paid:</strong></p>
+<br>
+<p><span class="check">✅</span> <strong>Go open-source when:</strong></p>
+<ul>
+<li>Handling sensitive/confidential business data</li>
+<li>High volume (millions of API calls/month)</li>
+<li>Need to customize/fine-tune on your domain</li>
+<li>Budget is a primary constraint</li>
+</ul>
+<br>
+<p>💳 <strong>Stick with paid when:</strong></p>
+<ul>
+<li>Need the absolute best quality available</li>
+<li>Speed-to-production matters more than cost</li>
+<li>Team lacks technical AI infrastructure expertise</li>
+<li>Multimodal (vision, voice) is required</li>
+</ul>
+<br>
+<hr class="slide-divider">
+<br>
+            </div>
+        </div>
+        
+
+        <div class="batch" id="batch4">
+            <div class="batch-header">
+                <span class="batch-number">Part 4</span>
+                <h2>The Tools Ecosystem — Native & Third-Party Applications</h2>
+            </div>
+            <div class="batch-content">
+                <h1>Week 08 — The World of Large Language Models</h1>
+<h1>Batch 4 of 5: Tools Ecosystem (Slides 19–24)</h1>
+<h1>Course: BUAN 6v99 — Generative AI for Business | UTDallas Spring 2026</h1>
+<br>
+<hr class="slide-divider">
+<br>
+<h2 id="slide-19-how-the-tools-ecosystem-works" class="slide-title">Slide 19: How the Tools Ecosystem Works</h2>
+<br>
+<h3>From Model to Product</h3>
+<br>
+<p><strong>The LLM value chain:</strong></p>
+<br>
+<pre><code class="language-text">
+┌─────────────────────────────────────────────────────────┐
+│                  FOUNDATION LAYER                        │
+│   LLM Core (GPT-4o / Claude / Gemini / Llama / Mistral) │
+└───────────────────────┬─────────────────────────────────┘
+                        │
+                   APIs &amp; SDKs
+                        │
+        ┌───────────────┼───────────────┐
+        │               │               │
+        ▼               ▼               ▼
+┌──────────────┐ ┌─────────────┐ ┌──────────────┐
+│ NATIVE APPS  │ │  3RD PARTY  │ │  ENTERPRISE  │
+│ (by company) │ │    TOOLS    │ │ INTEGRATIONS │
+├──────────────┤ ├─────────────┤ ├──────────────┤
+│ ChatGPT      │ │ Cursor      │ │ Salesforce   │
+│ Claude.ai    │ │ Notion AI   │ │ HubSpot AI   │
+│ Gemini       │ │ Jasper      │ │ MS Copilot   │
+│ NotebookLM   │ │ Perplexity  │ │ Zendesk AI   │
+└──────────────┘ └─────────────┘ └──────────────┘
+</code></pre>
+<br>
+<p><strong>Three types of tools:</strong></p>
+<br>
+<table>
+<thead><tr>
+<th>Type</th>
+<th>Who builds it</th>
+<th>Example</th>
+<th>Relationship to LLM</th>
+</tr></thead><tbody>
+<tr>
+<td><strong>Native</strong></td>
+<td>The LLM company itself</td>
+<td>Claude.ai, ChatGPT</td>
+<td>Direct product</td>
+</tr>
+<tr>
+<td><strong>3rd Party</strong></td>
+<td>Independent companies</td>
+<td>Cursor, Jasper</td>
+<td>Built via API</td>
+</tr>
+<tr>
+<td><strong>Enterprise</strong></td>
+<td>Large software vendors</td>
+<td>Salesforce Einstein</td>
+<td>Embedded feature</td>
+</tr>
+</tbody></table>
+<br>
+<p><strong>Key insight:</strong> The LLM itself is a commodity becoming. The <strong>application layer</strong> built on top is where business value is captured.</p>
+<br>
+<hr class="slide-divider">
+<br>
+<h2 id="slide-20-openai-s-native-ecosystem" class="slide-title">Slide 20: OpenAI's Native Ecosystem</h2>
+<br>
+<h3>Building an AI Empire</h3>
+<br>
+<p><strong>OpenAI's strategy:</strong> Create the platform, not just the model</p>
+<br>
+<pre><code class="language-text">
+                    OpenAI
+                      │
+    ┌─────────────────┼─────────────────┐
+    │                 │                 │
+    ▼                 ▼                 ▼
+Consumer          Developer         Enterprise
+Products           Tools             APIs
+    │                 │                 │
+ChatGPT          Assistants        Azure OpenAI
+DALL-E 3           API               Service
+Sora            GPTs Store         Batch API
+ChatGPT Voice   Embeddings        Fine-tuning
+</code></pre>
+<br>
+<p><strong>Key native products:</strong></p>
+<br>
+<table>
+<thead><tr>
+<th>Product</th>
+<th>What It Does</th>
+<th>Who Uses It</th>
+</tr></thead><tbody>
+<tr>
+<td><strong>ChatGPT</strong></td>
+<td>Conversational AI, web browsing, image gen</td>
+<td>Everyone</td>
+</tr>
+<tr>
+<td><strong>DALL-E 3</strong></td>
+<td>Text-to-image generation</td>
+<td>Designers, marketers</td>
+</tr>
+<tr>
+<td><strong>Sora</strong></td>
+<td>Text-to-video generation</td>
+<td>Content creators</td>
+</tr>
+<tr>
+<td><strong>GPTs Store</strong></td>
+<td>Custom AI assistants you build and share</td>
+<td>Power users, businesses</td>
+</tr>
+<tr>
+<td><strong>Assistants API</strong></td>
+<td>Build AI agents with memory + tools</td>
+<td>Developers</td>
+</tr>
+<tr>
+<td><strong>Canvas</strong></td>
+<td>AI-powered document editor</td>
+<td>Writers, professionals</td>
+</tr>
+</tbody></table>
+<br>
+<p><strong>The GPT Store model:</strong></p>
+<ul>
+<li>Anyone can create a custom ChatGPT ("GPT") without coding</li>
+<li>Businesses publish GPTs for customer service, internal tools, etc.</li>
+<li>3M+ custom GPTs created since launch</li>
+</ul>
+<br>
+<hr class="slide-divider">
+<br>
+<h2 id="slide-21-anthropic-google-ecosystems" class="slide-title">Slide 21: Anthropic & Google Ecosystems</h2>
+<br>
+<h3>Two Different Philosophies</h3>
+<br>
+<hr class="slide-divider">
+<br>
+<h3>Anthropic / Claude Ecosystem</h3>
+<br>
+<p><strong>Philosophy:</strong> Fewer products, done with exceptional quality</p>
+<br>
+<table>
+<thead><tr>
+<th>Product</th>
+<th>What It Does</th>
+</tr></thead><tbody>
+<tr>
+<td><strong>Claude.ai</strong></td>
+<td>Main chat interface — free and Pro tiers</td>
+</tr>
+<tr>
+<td><strong>Projects</strong></td>
+<td>Persistent memory workspace — Claude remembers across sessions</td>
+</tr>
+<tr>
+<td><strong>Claude API</strong></td>
+<td>Developer access to all models</td>
+</tr>
+<tr>
+<td><strong>Claude for Enterprise</strong></td>
+<td>SSO, admin controls, zero data retention</td>
+</tr>
+<tr>
+<td><strong>Artifacts</strong></td>
+<td>Generate and edit documents, code, diagrams live in chat</td>
+</tr>
+</tbody></table>
+<br>
+<p><strong>Claude's emerging role in coding:</strong> Claude Sonnet 4 is now the most popular model in Cursor and GitHub Copilot backend for complex tasks — a major third-party ecosystem win.</p>
+<br>
+<hr class="slide-divider">
+<br>
+<h3>Google's Ecosystem</h3>
+<br>
+<p><strong>Philosophy:</strong> Integrate AI everywhere Google already is</p>
+<br>
+<table>
+<thead><tr>
+<th>Product</th>
+<th>What It Does</th>
+<th>Where It Lives</th>
+</tr></thead><tbody>
+<tr>
+<td><strong>Gemini</strong></td>
+<td>Main chat interface</td>
+<td>gemini.google.com</td>
+</tr>
+<tr>
+<td><strong>NotebookLM</strong></td>
+<td>AI research assistant for your documents</td>
+<td>notebooklm.google.com</td>
+</tr>
+<tr>
+<td><strong>AI Studio</strong></td>
+<td>Developer playground for Gemini</td>
+<td>aistudio.google.com</td>
+</tr>
+<tr>
+<td><strong>Vertex AI</strong></td>
+<td>Enterprise AI platform on Google Cloud</td>
+<td>cloud.google.com</td>
+</tr>
+<tr>
+<td><strong>Gemini in Workspace</strong></td>
+<td>AI in Gmail, Docs, Sheets, Slides, Meet</td>
+<td>Your Google apps</td>
+</tr>
+<tr>
+<td><strong>Google Search AI</strong></td>
+<td>AI Overviews in search results</td>
+<td>google.com</td>
+</tr>
+</tbody></table>
+<br>
+<p><strong>NotebookLM — The standout product:</strong></p>
+<ul>
+<li>Upload PDFs, YouTube videos, Google Docs, websites</li>
+<li>AI creates summaries, FAQs, study guides, and — remarkably — a podcast audio discussion of your documents</li>
+<li>Business use: onboard new employees, analyze industry reports, create training materials</li>
+</ul>
+<br>
+<hr class="slide-divider">
+<br>
+<h2 id="slide-22-productivity-writing-tools" class="slide-title">Slide 22: Productivity & Writing Tools</h2>
+<br>
+<h3>The Content Creation Layer</h3>
+<br>
+<p><strong>Market size:</strong> $1.8B and growing — every major writing platform is adding AI</p>
+<br>
+<p><strong>Top tools and their LLM backbone:</strong></p>
+<br>
+<table>
+<thead><tr>
+<th>Tool</th>
+<th>Primary LLM</th>
+<th>Category</th>
+<th>Best For</th>
+<th>Price</th>
+</tr></thead><tbody>
+<tr>
+<td><strong>Notion AI</strong></td>
+<td>Claude + GPT-4o</td>
+<td>Docs & notes</td>
+<td>Meeting summaries, wikis, drafts</td>
+<td>$10/user/mo add-on</td>
+</tr>
+<tr>
+<td><strong>Jasper</strong></td>
+<td>GPT-4o + Claude</td>
+<td>Marketing copy</td>
+<td>Ad copy, blog posts, brand voice</td>
+<td>$49/mo</td>
+</tr>
+<tr>
+<td><strong>Copy.ai</strong></td>
+<td>GPT-4</td>
+<td>Sales & marketing</td>
+<td>Email sequences, social posts</td>
+<td>Free / $49/mo</td>
+</tr>
+<tr>
+<td><strong>Grammarly AI</strong></td>
+<td>Proprietary + GPT</td>
+<td>Writing assistant</td>
+<td>Grammar, tone, clarity, rewrites</td>
+<td>Free / $30/mo</td>
+</tr>
+<tr>
+<td><strong>Quillbot</strong></td>
+<td>Proprietary</td>
+<td>Paraphrasing</td>
+<td>Academic rewriting, summarization</td>
+<td>Free / $10/mo</td>
+</tr>
+<tr>
+<td><strong>Gamma</strong></td>
+<td>GPT-4o</td>
+<td>Presentations</td>
+<td>Auto-generate slides from a prompt</td>
+<td>Free / $10/mo</td>
+</tr>
+<tr>
+<td><strong>HeyGen</strong></td>
+<td>Proprietary</td>
+<td>Video</td>
+<td>AI avatar video from text script</td>
+<td>$29/mo</td>
+</tr>
+</tbody></table>
+<br>
+<p><strong>The common pattern:</strong> These tools wrap a foundational LLM and add:</p>
+<ul>
+<li><strong>Brand voice</strong> training so outputs match your company's style</li>
+<li><strong>Templates</strong> tuned for specific use cases (LinkedIn post, press release, email)</li>
+<li><strong>Workflow integrations</strong> with CRMs, CMSs, and project management tools</li>
+<li>A <strong>simpler interface</strong> than raw API access</li>
+</ul>
+<br>
+<p><strong>Business reality:</strong> These tools cost $10–$50/month each but can save hours of work weekly. ROI is typically positive within weeks.</p>
+<br>
+<hr class="slide-divider">
+<br>
+<h2 id="slide-23-developer-coding-tools" class="slide-title">Slide 23: Developer & Coding Tools</h2>
+<br>
+<h3>AI Enters the IDE</h3>
+<br>
+<p><strong>Market impact:</strong> GitHub Copilot alone has 1.8M paying subscribers. Developers using AI code 55% faster (GitHub internal study, 2024).</p>
+<br>
+<p><strong>The major coding AI tools:</strong></p>
+<br>
+<table>
+<thead><tr>
+<th>Tool</th>
+<th>LLM Backbone</th>
+<th>Platform</th>
+<th>Key Feature</th>
+<th>Price</th>
+</tr></thead><tbody>
+<tr>
+<td><strong>GitHub Copilot</strong></td>
+<td>Claude + GPT-4o</td>
+<td>VS Code, JetBrains, etc.</td>
+<td>In-editor autocomplete</td>
+<td>$10/mo individual</td>
+</tr>
+<tr>
+<td><strong>Cursor</strong></td>
+<td>Claude 4 Sonnet</td>
+<td>Standalone IDE</td>
+<td>Full codebase chat + edit</td>
+<td>$20/mo</td>
+</tr>
+<tr>
+<td><strong>Replit AI</strong></td>
+<td>Custom</td>
+<td>Browser-based IDE</td>
+<td>Run + deploy in the browser</td>
+<td>Free / $25/mo</td>
+</tr>
+<tr>
+<td><strong>Amazon CodeWhisperer</strong></td>
+<td>Amazon Titan</td>
+<td>AWS ecosystem</td>
+<td>Free for individual devs</td>
+<td>Free</td>
+</tr>
+<tr>
+<td><strong>Tabnine</strong></td>
+<td>Enterprise-hosted</td>
+<td>Any IDE</td>
+<td>Privacy-first, self-hosted option</td>
+<td>$12/mo</td>
+</tr>
+<tr>
+<td><strong>Windsurf</strong></td>
+<td>Multiple</td>
+<td>Standalone IDE</td>
+<td>Agentic coding — does multi-file edits</td>
+<td>$15/mo</td>
+</tr>
+</tbody></table>
+<br>
+<p><strong>What these tools can do:</strong></p>
+<ul>
+<li><strong>Autocomplete</strong> entire functions as you type</li>
+<li><strong>Explain</strong> legacy code you've never seen</li>
+<li><strong>Refactor</strong> messy code to best practices</li>
+<li><strong>Generate tests</strong> automatically</li>
+<li><strong>Fix bugs</strong> by describing the error in plain English</li>
+<li><strong>Build features</strong> from a plain English description</li>
+</ul>
+<br>
+<p><strong>Key insight for business students:</strong> You don't need to be a developer to use Cursor or Replit AI. These tools make coding accessible to analysts, product managers, and business professionals.</p>
+<br>
+<hr class="slide-divider">
+<br>
+<h2 id="slide-24-enterprise-business-tools" class="slide-title">Slide 24: Enterprise Business Tools</h2>
+<br>
+<h3>AI Embedded in the Software You Already Use</h3>
+<br>
+<p><strong>The enterprise AI wave:</strong> Every major B2B software vendor has embedded AI since 2023. You may already be paying for it.</p>
+<br>
+<p><strong>CRM & Sales:</strong></p>
+<br>
+<table>
+<thead><tr>
+<th>Tool</th>
+<th>AI Feature</th>
+<th>What It Does</th>
+</tr></thead><tbody>
+<tr>
+<td><strong>Salesforce Einstein</strong></td>
+<td>Einstein Copilot</td>
+<td>Summarize calls, draft emails, forecast deals</td>
+</tr>
+<tr>
+<td><strong>HubSpot AI</strong></td>
+<td>Content Assistant</td>
+<td>Write emails, landing pages, social posts</td>
+</tr>
+<tr>
+<td><strong>Outreach AI</strong></td>
+<td>Smart sequences</td>
+<td>Personalize cold outreach at scale</td>
+</tr>
+</tbody></table>
+<br>
+<p><strong>Customer Service:</strong></p>
+<br>
+<table>
+<thead><tr>
+<th>Tool</th>
+<th>AI Feature</th>
+<th>What It Does</th>
+</tr></thead><tbody>
+<tr>
+<td><strong>Zendesk AI</strong></td>
+<td>Intelligent triage</td>
+<td>Auto-categorize tickets, suggest answers</td>
+</tr>
+<tr>
+<td><strong>Intercom Fin</strong></td>
+<td>AI Agent</td>
+<td>Resolve 50%+ of support tickets without humans</td>
+</tr>
+<tr>
+<td><strong>Freshdesk Freddy</strong></td>
+<td>Answer Bot</td>
+<td>Deflect routine questions 24/7</td>
+</tr>
+</tbody></table>
+<br>
+<p><strong>Productivity & Collaboration:</strong></p>
+<br>
+<table>
+<thead><tr>
+<th>Tool</th>
+<th>AI Feature</th>
+<th>What It Does</th>
+</tr></thead><tbody>
+<tr>
+<td><strong>Microsoft Copilot 365</strong></td>
+<td>In Word/Excel/Teams/Outlook</td>
+<td>Summarize meetings, draft documents, analyze data</td>
+</tr>
+<tr>
+<td><strong>Slack AI</strong></td>
+<td>Channel summaries</td>
+<td>Catch up on long threads instantly</td>
+</tr>
+<tr>
+<td><strong>Zoom AI Companion</strong></td>
+<td>Meeting intelligence</td>
+<td>Auto-summaries, action items, follow-up emails</td>
+</tr>
+<tr>
+<td><strong>Notion AI</strong></td>
+<td>Docs + databases</td>
+<td>Write, edit, ask questions about your workspace</td>
+</tr>
+</tbody></table>
+<br>
+<p><strong>The hidden cost opportunity:</strong></p>
+<blockquote>Most companies pay $30/user/month for Microsoft Copilot 365 but use 20% of its features.</blockquote>
+<blockquote>Learning to maximize these embedded AI tools = immediate ROI with zero additional spend.</blockquote>
+<br>
+<hr class="slide-divider">
+<br>
+            </div>
+        </div>
+        
+
+        <div class="batch" id="batch5">
+            <div class="batch-header">
+                <span class="batch-number">Part 5</span>
+                <h2>Use Cases & Wrap-up — Choosing the Right LLM for Business</h2>
+            </div>
+            <div class="batch-content">
+                <h1>Week 08 — The World of Large Language Models</h1>
+<h1>Batch 5 of 5: Use Cases + Wrap-up (Slides 25–30)</h1>
+<h1>Course: BUAN 6v99 — Generative AI for Business | UTDallas Spring 2026</h1>
+<br>
+<hr class="slide-divider">
+<br>
+<h2 id="slide-25-choosing-the-right-llm-a-decision-framework" class="slide-title">Slide 25: Choosing the Right LLM — A Decision Framework</h2>
+<br>
+<h3>Match the Tool to the Task</h3>
+<br>
+<p><strong>Step 1: Identify the task category</strong></p>
+<br>
+<pre><code class="language-text">
+What do you need to do?
+        │
+        ├─── Write / Create content ────────────────► ChatGPT, Claude, Jasper
+        │
+        ├─── Research / Find current information ───► Perplexity, Gemini
+        │
+        ├─── Analyze long documents / PDFs ─────────► Claude (200K context)
+        │
+        ├─── Code / Build software ─────────────────► Cursor, Copilot, Claude
+        │
+        ├─── Work inside Google Workspace ──────────► Gemini + NotebookLM
+        │
+        ├─── Work inside Microsoft 365 ─────────────► Microsoft Copilot 365
+        │
+        ├─── Automate customer service ─────────────► Intercom Fin, Zendesk AI
+        │
+        ├─── Sensitive / private data ──────────────► Ollama (local), Claude Enterprise
+        │
+        └─── High-volume / cost-sensitive ──────────► Groq + Llama, Mistral API
+</code></pre>
+<br>
+<p><strong>Step 2: Check budget reality</strong></p>
+<br>
+<table>
+<thead><tr>
+<th>Budget</th>
+<th>Recommendation</th>
+</tr></thead><tbody>
+<tr>
+<td>$0/month</td>
+<td>Gemini free, Claude free, Meta.ai, Ollama local</td>
+</tr>
+<tr>
+<td>$20/month</td>
+<td>ChatGPT Plus OR Claude Pro OR Google One AI Premium</td>
+</tr>
+<tr>
+<td>$30–50/month</td>
+<td>Add a specialist (Perplexity Pro + one coding tool)</td>
+</tr>
+<tr>
+<td>Enterprise</td>
+<td>Microsoft Copilot 365 + Claude/OpenAI Enterprise</td>
+</tr>
+</tbody></table>
+<br>
+<p><strong>Step 3: Consider your data sensitivity</strong></p>
+<ul>
+<li><strong>Public / non-sensitive data</strong> → Any cloud LLM is fine</li>
+<li><strong>Confidential business data</strong> → Claude Enterprise (zero retention) or Ollama (local)</li>
+<li><strong>Regulated industry</strong> (healthcare, finance, legal) → Check compliance certifications (HIPAA, SOC2)</li>
+</ul>
+<br>
+<hr class="slide-divider">
+<br>
+<h2 id="slide-26-use-case-content-creation-marketing" class="slide-title">Slide 26: Use Case — Content Creation & Marketing</h2>
+<br>
+<h3>AI Is Now Every Marketer's Co-Writer</h3>
+<br>
+<p><strong>The business impact:</strong></p>
+<blockquote>Marketing teams using AI produce 3–5× more content at 60% lower cost (McKinsey, 2024)</blockquote>
+<br>
+<p><strong>What AI can create today:</strong></p>
+<br>
+<table>
+<thead><tr>
+<th>Content Type</th>
+<th>Best Tool</th>
+<th>Quality Level</th>
+<th>Time Savings</th>
+</tr></thead><tbody>
+<tr>
+<td>Blog posts (1,000–3,000 words)</td>
+<td>ChatGPT + Claude</td>
+<td>High with editing</td>
+<td>70%</td>
+</tr>
+<tr>
+<td>Social media posts (all platforms)</td>
+<td>Copy.ai, Jasper</td>
+<td>High</td>
+<td>80%</td>
+</tr>
+<tr>
+<td>Email campaigns & sequences</td>
+<td>HubSpot AI, Jasper</td>
+<td>High</td>
+<td>75%</td>
+</tr>
+<tr>
+<td>Ad copy (Google, Meta, LinkedIn)</td>
+<td>Jasper, Copy.ai</td>
+<td>High</td>
+<td>80%</td>
+</tr>
+<tr>
+<td>Product descriptions (e-commerce)</td>
+<td>ChatGPT</td>
+<td>High</td>
+<td>85%</td>
+</tr>
+<tr>
+<td>Video scripts</td>
+<td>Claude, ChatGPT</td>
+<td>High</td>
+<td>60%</td>
+</tr>
+<tr>
+<td>Press releases</td>
+<td>Claude</td>
+<td>High with editing</td>
+<td>65%</td>
+</tr>
+<tr>
+<td>Presentation decks</td>
+<td>Gamma, ChatGPT</td>
+<td>Medium</td>
+<td>50%</td>
+</tr>
+</tbody></table>
+<br>
+<p><strong>Best practice workflow:</strong></p>
+<br>
+<pre><code class="language-text">
+Brief AI with brand voice + audience + goal
+         ↓
+Generate multiple versions (ask for 3 variants)
+         ↓
+Human editor refines and fact-checks
+         ↓
+Publish
+</code></pre>
+<br>
+<p><strong>Real business example:</strong> A 5-person marketing team at a mid-size B2B company used Claude + Jasper to increase blog output from 4 to 20 posts/month without adding headcount. Organic traffic grew 140% in 6 months.</p>
+<br>
+<hr class="slide-divider">
+<br>
+<h2 id="slide-27-use-case-research-analysis" class="slide-title">Slide 27: Use Case — Research & Analysis</h2>
+<br>
+<h3>From Hours to Minutes</h3>
+<br>
+<p><strong>The traditional research process:</strong></p>
+<p>Search → Read → Synthesize → Write → Cite → Repeat (4–8 hours)</p>
+<br>
+<p><strong>The AI-augmented research process:</strong></p>
+<p>Perplexity search → NotebookLM digest → Claude analysis → Human validation (30–60 minutes)</p>
+<br>
+<hr class="slide-divider">
+<br>
+<p><strong>Tool-by-tool breakdown for research:</strong></p>
+<br>
+<p><strong>Perplexity AI</strong> — <em>Start here for current information</em></p>
+<ul>
+<li>Research competitor landscape, industry trends, market size</li>
+<li>Always provides sources — easy to verify claims</li>
+<li>Pro tip: Use "Research" mode for multi-step deep dives</li>
+</ul>
+<br>
+<p><strong>Google NotebookLM</strong> — <em>Your personal research analyst</em></p>
+<ul>
+<li>Upload: PDFs, articles, YouTube videos, Google Docs (up to 50 sources)</li>
+<li>Ask it questions across all sources simultaneously</li>
+<li>Generate: summaries, FAQs, timelines, study guides, and audio podcasts</li>
+<li>Best for: Literature reviews, competitive intelligence, due diligence</li>
+</ul>
+<br>
+<p><strong>Claude</strong> — <em>Best for long document analysis</em></p>
+<ul>
+<li>Upload entire annual reports, legal contracts, research papers</li>
+<li>Ask: "What are the 5 biggest risks mentioned in this document?"</li>
+<li>200K token context = entire books or large data files</li>
+<li>Best for: Contract review, financial analysis, policy documents</li>
+</ul>
+<br>
+<p><strong>ChatGPT with Advanced Data Analysis</strong> — <em>For structured data</em></p>
+<ul>
+<li>Upload CSVs, Excel files</li>
+<li>"Create a chart showing revenue by quarter"</li>
+<li>"Identify anomalies in this dataset"</li>
+</ul>
+<br>
+<hr class="slide-divider">
+<br>
+<h2 id="slide-28-use-case-coding-development" class="slide-title">Slide 28: Use Case — Coding & Development</h2>
+<br>
+<h3>Democratizing Software Development</h3>
+<br>
+<p><strong>The paradigm shift:</strong></p>
+<blockquote>In 2020, you needed a developer to build software.</blockquote>
+<blockquote>In 2025, a business analyst with AI tools can build production applications.</blockquote>
+<br>
+<p><strong>Who benefits from AI coding tools:</strong></p>
+<br>
+<table>
+<thead><tr>
+<th>Role</th>
+<th>How AI Helps</th>
+<th>Tool Recommendation</th>
+</tr></thead><tbody>
+<tr>
+<td><strong>Software developers</strong></td>
+<td>55% faster; AI handles boilerplate</td>
+<td>Cursor, GitHub Copilot</td>
+</tr>
+<tr>
+<td><strong>Business analysts</strong></td>
+<td>Build scripts, automate Excel/data tasks</td>
+<td>ChatGPT, Claude</td>
+</tr>
+<tr>
+<td><strong>Data scientists</strong></td>
+<td>Generate and debug Python/R code</td>
+<td>Cursor, Claude</td>
+</tr>
+<tr>
+<td><strong>Product managers</strong></td>
+<td>Prototype ideas without developers</td>
+<td>Replit AI, Cursor</td>
+</tr>
+<tr>
+<td><strong>Finance professionals</strong></td>
+<td>Automate Excel macros, build models</td>
+<td>Claude, ChatGPT</td>
+</tr>
+<tr>
+<td><strong>Operations</strong></td>
+<td>Build internal tools, automate workflows</td>
+<td>Cursor, Replit</td>
+</tr>
+</tbody></table>
+<br>
+<p><strong>What AI coding tools can build (no developer needed):</strong></p>
+<ul>
+<li>Web scrapers to collect competitor pricing data</li>
+<li>Excel automation that processes 10,000 rows in seconds</li>
+<li>Internal dashboards connected to your database</li>
+<li>Email/Slack notification bots</li>
+<li>Data cleaning and transformation pipelines</li>
+<li>Simple web apps with forms and databases</li>
+</ul>
+<br>
+<p><strong>The new skill for business professionals:</strong></p>
+<p>Being able to describe what you want to a coding AI (in plain English), evaluate the output, and iterate — is now a core business competency, not a technical skill.</p>
+<br>
+<hr class="slide-divider">
+<br>
+<h2 id="slide-29-use-case-business-automation" class="slide-title">Slide 29: Use Case — Business Automation</h2>
+<br>
+<h3>The Operational Transformation</h3>
+<br>
+<p><strong>What business automation with AI looks like:</strong></p>
+<br>
+<pre><code class="language-text">
+Customer emails → AI reads and categorizes → Routes to right team
+                                           → Drafts response suggestion
+                                           → Updates CRM automatically
+
+Sales call ends → AI transcribes → Extracts action items
+                                → Updates deal in Salesforce
+                                → Sends follow-up email draft
+
+New employee → AI onboarding bot answers questions 24/7
+             → Generates personalized training plan
+             → Tracks completion and flags gaps
+</code></pre>
+<br>
+<p><strong>High-ROI automation opportunities by department:</strong></p>
+<br>
+<table>
+<thead><tr>
+<th>Department</th>
+<th>Automation Opportunity</th>
+<th>Tool</th>
+<th>Estimated Time Saved</th>
+</tr></thead><tbody>
+<tr>
+<td><strong>Customer Service</strong></td>
+<td>Tier-1 ticket resolution</td>
+<td>Intercom Fin, Zendesk AI</td>
+<td>40–60% of tickets</td>
+</tr>
+<tr>
+<td><strong>Sales</strong></td>
+<td>Lead qualification + outreach personalization</td>
+<td>HubSpot AI, Outreach</td>
+<td>5–10 hrs/rep/week</td>
+</tr>
+<tr>
+<td><strong>HR</strong></td>
+<td>Job description writing, resume screening</td>
+<td>ChatGPT, Claude</td>
+<td>3–5 hrs/hire</td>
+</tr>
+<tr>
+<td><strong>Finance</strong></td>
+<td>Invoice data extraction, expense categorization</td>
+<td>Claude, GPT-4o</td>
+<td>6–8 hrs/week</td>
+</tr>
+<tr>
+<td><strong>Marketing</strong></td>
+<td>Content repurposing across channels</td>
+<td>Jasper, Copy.ai</td>
+<td>10–15 hrs/week</td>
+</tr>
+<tr>
+<td><strong>Legal</strong></td>
+<td>Contract first-pass review and redlining</td>
+<td>Harvey AI, Claude</td>
+<td>50–70% draft time</td>
+</tr>
+<tr>
+<td><strong>Operations</strong></td>
+<td>SOP creation, process documentation</td>
+<td>Notion AI, Claude</td>
+<td>4–6 hrs/process</td>
+</tr>
+</tbody></table>
+<br>
+<p><strong>The automation stack that works:</strong></p>
+<ol>
+<li><strong>LLM</strong> (Claude/GPT-4o) for intelligence</li>
+<li><strong>Zapier or Make.com</strong> for connecting apps</li>
+<li><strong>Existing software</strong> (Salesforce, Gmail, Slack) as the interface</li>
+<li><strong>Human oversight</strong> for exceptions and quality control</li>
+<br>
+<hr class="slide-divider">
+<br>
+<h2 id="slide-30-wrap-up-your-8-exercises" class="slide-title">Slide 30: Wrap-Up + Your 8 Exercises</h2>
+<br>
+<h3>What We Covered Today</h3>
+<br>
+<p><strong>The LLM landscape in 5 sentences:</strong></p>
+<br>
+<ol>
+<li>The Transformer architecture (2017) started everything — every LLM today builds on it</li>
+<li>The "ChatGPT moment" (Nov 2022) brought AI to a billion people in months</li>
+<li>You have two broad choices: <strong>paid/proprietary</strong> (easiest, most capable) and <strong>free/open-source</strong> (private, customizable, scalable)</li>
+<li>The real value isn't the LLM itself — it's the <strong>tools built on top</strong> that fit into your existing workflows</li>
+<li>Your job as a business professional is to <strong>match the right tool to the right task</strong> — not to be loyal to any one platform</li>
+<br>
+<hr class="slide-divider">
+<br>
+<p><strong>Your 8 hands-on exercises this week:</strong></p>
+<br>
+<table>
+<thead><tr>
+<th>#</th>
+<th>Tool</th>
+<th>Task</th>
+</tr></thead><tbody>
+<tr>
+<td>1</td>
+<td>ChatGPT</td>
+<td>Analyze a business document with GPT-4o</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Claude</td>
+<td>Long-document risk analysis</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Gemini + NotebookLM</td>
+<td>Research paper podcast generation</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Perplexity</td>
+<td>Market research vs. Google Search</td>
+</tr>
+<tr>
+<td>5</td>
+<td>GitHub Copilot / Cursor</td>
+<td>AI-assisted coding</td>
+</tr>
+<tr>
+<td>6</td>
+<td>Meta AI</td>
+<td>Compare free vs. paid LLM output</td>
+</tr>
+<tr>
+<td>7</td>
+<td>Ollama</td>
+<td>Run an LLM locally on your computer</td>
+</tr>
+<tr>
+<td>8</td>
+<td>Groq</td>
+<td>Blazing-fast API inference</td>
+</tr>
+</tbody></table>
+<br>
+<p><strong>Key takeaway:</strong></p>
+<blockquote>The question is never *"Should I use AI?"*</blockquote>
+<blockquote>The question is *"Which AI tool, for which task, at what cost?"*</blockquote>
+<br>
+<p><strong>See you next class — bring your exercise results to discuss!</strong></p>
+<br>
+<hr class="slide-divider">
+<br>
+            </div>
+        </div>
+        
+
+        <footer>
+            <strong>BUAN 6v99.SW2 — Generative AI for Business</strong><br>
+            University of Texas at Dallas | Spring 2026 | Professor Antonio Paes<br>
+            Week 8: The World of Large Language Models
+        </footer>
+    </div>
+</body>
+</html>
