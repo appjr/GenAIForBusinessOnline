@@ -1,10 +1,10 @@
 # Week 08 — The World of Large Language Models
-# Batch 5 of 5: Use Cases + Wrap-up (Slides 25–30)
+# Batch 5 of 5: Use Cases + Wrap-up (Slides 26–31)
 # Course: BUAN 6v99 — Generative AI for Business | UTDallas Spring 2026
 
 ---
 
-## Slide 25: Choosing the Right LLM — A Decision Framework
+## Slide 26: Choosing the Right LLM — A Decision Framework
 
 ### Match the Tool to the Task
 
@@ -48,7 +48,7 @@ What do you need to do?
 
 ---
 
-## Slide 26: Use Case — Content Creation & Marketing
+## Slide 27: Use Case — Content Creation & Marketing
 
 ### AI Is Now Every Marketer's Co-Writer
 
@@ -84,7 +84,7 @@ Publish
 
 ---
 
-## Slide 27: Use Case — Research & Analysis
+## Slide 28: Use Case — Research & Analysis
 
 ### From Hours to Minutes
 
@@ -122,7 +122,7 @@ Perplexity search → NotebookLM digest → Claude analysis → Human validation
 
 ---
 
-## Slide 28: Use Case — Coding & Development
+## Slide 29: Use Case — Coding & Development
 
 ### Democratizing Software Development
 
@@ -154,7 +154,7 @@ Being able to describe what you want to a coding AI (in plain English), evaluate
 
 ---
 
-## Slide 29: Use Case — Business Automation
+## Slide 30: Use Case — Business Automation
 
 ### The Operational Transformation
 
@@ -194,7 +194,7 @@ New employee → AI onboarding bot answers questions 24/7
 
 ---
 
-## Slide 30: Wrap-Up + Your 8 Exercises
+## Slide 31: Wrap-Up + Your 8 Exercises
 
 ### What We Covered Today
 

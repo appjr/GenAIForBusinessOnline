@@ -303,8 +303,8 @@
                 <li><a href="#batch1">Part 1: Opening & LLM History (Slides 1-6)</a></li>
                 <li><a href="#batch2">Part 2: Top Paid LLMs (Slides 7-12)</a></li>
                 <li><a href="#batch3">Part 3: Free & Open-Source LLMs (Slides 13-18)</a></li>
-                <li><a href="#batch4">Part 4: Tools Ecosystem (Slides 19-24)</a></li>
-                <li><a href="#batch5">Part 5: Use Cases & Wrap-up (Slides 25-30)</a></li>
+                <li><a href="#batch4">Part 4: Tools Ecosystem (Slides 19-25)</a></li>
+                <li><a href="#batch5">Part 5: Use Cases & Wrap-up (Slides 26-31)</a></li>
             </ul>
         </div>
 
@@ -1429,7 +1429,7 @@ Install Ollama → ollama pull llama3.2 → ollama run llama3.2
             </div>
             <div class="batch-content">
                 <h1>Week 08 — The World of Large Language Models</h1>
-<h1>Batch 4 of 5: Tools Ecosystem (Slides 19–24)</h1>
+<h1>Batch 4 of 5: Tools Ecosystem (Slides 19–25)</h1>
 <h1>Course: BUAN 6v99 — Generative AI for Business | UTDallas Spring 2026</h1>
 <br>
 <hr class="slide-divider">
@@ -1902,6 +1902,136 @@ ChatGPT Voice   Embeddings        Fine-tuning
 <br>
 <hr class="slide-divider">
 <br>
+<h2 id="slide-25-no-code-ai-automation" class="slide-title">Slide 25: No-Code AI Automation</h2>
+<br>
+<h3>Build AI Workflows Without Writing a Single Line of Code</h3>
+<br>
+<p><strong>What no-code AI automation means:</strong></p>
+<p>Connect apps, trigger actions, and embed LLM intelligence into multi-step workflows — using a visual drag-and-drop interface instead of code.</p>
+<br>
+<p><strong>Why it matters:</strong> A marketing manager or operations analyst can now build workflows that would have required a developer in 2022.</p>
+<br>
+<hr class="slide-divider">
+<br>
+<h3>n8n — The Power User's Automation Platform</h3>
+<br>
+<p><strong>Type:</strong> Open-source, self-hostable (also cloud-hosted)</p>
+<p><strong>LLM integrations:</strong> GPT-4o, Claude, Gemini, Mistral, Ollama (local), any OpenAI-compatible API</p>
+<p><strong>Website:</strong> n8n.io | <strong>Price:</strong> Free (self-hosted) / $20/mo (cloud)</p>
+<br>
+<p><strong>What makes n8n unique:</strong></p>
+<ul>
+<li>Connect <strong>400+ apps</strong> with AI nodes in between</li>
+<li><strong>AI Agent node</strong> — give the LLM tools (search, database, email) and let it decide what to do</li>
+<li><strong>Self-hosted option</strong> — your data never leaves your server (critical for regulated industries)</li>
+<li>Uses <strong>any LLM</strong> — swap GPT-4o for Claude or a local Ollama model in one click</li>
+</ul>
+<br>
+<p><strong>Example workflow:</strong></p>
+<pre><code class="language-text">
+New email arrives in Gmail
+    → n8n extracts key info (GPT-4o)
+    → Searches CRM for matching contact (HubSpot node)
+    → Drafts a personalized reply (Claude Sonnet)
+    → Saves summary to Notion
+    → Sends Slack notification
+</code></pre>
+<br>
+<hr class="slide-divider">
+<br>
+<h3>Other Leading No-Code AI Platforms</h3>
+<br>
+<table>
+<thead><tr>
+<th>Platform</th>
+<th>LLM Underneath</th>
+<th>Best For</th>
+<th>Price</th>
+<th>Key Differentiator</th>
+</tr></thead><tbody>
+<tr>
+<td><strong>Zapier AI</strong></td>
+<td>GPT-4o (OpenAI)</td>
+<td>Simple automations, beginners</td>
+<td>Free / $29/mo</td>
+<td>Easiest setup, 6,000+ app integrations</td>
+</tr>
+<tr>
+<td><strong>Make (Integromat)</strong></td>
+<td>GPT-4o, Claude</td>
+<td>Complex multi-branch flows</td>
+<td>Free / $9/mo</td>
+<td>Visual flow designer, very flexible</td>
+</tr>
+<tr>
+<td><strong>Flowise</strong></td>
+<td>Any (OpenAI, Ollama, Anthropic, HuggingFace)</td>
+<td>Building chatbots & RAG pipelines</td>
+<td>Free (open-source)</td>
+<td>Drag-and-drop LangChain flows</td>
+</tr>
+<tr>
+<td><strong>Dify</strong></td>
+<td>GPT-4o, Claude, Llama, Gemini, Mistral</td>
+<td>AI app builder for teams</td>
+<td>Free / $59/mo</td>
+<td>Prompt management + RAG + API out of box</td>
+</tr>
+<tr>
+<td><strong>Relevance AI</strong></td>
+<td>GPT-4o, Claude</td>
+<td>Sales & marketing AI agents</td>
+<td>Free / $19/mo</td>
+<td>Pre-built agent templates for business</td>
+</tr>
+<tr>
+<td><strong>Voiceflow</strong></td>
+<td>GPT-4o, Claude, Gemini</td>
+<td>Conversational AI / chatbots</td>
+<td>Free / $50/mo</td>
+<td>Visual chatbot designer, multi-channel deploy</td>
+</tr>
+<tr>
+<td><strong>Stack AI</strong></td>
+<td>GPT-4o, Claude, Llama</td>
+<td>Enterprise AI workflows</td>
+<td>Free / $199/mo</td>
+<td>Enterprise security, SOC2 compliant</td>
+</tr>
+</tbody></table>
+<br>
+<hr class="slide-divider">
+<br>
+<p><strong>The LLM flexibility advantage of no-code tools:</strong></p>
+<br>
+<p>Most platforms let you swap the underlying LLM without rebuilding the workflow:</p>
+<br>
+<pre><code class="language-text">
+Your workflow stays the same ──► Switch GPT-4o → Claude for lower cost
+                              ──► Switch to Ollama for 100% private processing
+                              ──► Switch to Groq for faster response times
+</code></pre>
+<br>
+<p><strong>When to use no-code AI automation:</strong></p>
+<br>
+<p><span class="check">✅</span> <strong>Perfect for:</strong></p>
+<ul>
+<li>Automating repetitive knowledge-work tasks (email triage, report generation)</li>
+<li>Connecting AI to your existing software stack (CRM, Slack, databases)</li>
+<li>Prototyping AI-powered workflows before investing in custom development</li>
+<li>Teams without dedicated engineers</li>
+</ul>
+<br>
+<p>⚠️ <strong>Limitations:</strong></p>
+<ul>
+<li>Complex logic and custom UI still require code</li>
+<li>Vendor lock-in risk with hosted platforms</li>
+<li>Debugging multi-step flows can be tricky</li>
+<li>Cost scales with usage volume</li>
+</ul>
+<br>
+<hr class="slide-divider">
+<br>
             </div>
         </div>
         
@@ -1913,12 +2043,12 @@ ChatGPT Voice   Embeddings        Fine-tuning
             </div>
             <div class="batch-content">
                 <h1>Week 08 — The World of Large Language Models</h1>
-<h1>Batch 5 of 5: Use Cases + Wrap-up (Slides 25–30)</h1>
+<h1>Batch 5 of 5: Use Cases + Wrap-up (Slides 26–31)</h1>
 <h1>Course: BUAN 6v99 — Generative AI for Business | UTDallas Spring 2026</h1>
 <br>
 <hr class="slide-divider">
 <br>
-<h2 id="slide-25-choosing-the-right-llm-a-decision-framework" class="slide-title">Slide 25: Choosing the Right LLM — A Decision Framework</h2>
+<h2 id="slide-26-choosing-the-right-llm-a-decision-framework" class="slide-title">Slide 26: Choosing the Right LLM — A Decision Framework</h2>
 <br>
 <h3>Match the Tool to the Task</h3>
 <br>
@@ -1980,7 +2110,7 @@ What do you need to do?
 <br>
 <hr class="slide-divider">
 <br>
-<h2 id="slide-26-use-case-content-creation-marketing" class="slide-title">Slide 26: Use Case — Content Creation & Marketing</h2>
+<h2 id="slide-27-use-case-content-creation-marketing" class="slide-title">Slide 27: Use Case — Content Creation & Marketing</h2>
 <br>
 <h3>AI Is Now Every Marketer's Co-Writer</h3>
 <br>
@@ -2062,7 +2192,7 @@ Publish
 <br>
 <hr class="slide-divider">
 <br>
-<h2 id="slide-27-use-case-research-analysis" class="slide-title">Slide 27: Use Case — Research & Analysis</h2>
+<h2 id="slide-28-use-case-research-analysis" class="slide-title">Slide 28: Use Case — Research & Analysis</h2>
 <br>
 <h3>From Hours to Minutes</h3>
 <br>
@@ -2108,7 +2238,7 @@ Publish
 <br>
 <hr class="slide-divider">
 <br>
-<h2 id="slide-28-use-case-coding-development" class="slide-title">Slide 28: Use Case — Coding & Development</h2>
+<h2 id="slide-29-use-case-coding-development" class="slide-title">Slide 29: Use Case — Coding & Development</h2>
 <br>
 <h3>Democratizing Software Development</h3>
 <br>
@@ -2171,7 +2301,7 @@ Publish
 <br>
 <hr class="slide-divider">
 <br>
-<h2 id="slide-29-use-case-business-automation" class="slide-title">Slide 29: Use Case — Business Automation</h2>
+<h2 id="slide-30-use-case-business-automation" class="slide-title">Slide 30: Use Case — Business Automation</h2>
 <br>
 <h3>The Operational Transformation</h3>
 <br>
@@ -2253,7 +2383,7 @@ New employee → AI onboarding bot answers questions 24/7
 <br>
 <hr class="slide-divider">
 <br>
-<h2 id="slide-30-wrap-up-your-8-exercises" class="slide-title">Slide 30: Wrap-Up + Your 8 Exercises</h2>
+<h2 id="slide-31-wrap-up-your-8-exercises" class="slide-title">Slide 31: Wrap-Up + Your 8 Exercises</h2>
 <br>
 <h3>What We Covered Today</h3>
 <br>

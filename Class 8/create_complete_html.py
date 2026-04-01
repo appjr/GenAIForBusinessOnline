@@ -503,8 +503,8 @@ def create_html_document(batch_contents: list, images_present: bool = False) -> 
                 <li><a href="#batch1">Part 1: Opening & LLM History (Slides 1-6)</a></li>
                 <li><a href="#batch2">Part 2: Top Paid LLMs (Slides 7-12)</a></li>
                 <li><a href="#batch3">Part 3: Free & Open-Source LLMs (Slides 13-18)</a></li>
-                <li><a href="#batch4">Part 4: Tools Ecosystem (Slides 19-24)</a></li>
-                <li><a href="#batch5">Part 5: Use Cases & Wrap-up (Slides 25-30)</a></li>
+                <li><a href="#batch4">Part 4: Tools Ecosystem (Slides 19-25)</a></li>
+                <li><a href="#batch5">Part 5: Use Cases & Wrap-up (Slides 26-31)</a></li>
             </ul>
         </div>
 
