@@ -1,0 +1,2620 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Week 11: New AI Tools and Trends - Complete Course Materials</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.7;
+            color: #1a1a2e;
+            background: linear-gradient(135deg, #16213e 0%, #0f3460 50%, #533483 100%);
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+            overflow: hidden;
+        }
+
+        header {
+            background: linear-gradient(135deg, #16213e 0%, #0f3460 50%, #533483 100%);
+            color: white;
+            padding: 50px 40px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.05) 0%, transparent 60%);
+        }
+
+        header h1 {
+            font-size: 2.4em;
+            font-weight: 800;
+            margin-bottom: 12px;
+            letter-spacing: -0.5px;
+            position: relative;
+        }
+
+        header .subtitle {
+            font-size: 1.1em;
+            opacity: 0.85;
+            position: relative;
+        }
+
+        header .meta {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        header .meta span {
+            background: rgba(255,255,255,0.15);
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            backdrop-filter: blur(10px);
+        }
+
+        .toc {
+            background: #f8f9ff;
+            padding: 30px 40px;
+            border-bottom: 2px solid #e8ecff;
+        }
+
+        .toc h2 {
+            font-size: 1.1em;
+            color: #533483;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 15px;
+        }
+
+        .toc ul {
+            list-style: none;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 8px;
+        }
+
+        .toc ul li a {
+            color: #0f3460;
+            text-decoration: none;
+            font-size: 0.9em;
+            padding: 6px 12px;
+            border-radius: 6px;
+            display: block;
+            transition: background 0.2s;
+        }
+
+        .toc ul li a:hover {
+            background: #e8ecff;
+        }
+
+        .batch {
+            border-bottom: 3px solid #e8ecff;
+        }
+
+        .batch-header {
+            background: linear-gradient(90deg, #16213e, #0f3460);
+            color: white;
+            padding: 20px 40px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .batch-number {
+            background: rgba(255,255,255,0.2);
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 0.8em;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .batch-header h2 {
+            font-size: 1.2em;
+            font-weight: 600;
+        }
+
+        .batch-content {
+            padding: 30px 40px;
+        }
+
+        h1 { font-size: 2em; color: #16213e; margin: 24px 0 12px; }
+        h2.slide-title {
+            font-size: 1.5em;
+            color: #0f3460;
+            margin: 40px 0 16px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e8ecff;
+        }
+        h3 { font-size: 1.2em; color: #533483; margin: 20px 0 10px; }
+        h4 { font-size: 1em; color: #16213e; margin: 16px 0 8px; font-weight: 600; }
+
+        p { margin: 10px 0; color: #2d3748; }
+
+        pre {
+            background: #1a1a2e;
+            color: #e2e8f0;
+            padding: 20px 24px;
+            border-radius: 10px;
+            overflow-x: auto;
+            margin: 16px 0;
+            font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+            font-size: 0.85em;
+            line-height: 1.6;
+            border-left: 4px solid #533483;
+        }
+
+        code {
+            background: #f0f0ff;
+            color: #533483;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+            font-size: 0.85em;
+        }
+
+        pre code {
+            background: transparent;
+            color: inherit;
+            padding: 0;
+            border-radius: 0;
+            font-size: inherit;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 16px 0;
+            font-size: 0.9em;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        th {
+            background: #16213e;
+            color: white;
+            padding: 12px 16px;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        td {
+            padding: 10px 16px;
+            border-bottom: 1px solid #e8ecff;
+            color: #2d3748;
+        }
+
+        tr:nth-child(even) td { background: #f8f9ff; }
+        tr:hover td { background: #eef0ff; }
+
+        ul, ol {
+            margin: 10px 0 10px 28px;
+            color: #2d3748;
+        }
+
+        li {
+            margin: 6px 0;
+            line-height: 1.6;
+        }
+
+        blockquote {
+            border-left: 4px solid #533483;
+            padding: 12px 20px;
+            margin: 16px 0;
+            background: #f8f9ff;
+            color: #4a5568;
+            font-style: italic;
+            border-radius: 0 8px 8px 0;
+        }
+
+        hr.slide-divider {
+            border: none;
+            border-top: 1px dashed #c3cfe2;
+            margin: 30px 0;
+        }
+
+        .check { color: #38a169; }
+        .cross { color: #e53e3e; }
+
+        strong { color: #16213e; }
+
+        a { color: #0f3460; text-decoration: none; }
+        a:hover { text-decoration: underline; }
+
+        footer {
+            background: #16213e;
+            color: rgba(255,255,255,0.7);
+            text-align: center;
+            padding: 24px;
+            font-size: 0.85em;
+        }
+
+        footer strong { color: white; }
+
+        @media print {
+            body { background: white; padding: 0; }
+            .container { box-shadow: none; border-radius: 0; }
+            pre { border: 1px solid #ddd; }
+        }
+
+        .slide-image {
+            margin: 0 0 24px 0;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.18);
+            line-height: 0;
+        }
+
+        .slide-image img {
+            width: 100%;
+            height: auto;
+            display: block;
+            border-radius: 12px;
+        }
+
+        @media (max-width: 768px) {
+            .batch-content { padding: 20px; }
+            header { padding: 30px 20px; }
+            header h1 { font-size: 1.6em; }
+            pre { font-size: 0.75em; padding: 14px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Week 11: New AI Tools and Trends</h1>
+            <p class="subtitle">The Full 2026 AI Landscape — Models, Agents, Coding Tools, Automation & What's Next</p>
+            <div class="meta">
+                <span>📅 April 8, 2026</span>
+                <span>🎓 BUAN 6v99.SW2 — UTD</span>
+                <span>⏱ 2 Hours</span>
+                <span>📊 31 Slides</span>
+            </div>
+        </header>
+
+        <div class="toc">
+            <h2>📋 Table of Contents</h2>
+            <ul>
+                <li><a href="#batch1">Part 1: Opening & AI Model Landscape (Slides 1–6)</a></li>
+                <li><a href="#batch2">Part 2: AI Agent Frameworks & MCP (Slides 7–13)</a></li>
+                <li><a href="#batch3">Part 3: AI Coding Tools (Slides 14–19)</a></li>
+                <li><a href="#batch4">Part 4: Business Automation & Multimodal AI (Slides 20–25)</a></li>
+                <li><a href="#batch5">Part 5: Key Trends & Strategic Outlook (Slides 26–31)</a></li>
+            </ul>
+        </div>
+
+        
+        <div class="batch" id="batch1">
+            <div class="batch-header">
+                <span class="batch-number">Part 1</span>
+                <h2>Opening & AI Model Landscape — Closed Source, Open Source & Selection Framework</h2>
+            </div>
+            <div class="batch-content">
+                <h1>Week 11 — New AI Tools and Trends</h1>
+<h1>Batch 1 of 5: Opening + The AI Model Landscape (Slides 1–6)</h1>
+<h1>Course: BUAN 6v99 — Generative AI for Business | UTDallas Spring 2026</h1>
+<br>
+<hr class="slide-divider">
+<br>
+<h2 id="slide-1-new-ai-tools-and-trends" class="slide-title">Slide 1: New AI Tools and Trends</h2>
+<br>
+<h3>BUAN 6v99 — Generative AI for Business</h3>
+<h3>Class 11 | University of Texas at Dallas | Spring 2026</h3>
+<br>
+<p><strong>Professor:</strong> Antonio de Pádua Paes Jr.</p>
+<br>
+<hr class="slide-divider">
+<br>
+<blockquote>*"We are not in a period of gradual improvement. We are in a period of compounding transformation — where every month rewrites what's possible."*</blockquote>
+<br>
+<p><strong>Today we cover five sections:</strong></p>
+<ul>
+<li>The AI model landscape in early 2026 — who's leading and why</li>
+<li>AI agent frameworks — how AI now takes actions, not just answers questions</li>
+<li>AI coding tools — Claude Code, Cursor, Copilot, Windsurf compared</li>
+<li>Business automation and multimodal AI — n8n, Make, Zapier, video generation</li>
+<li>Key trends — RAG, fine-tuning, building your AI stack, career outlook</li>
+</ul>
+<br>
+<p><strong>The goal:</strong> Leave with a complete, actionable map of the 2026 AI ecosystem</p>
+<br>
+<hr class="slide-divider">
+<br>
+<h2 id="slide-2-today-s-agenda" class="slide-title">Slide 2: Today's Agenda</h2>
+<br>
+<h3>Class Overview — 2 Hours</h3>
+<br>
+<table>
+<thead><tr>
+<th>#</th>
+<th>Section</th>
+<th>Topics</th>
+<th>Time</th>
+</tr></thead><tbody>
+<tr>
+<td>1</td>
+<td>AI Model Landscape</td>
+<td>GPT, Claude, Gemini, DeepSeek, Llama — what's new and how to choose</td>
+<td>25 min</td>
+</tr>
+<tr>
+<td>2</td>
+<td>AI Agent Frameworks</td>
+<td>Claude SDK, OpenAI Agents, LangGraph, CrewAI, MCP protocol</td>
+<td>25 min</td>
+</tr>
+<tr>
+<td>3</td>
+<td>AI Coding Tools</td>
+<td>Claude Code, Cursor, Windsurf, GitHub Copilot — live comparison</td>
+<td>20 min</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Business Automation</td>
+<td>n8n, Make, Zapier AI, vision/audio/video — real workflows</td>
+<td>20 min</td>
+</tr>
+<tr>
+<td>5</td>
+<td>Key Trends</td>
+<td>RAG 2026, fine-tuning access, your AI stack, career paths</td>
+<td>20 min</td>
+</tr>
+</tbody></table>
+<br>
+<p><strong>Wrap-up:</strong> Building your personal AI stack + homework preview</p>
+<br>
+<p><strong>What's different about this class:</strong> We're not just surveying tools — we're building judgment about when to use each one, at what cost, and for what business outcome.</p>
+<br>
+<hr class="slide-divider">
+<br>
+<h2 id="slide-3-the-five-layer-ai-ecosystem" class="slide-title">Slide 3: The Five-Layer AI Ecosystem</h2>
+<br>
+<h3>How the Industry Organizes Itself</h3>
+<br>
+<table>
+<thead><tr>
+<th>Layer</th>
+<th>What It Is</th>
+<th>Key Players</th>
+<th>Where Value Lives</th>
+</tr></thead><tbody>
+<tr>
+<td><strong>Layer 5: Applications</strong></td>
+<td>End-user products people interact with daily</td>
+<td>ChatGPT, Claude.ai, Gemini, Perplexity, Copilot</td>
+<td>User experience + workflow integration</td>
+</tr>
+<tr>
+<td><strong>Layer 4: Agent Frameworks</strong></td>
+<td>Orchestration of multi-step AI workflows</td>
+<td>Claude Agent SDK, OpenAI Agents, LangGraph, CrewAI</td>
+<td>Business process automation</td>
+</tr>
+<tr>
+<td><strong>Layer 3: Integration Tools</strong></td>
+<td>Connecting models to data and external systems</td>
+<td>MCP, LangChain, LlamaIndex, RAG Pipelines</td>
+<td>Enterprise data access</td>
+</tr>
+<tr>
+<td><strong>Layer 2: Foundation Models</strong></td>
+<td>The raw intelligence — trained on massive data</td>
+<td>GPT-4.1, Claude 3.7, Gemini 2.5, Llama 4, DeepSeek</td>
+<td>Capability benchmarks</td>
+</tr>
+<tr>
+<td><strong>Layer 1: Infrastructure</strong></td>
+<td>Compute, cloud, and specialized AI chips</td>
+<td>NVIDIA H100, AWS, Azure, GCP, Groq</td>
+<td>Speed and cost</td>
+</tr>
+</tbody></table>
+<br>
+<p><strong>The critical insight for business strategists:</strong></p>
+<ul>
+<li>Layers 1 and 2 are rapidly commoditizing — multiple providers offer similar capability at falling prices</li>
+<li>Competitive advantage has moved to Layers 3, 4, and 5 — how you connect AI to your data and workflows</li>
+<li>The companies winning in AI are not the ones with the best models — they're the ones with the best integration</li>
+</ul>
+<br>
+<hr class="slide-divider">
+<br>
+<h2 id="slide-4-frontier-models-the-big-three-in-2026" class="slide-title">Slide 4: Frontier Models — The Big Three in 2026</h2>
+<br>
+<h3>OpenAI, Anthropic, Google: What's New and Why It Matters</h3>
+<br>
+<p><strong>OpenAI — Reasoning at Scale</strong></p>
+<br>
+<table>
+<thead><tr>
+<th>Model</th>
+<th>Capability</th>
+<th>Best For</th>
+<th>Cost</th>
+</tr></thead><tbody>
+<tr>
+<td>GPT-4.1</td>
+<td>Best general-purpose, fast</td>
+<td>Everyday tasks, broad applications</td>
+<td>~$2–8/M tokens</td>
+</tr>
+<tr>
+<td>o3</td>
+<td>Deep reasoning, thinks before answering</td>
+<td>Math, complex logic, multi-step analysis</td>
+<td>~$15/M tokens</td>
+</tr>
+<tr>
+<td>o4-mini</td>
+<td>Near-o3 quality, 10× cheaper</td>
+<td>Reasoning tasks at scale</td>
+<td>~$1–3/M tokens</td>
+</tr>
+</tbody></table>
+<br>
+<p><strong>Anthropic — Coding and Long Context</strong></p>
+<br>
+<table>
+<thead><tr>
+<th>Model</th>
+<th>Capability</th>
+<th>Best For</th>
+<th>Cost</th>
+</tr></thead><tbody>
+<tr>
+<td>Claude 3.7 Sonnet</td>
+<td>#1 on coding benchmarks, extended thinking</td>
+<td>Software development, document analysis</td>
+<td>~$3–15/M tokens</td>
+</tr>
+<tr>
+<td>Claude 3.7 + Computer Use</td>
+<td>Controls browser, clicks, fills forms</td>
+<td>GUI automation, legacy system access</td>
+<td>API add-on</td>
+</tr>
+<tr>
+<td>Claude Haiku</td>
+<td>Very fast and cheap</td>
+<td>High-volume simple tasks</td>
+<td>~$0.25–1.25/M tokens</td>
+</tr>
+</tbody></table>
+<br>
+<p><strong>Google — Multimodal and Massive Context</strong></p>
+<br>
+<table>
+<thead><tr>
+<th>Model</th>
+<th>Capability</th>
+<th>Best For</th>
+<th>Cost</th>
+</tr></thead><tbody>
+<tr>
+<td>Gemini 2.5 Pro</td>
+<td>1 million token context, native multimodal</td>
+<td>Analyzing entire codebases, long documents</td>
+<td>~$3–15/M tokens</td>
+</tr>
+<tr>
+<td>Gemini 2.0 Flash</td>
+<td>Extremely fast, cheap, good quality</td>
+<td>Real-time applications, high volume</td>
+<td>~$0.10–0.40/M tokens</td>
+</tr>
+</tbody></table>
+<br>
+<blockquote><strong>Key 2026 shift:</strong> The capability gap between providers has narrowed dramatically. The decision framework is no longer "which is best?" — it's "which fits my specific task, data requirements, and budget?"</blockquote>
+<br>
+<hr class="slide-divider">
+<br>
+<h2 id="slide-5-the-open-source-revolution" class="slide-title">Slide 5: The Open Source Revolution</h2>
+<br>
+<h3>DeepSeek, Llama, Mistral — Why This Changes Everything</h3>
+<br>
+<p><strong>The January 2025 Inflection Point: The DeepSeek Moment</strong></p>
+<br>
+<p>DeepSeek (a Chinese AI lab) released two open-source models in early 2025 that matched the best proprietary models — trained for a reported <strong>$6 million</strong>, compared to hundreds of millions spent by OpenAI and Google. The market reacted: NVIDIA's stock dropped 10% in one day.</p>
+<br>
+<p><strong>Leading open-source models as of April 2026:</strong></p>
+<br>
+<table>
+<thead><tr>
+<th>Model</th>
+<th>Creator</th>
+<th>Size</th>
+<th>Benchmark vs. Proprietary</th>
+<th>Can Run Locally?</th>
+</tr></thead><tbody>
+<tr>
+<td><strong>Llama 4 Scout</strong></td>
+<td>Meta</td>
+<td>17B active (109B total MoE)</td>
+<td>Matches GPT-4o on most tasks</td>
+<td>Yes (requires 24GB+ GPU)</td>
+</tr>
+<tr>
+<td><strong>DeepSeek V3 / R1</strong></td>
+<td>DeepSeek</td>
+<td>671B (MoE)</td>
+<td>V3 ≈ GPT-4o; R1 ≈ o1</td>
+<td>Via API or self-hosted</td>
+</tr>
+<tr>
+<td><strong>Mistral Large 2</strong></td>
+<td>Mistral AI</td>
+<td>123B</td>
+<td>Strong multilingual, coding</td>
+<td>Via API or self-hosted</td>
+</tr>
+<tr>
+<td><strong>Qwen 2.5 / QwQ-32B</strong></td>
+<td>Alibaba</td>
+<td>7B–72B</td>
+<td>QwQ-32B strong reasoning</td>
+<td>Yes — runs on consumer GPU</td>
+</tr>
+<tr>
+<td><strong>Phi-4</strong></td>
+<td>Microsoft</td>
+<td>14B</td>
+<td>Outperforms models 5× larger</td>
+<td>Yes — runs on a laptop</td>
+</tr>
+</tbody></table>
+<br>
+<p><strong>What open source unlocks for business:</strong></p>
+<ul>
+<li><strong>Privacy:</strong> Entire pipeline stays inside your infrastructure — no data sent to any cloud provider</li>
+<li><strong>Cost at scale:</strong> Zero per-token fees once deployed; fixed infrastructure cost only</li>
+<li><strong>Customization:</strong> Fine-tune on proprietary data with no sharing or licensing restrictions</li>
+<li><strong>Audit and compliance:</strong> Full visibility into model behavior — required in regulated industries</li>
+<li><strong>No vendor dependency:</strong> Not subject to pricing changes, API outages, or terms-of-service shifts</li>
+</ul>
+<br>
+<hr class="slide-divider">
+<br>
+<h2 id="slide-6-choosing-the-right-model-decision-framework" class="slide-title">Slide 6: Choosing the Right Model — Decision Framework</h2>
+<br>
+<h3>A Systematic Approach for Business Use Cases</h3>
+<br>
+<p><strong>Step 1: Match capability to task type</strong></p>
+<br>
+<table>
+<thead><tr>
+<th>Task Category</th>
+<th>Top Choice</th>
+<th>Runner-Up</th>
+<th>Why</th>
+</tr></thead><tbody>
+<tr>
+<td>Complex reasoning & analysis</td>
+<td>Claude 3.7 / o3</td>
+<td>Gemini 2.5 Pro</td>
+<td>Step-by-step thinking, high accuracy</td>
+</tr>
+<tr>
+<td>High-volume text processing</td>
+<td>Gemini 2.0 Flash</td>
+<td>GPT-4.1-mini</td>
+<td>Cheap + fast at scale</td>
+</tr>
+<tr>
+<td>Software development & coding</td>
+<td>Claude 3.7 Sonnet</td>
+<td>GPT-4.1</td>
+<td>Consistently #1 on coding benchmarks</td>
+</tr>
+<tr>
+<td>Very long documents (>100K words)</td>
+<td>Gemini 2.5 Pro</td>
+<td>Claude 3.7</td>
+<td>1M token context window</td>
+</tr>
+<tr>
+<td>Sensitive / regulated data</td>
+<td>Llama 4 / Phi-4 (local)</td>
+<td>Mistral (self-hosted)</td>
+<td>Data never leaves your infrastructure</td>
+</tr>
+<tr>
+<td>Real-time search + synthesis</td>
+<td>Perplexity Pro</td>
+<td>GPT-4.1 + web tool</td>
+<td>Up-to-date, cited information</td>
+</tr>
+<tr>
+<td>Image / video / audio understanding</td>
+<td>Gemini 2.5 Pro</td>
+<td>GPT-4o</td>
+<td>Native multimodal from the ground up</td>
+</tr>
+<tr>
+<td>Budget-constrained high volume</td>
+<td>Claude Haiku</td>
+<td>Gemini Flash</td>
+<td>Sub-$1 per million tokens</td>
+</tr>
+</tbody></table>
+<br>
+<p><strong>Step 2: Apply constraint filters</strong></p>
+<br>
+<ul>
+<li>Is data <strong>sensitive or regulated</strong>? → Self-hosted open source (Llama, Phi-4, Mistral)</li>
+<li>Is <strong>cost per call</strong> the primary constraint? → Flash / Haiku / o4-mini tier</li>
+<li>Does quality of <strong>reasoning</strong> matter most? → o3, Claude 3.7 extended thinking, Gemini 2.5 Pro</li>
+<li>Do you need <strong>real-time information</strong>? → Perplexity, or GPT-4.1 with web search enabled</li>
+<li>Is this a <strong>one-time prototype</strong> or <strong>production at scale</strong>? → Different cost/quality trade-offs apply</li>
+</ul>
+<br>
+<p><strong>The architect's rule:</strong> Never hard-code a model provider. Use an abstraction layer (LiteLLM, LangChain, or your own wrapper) so you can swap models with a single config change. The best model today is not the best model in six months.</p>
+<br>
+<hr class="slide-divider">
+<br>
+            </div>
+        </div>
+        
+
+        <div class="batch" id="batch2">
+            <div class="batch-header">
+                <span class="batch-number">Part 2</span>
+                <h2>AI Agent Frameworks & MCP — Claude SDK, OpenAI Agents, LangGraph, CrewAI</h2>
+            </div>
+            <div class="batch-content">
+                <h1>Week 11 — New AI Tools and Trends</h1>
+<h1>Batch 2 of 5: AI Agent Frameworks & MCP (Slides 7–13)</h1>
+<h1>Course: BUAN 6v99 — Generative AI for Business | UTDallas Spring 2026</h1>
+<br>
+<hr class="slide-divider">
+<br>
+<h2 id="slide-7-the-rise-of-agentic-ai" class="slide-title">Slide 7: The Rise of Agentic AI</h2>
+<br>
+<h3>From "Answer Me" to "Do This For Me"</h3>
+<br>
+<p><strong>The fundamental shift:</strong></p>
+<br>
+<table>
+<thead><tr>
+<th>Dimension</th>
+<th>Chatbot (2022–2024)</th>
+<th>AI Agent (2025–2026)</th>
+</tr></thead><tbody>
+<tr>
+<td><strong>What you give it</strong></td>
+<td>A question</td>
+<td>A goal or task</td>
+</tr>
+<tr>
+<td><strong>What it returns</strong></td>
+<td>Text</td>
+<td>A completed result</td>
+</tr>
+<tr>
+<td><strong>How it works</strong></td>
+<td>One round of input/output</td>
+<td>Plans, uses tools, iterates, adapts</td>
+</tr>
+<tr>
+<td><strong>Memory</strong></td>
+<td>Single session only</td>
+<td>Persistent across steps and sessions</td>
+</tr>
+<tr>
+<td><strong>Tools available</strong></td>
+<td>None (or limited search)</td>
+<td>Web, code execution, files, APIs, databases, email</td>
+</tr>
+<tr>
+<td><strong>Supervision needed</strong></td>
+<td>High — human drives every step</td>
+<td>Low to Medium — agent drives, human reviews</td>
+</tr>
+<tr>
+<td><strong>Business analogy</strong></td>
+<td>Search engine</td>
+<td>Junior analyst</td>
+</tr>
+</tbody></table>
+<br>
+<p><strong>The agent loop — how every agent framework works:</strong></p>
+<ol>
+<li><strong>Receive</strong> the task and break it into steps</li>
+<li><strong>Select</strong> the right tool for each step</li>
+<li><strong>Execute</strong> the tool call and observe the result</li>
+<li><strong>Reason</strong> about whether the result moves toward the goal</li>
+<li><strong>Repeat</strong> until the task is complete — then return the final answer</li>
+<br>
+<p><strong>Why this matters for business:</strong> Tasks that used to require a junior analyst working 3–4 hours — competitive research, data synthesis, report drafting, invoice processing — can now be completed in minutes by an agent running autonomously. The bottleneck shifts from execution to oversight and validation.</p>
+<br>
+<hr class="slide-divider">
+<br>
+<h2 id="slide-8-anthropic-claude-agent-sdk" class="slide-title">Slide 8: Anthropic Claude Agent SDK</h2>
+<br>
+<h3>Building Production Agents with Claude</h3>
+<br>
+<p><strong>What makes the Claude Agent SDK powerful:</strong></p>
+<ul>
+<li><strong>Tool use:</strong> Define any Python function as a tool — the model decides when and how to call it</li>
+<li><strong>Extended thinking:</strong> Claude reasons step-by-step before using tools, reducing errors on complex tasks</li>
+<li><strong>Computer use:</strong> Claude can control a real browser — click, type, navigate, take screenshots</li>
+<li><strong>Multi-agent:</strong> Spawn sub-agents for parallel tasks; orchestrate teams of specialized Claudes</li>
+<li><strong>Long context:</strong> 200K tokens of working memory — entire codebases, long documents, conversation history</li>
+</ul>
+<br>
+<p><strong>Core pattern — tool definition and agent loop:</strong></p>
+<pre><code class="language-python">
+import anthropic
+client = anthropic.Anthropic()
+
+tools = [{
+    "name": "search_competitors",
+    "description": "Search competitor websites for pricing and feature information",
+    "input_schema": {
+        "type": "object",
+        "properties": {
+            "company": {"type": "string"},
+            "focus": {"type": "string", "enum": ["pricing", "features", "news"]}
+        },
+        "required": ["company", "focus"]
+    }
+}]
+
+response = client.messages.create(
+    model="claude-sonnet-4-6",
+    max_tokens=4096,
+    tools=tools,
+    messages=[{"role": "user", "content":
+        "Research pricing for Salesforce, HubSpot, and Pipedrive. "
+        "Produce a comparison table and a recommendation for a 50-person sales team."}]
+)
+</code></pre>
+<br>
+<p><strong>What Claude returns:</strong> Either a final text answer, or a <code>tool_use</code> block containing the tool name and input — which your code executes, returning results back into the conversation until the task is done.</p>
+<br>
+<p><strong>Best business use cases:</strong> Multi-step research and reporting, automated code review, document analysis pipelines, CRM data enrichment, financial modeling workflows</p>
+<br>
+<hr class="slide-divider">
+<br>
+<h2 id="slide-9-openai-agents-sdk" class="slide-title">Slide 9: OpenAI Agents SDK</h2>
+<br>
+<h3>Four Primitives for Production Agentic Systems</h3>
+<br>
+<p><strong>Released in early 2025 — designed for enterprise deployments</strong></p>
+<br>
+<p>The OpenAI Agents SDK is built around four composable primitives that map cleanly to real business workflow patterns:</p>
+<br>
+<table>
+<thead><tr>
+<th>Primitive</th>
+<th>What It Is</th>
+<th>Business Example</th>
+</tr></thead><tbody>
+<tr>
+<td><strong>Agent</strong></td>
+<td>An LLM with a role, instructions, and tools</td>
+<td>"Tier-1 Support Agent" with access to your knowledge base</td>
+</tr>
+<tr>
+<td><strong>Handoff</strong></td>
+<td>Transfers control to a specialist agent</td>
+<td>Escalate complex issues to "Billing Specialist Agent"</td>
+</tr>
+<tr>
+<td><strong>Guardrail</strong></td>
+<td>Validates inputs and outputs against rules</td>
+<td>Block PII from leaving the system; enforce safe responses</td>
+</tr>
+<tr>
+<td><strong>Tracing</strong></td>
+<td>Full audit log of every agent decision and tool call</td>
+<td>Required for compliance in finance and healthcare</td>
+</tr>
+</tbody></table>
+<br>
+<p><strong>Code pattern — multi-agent handoff:</strong></p>
+<pre><code class="language-python">
+from agents import Agent, Runner
+
+triage_agent = Agent(
+    name="Support Triage",
+    instructions="Classify support tickets and route to the right specialist.",
+    handoffs=[billing_agent, technical_agent, escalation_agent]
+)
+
+billing_agent = Agent(
+    name="Billing Specialist",
+    instructions="Resolve billing questions using the customer database tool.",
+    tools=[query_billing_db, issue_refund, update_subscription]
+)
+
+result = Runner.run(triage_agent, "My invoice shows double charge for March")
+</code></pre>
+<br>
+<p><strong>Key differentiators vs. other frameworks:</strong></p>
+<ul>
+<li>Native integration with OpenAI Assistants API (persistent threads, file attachments)</li>
+<li>Built-in tracing dashboard — see every step your agent took</li>
+<li>Guardrails run in parallel, not sequentially — no added latency</li>
+<li>Seamless handoffs with context preservation — the receiving agent knows the full history</li>
+</ul>
+<br>
+<hr class="slide-divider">
+<br>
+<h2 id="slide-10-google-adk-and-langgraph" class="slide-title">Slide 10: Google ADK and LangGraph</h2>
+<br>
+<h3>Enterprise Orchestration and Complex Control Flow</h3>
+<br>
+<p><strong>Google Agent Development Kit (ADK)</strong></p>
+<br>
+<p>Designed for organizations already on Google Cloud — tightly integrated with Vertex AI, Google Search, Google Workspace, and enterprise compliance infrastructure.</p>
+<br>
+<table>
+<thead><tr>
+<th>Feature</th>
+<th>Detail</th>
+</tr></thead><tbody>
+<tr>
+<td><strong>Model</strong></td>
+<td>Gemini 2.0 Flash / Pro — native, no adapter needed</td>
+</tr>
+<tr>
+<td><strong>Tools</strong></td>
+<td>Google Search, Maps, Drive, Gmail, Calendar — all native</td>
+</tr>
+<tr>
+<td><strong>Multi-agent</strong></td>
+<td>Hierarchical: agents delegate to sub-agents automatically</td>
+</tr>
+<tr>
+<td><strong>Sessions</strong></td>
+<td>Persistent state management across user conversations</td>
+</tr>
+<tr>
+<td><strong>Deployment</strong></td>
+<td>Vertex AI — enterprise billing, SOC2, HIPAA, regional data</td>
+</tr>
+<tr>
+<td><strong>Evaluation</strong></td>
+<td>Built-in eval framework for measuring agent quality</td>
+</tr>
+</tbody></table>
+<br>
+<pre><code class="language-python">
+from google.adk.agents import Agent
+from google.adk.tools import google_search, google_drive_read
+
+market_analyst = Agent(
+    name="market_analyst",
+    model="gemini-2.0-flash",
+    tools=[google_search, google_drive_read],
+    system_instruction="""You are a senior market analyst.
+    Research using current web data and internal Drive documents.
+    Always cite sources and flag uncertainty."""
+)
+</code></pre>
+<br>
+<hr class="slide-divider">
+<br>
+<p><strong>LangGraph — Workflows as Graphs</strong></p>
+<br>
+<p>LangGraph models agent behavior as a <strong>directed graph</strong>: nodes are processing steps, edges are transitions. This enables patterns that linear chains cannot handle:</p>
+<br>
+<ul>
+<li><strong>Cycles:</strong> Retry a step if quality is insufficient; iterate until criteria are met</li>
+<li><strong>Parallel branches:</strong> Run research and data analysis simultaneously; merge results</li>
+<li><strong>Human-in-the-loop:</strong> Pause execution at a "human review" node; resume when approved</li>
+<li><strong>Conditional routing:</strong> Branch to different paths based on content classification</li>
+</ul>
+<br>
+<pre><code class="language-python">
+from langgraph.graph import StateGraph, END
+
+workflow = StateGraph(AgentState)
+workflow.add_node("research", research_step)
+workflow.add_node("write", write_step)
+workflow.add_node("human_review", pause_for_approval)
+workflow.add_node("publish", publish_step)
+
+# Conditional: only route through human review if flagged
+workflow.add_conditional_edges("write",
+    lambda s: "human_review" if s["needs_review"] else "publish")
+workflow.add_edge("human_review", "publish")
+</code></pre>
+<br>
+<p><strong>When to use LangGraph:</strong> Any workflow with retry logic, parallel execution, human approval gates, or complex branching — compliance workflows, content production pipelines, multi-stage data processing</p>
+<br>
+<hr class="slide-divider">
+<br>
+<h2 id="slide-11-crewai-role-based-ai-teams" class="slide-title">Slide 11: CrewAI — Role-Based AI Teams</h2>
+<br>
+<h3>The Consulting Firm Model for AI</h3>
+<br>
+<p><strong>The core insight behind CrewAI:</strong> Complex knowledge work is done better by a team of specialists than by one generalist — even when all the "people" are AI.</p>
+<br>
+<p>A researcher produces different quality work than a writer. An analyst reasons differently than a strategist. CrewAI makes this explicit: you define a team with roles, goals, and backstories — and the agents actually perform differently as a result.</p>
+<br>
+<p><strong>Full example — competitive intelligence workflow:</strong></p>
+<pre><code class="language-python">
+from crewai import Agent, Task, Crew, Process
+
+researcher = Agent(
+    role="Senior Market Research Analyst",
+    goal="Find accurate, data-backed competitive intelligence",
+    backstory="""You are a veteran analyst at McKinsey &amp; Company.
+    You cite specific numbers and sources. You never speculate.""",
+    tools=[web_search, company_database, news_api],
+    verbose=True
+)
+
+analyst = Agent(
+    role="Strategic Analyst",
+    goal="Draw actionable insights from raw research data",
+    backstory="You turn data into strategy. You think in frameworks.",
+)
+
+writer = Agent(
+    role="Executive Communications Specialist",
+    goal="Produce crisp, C-suite-ready reports in under 500 words",
+    backstory="Your reports get read by CEOs. Clarity above all.",
+)
+
+# Tasks flow sequentially — each builds on the previous
+research_task = Task(
+    description="Research Salesforce's Q1 2026 product announcements and pricing changes",
+    agent=researcher,
+    expected_output="Structured data: announcements, pricing, quotes, dates"
+)
+analysis_task = Task(
+    description="Identify strategic implications for a mid-market CRM competitor",
+    agent=analyst, context=[research_task]
+)
+writing_task = Task(
+    description="Write a one-page executive brief on competitive risk and response options",
+    agent=writer, context=[research_task, analysis_task]
+)
+
+crew = Crew(agents=[researcher, analyst, writer],
+            tasks=[research_task, analysis_task, writing_task],
+            process=Process.sequential)
+result = crew.kickoff()
+</code></pre>
+<br>
+<p><strong>Real production deployments today:</strong> Automated RFP responses (one agent per requirement section), daily competitive intelligence briefings, M&A due diligence workflows, content production pipelines</p>
+<br>
+<hr class="slide-divider">
+<br>
+<h2 id="slide-12-mcp-model-context-protocol" class="slide-title">Slide 12: MCP — Model Context Protocol</h2>
+<br>
+<h3>The Universal Standard for AI Tool Integration</h3>
+<br>
+<p><strong>The problem MCP solves:</strong></p>
+<br>
+<p>Before MCP (pre-late 2024), every AI application needed custom integrations for every data source. A team using Claude needed one custom integration for their database, another for Slack, another for GitHub, another for their CRM. Multiply this by dozens of tools and dozens of AI products — every vendor reinventing the same connections in incompatible ways.</p>
+<br>
+<p><strong>MCP's solution:</strong> One open standard, like USB-C for AI. Build an MCP server once; any MCP-compatible client can use it.</p>
+<br>
+<p><strong>How MCP works:</strong></p>
+<br>
+<table>
+<thead><tr>
+<th>Component</th>
+<th>Role</th>
+<th>Example</th>
+</tr></thead><tbody>
+<tr>
+<td><strong>MCP Server</strong></td>
+<td>Exposes data/tools via the standard protocol</td>
+<td>Your PostgreSQL database as an MCP server</td>
+</tr>
+<tr>
+<td><strong>MCP Client</strong></td>
+<td>AI application that connects to servers</td>
+<td>Claude, Cursor, any LLM app</td>
+</tr>
+<tr>
+<td><strong>MCP Protocol</strong></td>
+<td>The standard that connects them</td>
+<td>JSON-RPC over stdio or HTTP</td>
+</tr>
+</tbody></table>
+<br>
+<p><strong>MCP servers available today (April 2026):</strong></p>
+<br>
+<table>
+<thead><tr>
+<th>Server</th>
+<th>What AI Can Do</th>
+<th>Use Case</th>
+</tr></thead><tbody>
+<tr>
+<td><strong>PostgreSQL / SQLite</strong></td>
+<td>Query, read, analyze your database</td>
+<td>AI-powered data analysis without ETL</td>
+</tr>
+<tr>
+<td><strong>GitHub</strong></td>
+<td>Read issues, create PRs, push commits</td>
+<td>AI-assisted development workflows</td>
+</tr>
+<tr>
+<td><strong>Slack</strong></td>
+<td>Read channels, send messages</td>
+<td>AI team communication and monitoring</td>
+</tr>
+<tr>
+<td><strong>Google Drive / Docs</strong></td>
+<td>Read and write documents</td>
+<td>AI document workflows</td>
+</tr>
+<tr>
+<td><strong>File System</strong></td>
+<td>Read and write local files</td>
+<td>Local AI automation</td>
+</tr>
+<tr>
+<td><strong>Brave Search</strong></td>
+<td>Real-time web search</td>
+<td>Grounded, up-to-date AI responses</td>
+</tr>
+<tr>
+<td><strong>Jira / Linear</strong></td>
+<td>Read/create tickets</td>
+<td>AI-driven project management</td>
+</tr>
+</tbody></table>
+<br>
+<p><strong>Why MCP matters for your career:</strong> If you build an MCP server for your company's internal tools, that integration works with every MCP-compatible AI product — now and in the future. One investment, compounding returns as the ecosystem grows.</p>
+<br>
+<hr class="slide-divider">
+<br>
+<h2 id="slide-13-building-your-first-agent-the-pattern" class="slide-title">Slide 13: Building Your First Agent — The Pattern</h2>
+<br>
+<h3>The Code Architecture Every Agent Uses</h3>
+<br>
+<p><strong>Every agent framework — regardless of provider — implements this same fundamental loop:</strong></p>
+<br>
+<pre><code class="language-python">
+import anthropic, os
+client = anthropic.Anthropic()
+
+# 1. DEFINE TOOLS: Tell the model what capabilities it has
+tools = [
+    {
+        "name": "fetch_webpage",
+        "description": "Fetch visible text from a URL. Use for research.",
+        "input_schema": {"type": "object",
+                         "properties": {"url": {"type": "string"}},
+                         "required": ["url"]}
+    },
+    {
+        "name": "save_report",
+        "description": "Save the finished report to a file.",
+        "input_schema": {"type": "object",
+                         "properties": {"filename": {"type": "string"},
+                                        "content": {"type": "string"}},
+                         "required": ["filename", "content"]}
+    }
+]
+
+# 2. RUN THE AGENT LOOP
+messages = [{"role": "user", "content":
+    "Research the top 3 cloud CRM providers, compare pricing, save as crm_report.md"}]
+
+while True:
+    response = client.messages.create(
+        model="claude-sonnet-4-6", max_tokens=4096,
+        tools=tools, messages=messages
+    )
+
+    if response.stop_reason == "end_turn":          # 3. DONE
+        print(response.content[0].text)
+        break
+
+    for block in response.content:                  # 4. EXECUTE TOOLS
+        if block.type == "tool_use":
+            result = execute_tool(block.name, block.input)
+            messages += [
+                {"role": "assistant", "content": response.content},
+                {"role": "user", "content": [
+                    {"type": "tool_result", "tool_use_id": block.id, "content": result}
+                ]}
+            ]
+</code></pre>
+<br>
+<p><strong>Three things to understand about this pattern:</strong></p>
+<ul>
+<li>The model <strong>reads</strong> the tool descriptions and decides when to call them — you never tell it which tools to use</li>
+<li>The loop continues until <code>stop_reason == "end_turn"</code> — the model signals when it's done</li>
+<li>Any Python function you can write becomes a tool — databases, APIs, email, file system, anything</li>
+</ul>
+<br>
+<p><strong>This is the foundation.</strong> Every framework (LangGraph, CrewAI, OpenAI Agents) is an abstraction on top of exactly this loop.</p>
+<br>
+<hr class="slide-divider">
+<br>
+            </div>
+        </div>
+        
+
+        <div class="batch" id="batch3">
+            <div class="batch-header">
+                <span class="batch-number">Part 3</span>
+                <h2>AI Coding Tools — Claude Code, Cursor, Windsurf, GitHub Copilot</h2>
+            </div>
+            <div class="batch-content">
+                <h1>Week 11 — New AI Tools and Trends</h1>
+<h1>Batch 3 of 5: AI Coding Tools (Slides 14–19)</h1>
+<h1>Course: BUAN 6v99 — Generative AI for Business | UTDallas Spring 2026</h1>
+<br>
+<hr class="slide-divider">
+<br>
+<h2 id="slide-14-the-ai-powered-development-revolution" class="slide-title">Slide 14: The AI-Powered Development Revolution</h2>
+<br>
+<h3>What Changed in 24 Months</h3>
+<br>
+<p><strong>The productivity data (GitHub, StackOverflow surveys, 2025–2026):</strong></p>
+<br>
+<table>
+<thead><tr>
+<th>Development Task</th>
+<th>Without AI</th>
+<th>With AI Tools</th>
+<th>Speedup</th>
+</tr></thead><tbody>
+<tr>
+<td>Write a new function</td>
+<td>15 min</td>
+<td>2 min</td>
+<td><strong>7×</strong></td>
+</tr>
+<tr>
+<td>Fix a bug</td>
+<td>30 min</td>
+<td>8 min</td>
+<td><strong>4×</strong></td>
+</tr>
+<tr>
+<td>Write boilerplate / scaffolding</td>
+<td>45 min</td>
+<td>30 sec</td>
+<td><strong>90×</strong></td>
+</tr>
+<tr>
+<td>Understand an unfamiliar codebase</td>
+<td>2 weeks</td>
+<td>3 days</td>
+<td><strong>5×</strong></td>
+</tr>
+<tr>
+<td>Write unit tests</td>
+<td>20 min</td>
+<td>3 min</td>
+<td><strong>7×</strong></td>
+</tr>
+<tr>
+<td>Code review coverage</td>
+<td>60% of PRs</td>
+<td>95% (AI reviews all)</td>
+<td><strong>+35%</strong></td>
+</tr>
+</tbody></table>
+<br>
+<p><strong>The before/after for business analytics professionals:</strong></p>
+<br>
+<p><strong>Before (2022):</strong> Write every line manually. Google for syntax. Stack Overflow for debugging. 70% of coding time on boilerplate, lookups, and mechanical fixes.</p>
+<br>
+<p><strong>After (2026):</strong> Describe what you want. Review and validate what AI produces. Focus on logic, architecture, and business problem framing. AI handles the execution details.</p>
+<br>
+<p><strong>What this changes about skills:</strong></p>
+<ul>
+<li><strong>Declining value:</strong> Memorizing syntax, writing boilerplate, translating pseudocode to code</li>
+<li><strong>Rising value:</strong> Problem decomposition, system design, prompt engineering, output validation, domain expertise</li>
+<li><strong>New skill:</strong> Knowing when to trust AI output vs. when to verify carefully (security, edge cases, data integrity)</li>
+</ul>
+<br>
+<blockquote>*"The question is no longer whether you should use AI coding tools. It's which ones, and how to use them without losing your own judgment."*</blockquote>
+<br>
+<hr class="slide-divider">
+<br>
+<h2 id="slide-15-claude-code-the-agentic-terminal" class="slide-title">Slide 15: Claude Code — The Agentic Terminal</h2>
+<br>
+<h3>Anthropic's CLI Coding Agent</h3>
+<br>
+<p><strong>What makes Claude Code fundamentally different from Copilot-style tools:</strong></p>
+<br>
+<table>
+<thead><tr>
+<th>Dimension</th>
+<th>Claude Code</th>
+<th>IDE Autocomplete Tools</th>
+</tr></thead><tbody>
+<tr>
+<td><strong>Interface</strong></td>
+<td>Terminal CLI — works anywhere</td>
+<td>IDE plugin — tied to one editor</td>
+</tr>
+<tr>
+<td><strong>Scope of awareness</strong></td>
+<td>Your entire codebase</td>
+<td>The file you're editing</td>
+</tr>
+<tr>
+<td><strong>Mode of operation</strong></td>
+<td>Completes full tasks end-to-end</td>
+<td>Suggests what to type next</td>
+</tr>
+<tr>
+<td><strong>Actions it can take</strong></td>
+<td>Read files, write files, run tests, execute commands</td>
+<td>Insert code suggestions only</td>
+</tr>
+<tr>
+<td><strong>Autonomy level</strong></td>
+<td>Full agent — plans and executes</td>
+<td>Copilot — assists and waits</td>
+</tr>
+<tr>
+<td><strong>Best model</strong></td>
+<td>Claude 3.7 Sonnet (coding benchmark leader)</td>
+<td>Varies by tool</td>
+</tr>
+</tbody></table>
+<br>
+<p><strong>How it works in practice:</strong></p>
+<pre><code class="language-bash">
+npm install -g @anthropic-ai/claude-code   # install once
+cd my-project                              # go to your project
+claude                                     # launch the agent
+</code></pre>
+<br>
+<p><strong>Real task examples Claude Code completes autonomously:</strong></p>
+<ul>
+<li>"Add error handling and retry logic to all API calls in the <code>src/api/</code> directory"</li>
+<li>"Write pytest unit tests for the <code>UserService</code> class, covering edge cases"</li>
+<li>"Refactor the authentication module to use JWT tokens instead of session cookies"</li>
+<li>"There's a bug in <code>checkout.py</code> — the discount isn't applied when cart > $500. Fix it."</li>
+<li>"Explain what this 800-line legacy function does and add inline documentation"</li>
+</ul>
+<br>
+<p><strong>The agent loop:</strong> Reads relevant files → understands context → makes targeted changes → runs your tests → iterates if tests fail → reports when done</p>
+<br>
+<p><strong>Pricing:</strong> You pay for Claude API tokens. A typical task costs <strong>$0.05–$0.50</strong>. Complex multi-file refactors run $1–$3. No subscription fee.</p>
+<br>
+<hr class="slide-divider">
+<br>
+<h2 id="slide-16-cursor-the-ai-native-ide" class="slide-title">Slide 16: Cursor — The AI-Native IDE</h2>
+<br>
+<h3>VS Code Rebuilt for AI-Assisted Development</h3>
+<br>
+<p><strong>Why Cursor is the most popular AI coding tool among professional developers (2025–2026):</strong></p>
+<br>
+<p>Cursor didn't bolt AI onto an existing editor — they forked VS Code and rebuilt every layer with AI as a core primitive. The AI has access to your full project structure, open files, terminal output, and git history. This context depth is what separates Cursor from plugins.</p>
+<br>
+<p><strong>The four features that matter:</strong></p>
+<br>
+<table>
+<thead><tr>
+<th>Feature</th>
+<th>How It Works</th>
+<th>What It Unlocks</th>
+</tr></thead><tbody>
+<tr>
+<td><strong>Tab Completion</strong></td>
+<td>Completes entire functions, not just lines. Understands the surrounding code's intent.</td>
+<td>3–5× faster for function and class writing</td>
+</tr>
+<tr>
+<td><strong>Chat (Ctrl+L)</strong></td>
+<td>Conversational AI with @-mention context. <code>@UserService</code> pulls that file into context.</td>
+<td>Navigate and understand large codebases instantly</td>
+</tr>
+<tr>
+<td><strong>Composer / Agent Mode</strong></td>
+<td>Give a task, not a line. Plans, writes, runs terminal commands, iterates.</td>
+<td>Autonomous multi-file implementation</td>
+</tr>
+<tr>
+<td><strong>Cursor Rules</strong></td>
+<td>Project-level instructions: style guides, conventions, framework choices, test requirements.</td>
+<td>Consistent AI behavior across your whole team</td>
+</tr>
+</tbody></table>
+<br>
+<p><strong>Pricing tiers:</strong></p>
+<br>
+<table>
+<thead><tr>
+<th>Plan</th>
+<th>Completions</th>
+<th>Models</th>
+<th>Best For</th>
+</tr></thead><tbody>
+<tr>
+<td>Free</td>
+<td>2,000/month, limited chat</td>
+<td>Cursor-mini</td>
+<td>Trying it out</td>
+</tr>
+<tr>
+<td>Pro ($20/mo)</td>
+<td>Unlimited</td>
+<td>GPT-4o, Claude 3.7, Gemini 2.5</td>
+<td>Daily professional use</td>
+</tr>
+<tr>
+<td>Business ($40/user/mo)</td>
+<td>Unlimited</td>
+<td>All models + priority</td>
+<td>Teams with shared rules and admin controls</td>
+</tr>
+</tbody></table>
+<br>
+<p><strong>Student recommendation:</strong> Pro at $20/month. If you write Python for data work, this pays for itself in the first hour of use.</p>
+<br>
+<hr class="slide-divider">
+<br>
+<h2 id="slide-17-windsurf-the-cascade-agent" class="slide-title">Slide 17: Windsurf — The Cascade Agent</h2>
+<br>
+<h3>Long-Horizon Autonomous Coding</h3>
+<br>
+<p><strong>Windsurf</strong>, built by Codeium, launched in late 2024 with a different philosophy than Cursor: instead of optimizing for how fast you can type, optimize for how complex a task AI can complete without you touching the keyboard.</p>
+<br>
+<p><strong>The Cascade Agent — what makes it distinct:</strong></p>
+<ul>
+<li>Maintains a <strong>coherent understanding of the whole goal</strong> across many steps — not just the current task</li>
+<li>Decisions made in step 10 are consistent with decisions made in step 2</li>
+<li>Rewrites across many files stay architecturally consistent</li>
+<li>Better at greenfield builds (starting from scratch) than at incremental edits to existing code</li>
+</ul>
+<br>
+<p><strong>Feature comparison:</strong></p>
+<br>
+<table>
+<thead><tr>
+<th>Feature</th>
+<th>Cursor</th>
+<th>Windsurf</th>
+</tr></thead><tbody>
+<tr>
+<td>Base editor</td>
+<td>VS Code fork</td>
+<td>VS Code fork</td>
+</tr>
+<tr>
+<td>Agent name</td>
+<td>Composer</td>
+<td>Cascade</td>
+</tr>
+<tr>
+<td>Model options</td>
+<td>GPT-4o, Claude 3.7, Gemini</td>
+<td>Claude 3.7, GPT-4o, Gemini</td>
+</tr>
+<tr>
+<td>Free tier</td>
+<td>2,000 completions, limited chat</td>
+<td>More generous — 5 Cascade flows/day + unlimited autocomplete</td>
+</tr>
+<tr>
+<td>Unique strength</td>
+<td>Deep context on existing codebases</td>
+<td>Coherent long-horizon task execution</td>
+</tr>
+<tr>
+<td>Best for</td>
+<td>Working on mature, complex projects</td>
+<td>Building new features and services from scratch</td>
+</tr>
+<tr>
+<td>Pricing (Pro)</td>
+<td>$20/month</td>
+<td>$15/month</td>
+</tr>
+</tbody></table>
+<br>
+<p><strong>When to use Windsurf over Cursor:</strong></p>
+<ul>
+<li>Building a new module, service, or application from scratch</li>
+<li>You want to describe an entire feature and come back to a working implementation</li>
+<li>Budget is a constraint — more capability in the free tier</li>
+</ul>
+<br>
+<p><strong>When to use Cursor over Windsurf:</strong></p>
+<ul>
+<li>Deep editing within a large existing codebase</li>
+<li>You want fast, reactive completions as you type</li>
+<li>Your team already has shared Cursor Rules configured</li>
+</ul>
+<br>
+<p><strong>Bottom line:</strong> Download both. Do the same task in each. Developers consistently prefer one — but the preference varies by person and project type.</p>
+<br>
+<hr class="slide-divider">
+<br>
+<h2 id="slide-18-github-copilot-and-enterprise-ai-coding-tools" class="slide-title">Slide 18: GitHub Copilot and Enterprise AI Coding Tools</h2>
+<br>
+<h3>The Enterprise Standard and the Ecosystem</h3>
+<br>
+<p><strong>GitHub Copilot in 2026 — beyond autocomplete:</strong></p>
+<br>
+<table>
+<thead><tr>
+<th>Feature</th>
+<th>What It Does</th>
+<th>Business Value</th>
+</tr></thead><tbody>
+<tr>
+<td><strong>Copilot Autofix</strong></td>
+<td>Scans code for security vulnerabilities; generates fixes automatically</td>
+<td>Reduces CVE backlog without dedicated security sprints</td>
+</tr>
+<tr>
+<td><strong>Copilot Workspace</strong></td>
+<td>Takes a GitHub Issue, plans the implementation, proposes code changes</td>
+<td>From ticket to PR without opening an IDE</td>
+</tr>
+<tr>
+<td><strong>Copilot in PRs</strong></td>
+<td>Reviews every pull request, suggests improvements, summarizes changes</td>
+<td>Every PR gets an AI review pass before human reviewers</td>
+</tr>
+<tr>
+<td><strong>Copilot Chat</strong></td>
+<td>Conversational AI about any codebase — ask architecture questions, debug issues</td>
+<td>Junior developers onboard faster; seniors stay in flow</td>
+</tr>
+<tr>
+<td><strong>Copilot Extensions</strong></td>
+<td>Connect Jira, Datadog, Sentry, and 30+ tools directly into the chat interface</td>
+<td>One AI interface for your entire toolchain</td>
+</tr>
+</tbody></table>
+<br>
+<p><strong>Why enterprises choose Copilot:</strong> It's not always the most capable agent — it's where the code already lives. GitHub manages the org's entire codebase, PR history, and issue backlog. Copilot integrates there, not alongside it.</p>
+<br>
+<p><strong>The broader enterprise AI coding ecosystem:</strong></p>
+<br>
+<table>
+<thead><tr>
+<th>Tool</th>
+<th>Vendor</th>
+<th>Why It Exists</th>
+</tr></thead><tbody>
+<tr>
+<td><strong>Amazon Q Developer</strong></td>
+<td>AWS</td>
+<td>Best for teams building on AWS — Lambda, DynamoDB, CDK-aware</td>
+</tr>
+<tr>
+<td><strong>JetBrains AI</strong></td>
+<td>JetBrains</td>
+<td>Native in IntelliJ / PyCharm / DataGrip — Java, Kotlin, Python shops</td>
+</tr>
+<tr>
+<td><strong>Tabnine</strong></td>
+<td>Tabnine</td>
+<td>On-premises deployment — zero data to cloud, required in some regulated industries</td>
+</tr>
+<tr>
+<td><strong>Replit AI</strong></td>
+<td>Replit</td>
+<td>Browser-based, no install — ideal for learning and quick prototypes</td>
+</tr>
+</tbody></table>
+<br>
+<p><strong>Free access for students:</strong> GitHub Copilot Pro is included in the <strong>GitHub Student Developer Pack</strong> at no cost. Apply at github.com/education with your UTD email.</p>
+<br>
+<hr class="slide-divider">
+<br>
+<h2 id="slide-19-ai-coding-tools-full-comparison-and-decision-guide" class="slide-title">Slide 19: AI Coding Tools — Full Comparison and Decision Guide</h2>
+<br>
+<h3>Choosing the Right Tool for Your Work</h3>
+<br>
+<p><strong>Head-to-head comparison:</strong></p>
+<br>
+<table>
+<thead><tr>
+<th>Tool</th>
+<th>Interface</th>
+<th>Autonomy</th>
+<th>Model Quality</th>
+<th>Free Tier</th>
+<th>Paid Tier</th>
+<th>Best For</th>
+</tr></thead><tbody>
+<tr>
+<td><strong>Claude Code</strong></td>
+<td>Terminal CLI</td>
+<td>★★★★★</td>
+<td>Claude 3.7 (best coder)</td>
+<td>Pay-as-you-go</td>
+<td>~$20/mo typical</td>
+<td>Agentic tasks, multi-file changes</td>
+</tr>
+<tr>
+<td><strong>Cursor</strong></td>
+<td>IDE (VS Code)</td>
+<td>★★★★☆</td>
+<td>GPT-4o, Claude, Gemini</td>
+<td>2,000 completions</td>
+<td>$20/mo</td>
+<td>Daily dev work, large codebases</td>
+</tr>
+<tr>
+<td><strong>Windsurf</strong></td>
+<td>IDE (VS Code)</td>
+<td>★★★★☆</td>
+<td>Claude, GPT-4o</td>
+<td>5 flows/day</td>
+<td>$15/mo</td>
+<td>New features, long tasks</td>
+</tr>
+<tr>
+<td><strong>GitHub Copilot</strong></td>
+<td>IDE + GitHub</td>
+<td>★★★☆☆</td>
+<td>GPT-4o</td>
+<td>Yes (limited)</td>
+<td>$19/mo</td>
+<td>Enterprise, GitHub-integrated teams</td>
+</tr>
+<tr>
+<td><strong>Amazon Q</strong></td>
+<td>IDE + CLI</td>
+<td>★★★☆☆</td>
+<td>Claude-powered</td>
+<td>Yes</td>
+<td>$19/mo</td>
+<td>AWS-native development</td>
+</tr>
+<tr>
+<td><strong>Replit AI</strong></td>
+<td>Browser</td>
+<td>★★☆☆☆</td>
+<td>GPT-4o</td>
+<td>Yes (limited)</td>
+<td>$20/mo</td>
+<td>Learning, no-install prototypes</td>
+</tr>
+</tbody></table>
+<br>
+<p><strong>Decision guide by situation:</strong></p>
+<br>
+<ul>
+<li>In an enterprise with IT governance requirements → <strong>GitHub Copilot</strong> (approved vendor, SOC2, audit logs)</li>
+<li>Building Python data pipelines and analytics → <strong>Cursor</strong> or <strong>Claude Code</strong></li>
+<li>Starting a new project from scratch → <strong>Windsurf Cascade</strong> for the first build</li>
+<li>Want maximum autonomy, hands-off task completion → <strong>Claude Code</strong></li>
+<li>Student learning to code → <strong>Replit AI</strong> (browser, no setup) or <strong>Windsurf</strong> (generous free tier)</li>
+<li>AWS-heavy stack → <strong>Amazon Q Developer</strong></li>
+</ul>
+<br>
+<p><strong>The meta-lesson:</strong> These tools are skills, not features. Developers who spend time learning to prompt them well — how to give clear context, how to validate output, when to take manual control — get dramatically more value than those who just install and hope. Pick one and go deep before expanding.</p>
+<br>
+<hr class="slide-divider">
+<br>
+            </div>
+        </div>
+        
+
+        <div class="batch" id="batch4">
+            <div class="batch-header">
+                <span class="batch-number">Part 4</span>
+                <h2>Business Automation & Multimodal AI — n8n, Make, Zapier, Vision, Video</h2>
+            </div>
+            <div class="batch-content">
+                <h1>Week 11 — New AI Tools and Trends</h1>
+<h1>Batch 4 of 5: Business Automation & Multimodal AI (Slides 20–25)</h1>
+<h1>Course: BUAN 6v99 — Generative AI for Business | UTDallas Spring 2026</h1>
+<br>
+<hr class="slide-divider">
+<br>
+<h2 id="slide-20-ai-business-automation-the-convergence" class="slide-title">Slide 20: AI Business Automation — The Convergence</h2>
+<br>
+<h3>When Workflow Automation Meets Intelligence</h3>
+<br>
+<p><strong>Two technologies, each powerful alone — together, transformative:</strong></p>
+<br>
+<table>
+<thead><tr>
+<th>Traditional Automation (Zapier/Make/n8n)</th>
+<th>AI (LLMs, Vision, Voice)</th>
+</tr></thead><tbody>
+<tr>
+<td>Rule-based: if X then Y</td>
+<td>Judgment-based: understand X, decide Y</td>
+</tr>
+<tr>
+<td>Only handles structured data</td>
+<td>Handles text, images, audio, documents</td>
+</tr>
+<tr>
+<td>Brittle — breaks on edge cases</td>
+<td>Adaptive — handles variation and ambiguity</td>
+</tr>
+<tr>
+<td>"If email arrives → create ticket"</td>
+<td>"Read email, understand intent, draft reply, route to right team"</td>
+</tr>
+<tr>
+<td>Replaces mechanical steps</td>
+<td>Replaces judgment steps</td>
+</tr>
+</tbody></table>
+<br>
+<p><strong>The resulting productivity impact — measured across 2025–2026 deployments:</strong></p>
+<br>
+<table>
+<thead><tr>
+<th>Business Process</th>
+<th>Manual Time</th>
+<th>With AI Automation</th>
+<th>Time Saved</th>
+<th>Typical Cost/Run</th>
+</tr></thead><tbody>
+<tr>
+<td>Invoice processing (extract, validate, route)</td>
+<td>5 min/invoice</td>
+<td>10 seconds</td>
+<td><strong>97%</strong></td>
+<td><$0.01</td>
+</tr>
+<tr>
+<td>Customer support ticket triage + draft reply</td>
+<td>8 min/ticket</td>
+<td>45 seconds</td>
+<td><strong>91%</strong></td>
+<td>~$0.05</td>
+</tr>
+<tr>
+<td>Contract risk review (50-page document)</td>
+<td>2–3 hours</td>
+<td>3 minutes</td>
+<td><strong>97%</strong></td>
+<td>~$0.30</td>
+</tr>
+<tr>
+<td>Competitive intelligence report (weekly)</td>
+<td>6 hours</td>
+<td>20 minutes</td>
+<td><strong>94%</strong></td>
+<td>~$1.00</td>
+</tr>
+<tr>
+<td>Meeting transcript → action items + summary</td>
+<td>30 min</td>
+<td>2 minutes</td>
+<td><strong>93%</strong></td>
+<td>~$0.10</td>
+</tr>
+</tbody></table>
+<br>
+<p><strong>The shift in what humans do:</strong> Professionals stop spending 70% of their time on gathering, extracting, formatting, and routing — and spend it instead on judgment calls, client relationships, and strategy. The work becomes higher-leverage, not just faster.</p>
+<br>
+<hr class="slide-divider">
+<br>
+<h2 id="slide-21-n8n-open-source-ai-automation" class="slide-title">Slide 21: n8n — Open Source AI Automation</h2>
+<br>
+<h3>When Privacy and Flexibility Matter</h3>
+<br>
+<p><strong>n8n</strong> (pronounced "nodemation") is the open-source alternative to Zapier — self-hostable, developer-extensible, and with native AI integration built for production workloads.</p>
+<br>
+<p><strong>Why organizations choose n8n over Zapier for AI workflows:</strong></p>
+<br>
+<table>
+<thead><tr>
+<th>Criterion</th>
+<th>n8n</th>
+<th>Zapier</th>
+</tr></thead><tbody>
+<tr>
+<td><strong>Data hosting</strong></td>
+<td>Self-hosted on your servers — data never leaves</td>
+<td>All data flows through Zapier's US cloud</td>
+</tr>
+<tr>
+<td><strong>AI model support</strong></td>
+<td>Claude, GPT, Gemini, <strong>Ollama (local)</strong> — full choice</td>
+<td>OpenAI + limited others</td>
+</tr>
+<tr>
+<td><strong>Cost at scale</strong></td>
+<td>Fixed server cost — unlimited operations</td>
+<td>Per-operation pricing, expensive at scale</td>
+</tr>
+<tr>
+<td><strong>Customization</strong></td>
+<td>Full JavaScript/Python custom nodes</td>
+<td>Limited to available integrations</td>
+</tr>
+<tr>
+<td><strong>Open source</strong></td>
+<td>Yes — auditable, forkable, extensible</td>
+<td>No</td>
+</tr>
+<tr>
+<td><strong>Setup complexity</strong></td>
+<td>Medium (Docker, 30 minutes)</td>
+<td>Low (browser, 5 minutes)</td>
+</tr>
+</tbody></table>
+<br>
+<p><strong>A production AI workflow in n8n — intelligent email routing:</strong></p>
+<br>
+<ol>
+<li><strong>Trigger:</strong> New email arrives (Gmail / Outlook webhook)</li>
+<li><strong>AI Agent Node (Claude):</strong> Read full email → classify as [Sales / Support / Billing / Internal / Spam] → extract key information (sender intent, urgency, required action, deadline)</li>
+<li><strong>Branch by classification:</strong></li>
+<p>   - Sales → Create HubSpot lead → Notify sales channel in Slack with AI summary</p>
+<p>   - Support → Create Zendesk ticket + AI-generated first draft reply for agent to edit</p>
+<p>   - Billing → Route to billing team email with extracted invoice details</p>
+<p>   - Spam → Archive silently</p>
+<ol>
+<li><strong>Logging:</strong> All actions logged to Google Sheets for weekly review</li>
+<br>
+<p><strong>Getting started:</strong></p>
+<pre><code class="language-bash">
+docker run -it --rm -p 5678:5678 -v ~/.n8n:/home/node/.n8n n8nio/n8n
+# Open http://localhost:5678 — full visual editor, no code required
+</code></pre>
+<br>
+<p><strong>The Ollama integration</strong> is n8n's killer feature for regulated industries: run Llama 4 or Phi-4 locally inside n8n, processing sensitive documents with zero data leaving your network.</p>
+<br>
+<hr class="slide-divider">
+<br>
+<h2 id="slide-22-make-and-zapier-no-code-ai-automation" class="slide-title">Slide 22: Make and Zapier — No-Code AI Automation</h2>
+<br>
+<h3>The Tools Your Non-Technical Colleagues Are Already Using</h3>
+<br>
+<p><strong>Make (formerly Integromat) — Visual, Flexible, Powerful</strong></p>
+<br>
+<p>Make's scenario builder is a visual flowchart: modules are connected with wires, data flows are visible, and branching logic is explicit. It occupies the middle ground between Zapier's simplicity and n8n's technical depth.</p>
+<br>
+<p><strong>Make AI features added in 2025:</strong></p>
+<br>
+<table>
+<thead><tr>
+<th>Feature</th>
+<th>What It Does</th>
+<th>Business Example</th>
+</tr></thead><tbody>
+<tr>
+<td><strong>AI Scenario Builder</strong></td>
+<td>Describe what you want in natural language → Make builds first draft</td>
+<td>"When a form is submitted, classify it and email the right department"</td>
+</tr>
+<tr>
+<td><strong>OpenAI / Claude Module</strong></td>
+<td>LLM step in any scenario</td>
+<td>Summarize, classify, extract, generate — anywhere in the flow</td>
+</tr>
+<tr>
+<td><strong>AI Data Transform</strong></td>
+<td>"Convert this messy incoming JSON to this clean format" — no regex needed</td>
+<td>Normalize data from 5 different vendors into one schema</td>
+</tr>
+<tr>
+<td><strong>Make AI Chat</strong></td>
+<td>Conversational debugging — "Why did this scenario fail?"</td>
+<td>Reduce troubleshooting time from hours to minutes</td>
+</tr>
+</tbody></table>
+<br>
+<p><strong>Pricing:</strong> Free (1,000 ops/mo) · Basic $9/mo · Pro $16/mo · Teams $29/mo</p>
+<br>
+<hr class="slide-divider">
+<br>
+<p><strong>Zapier — The Largest Integration Ecosystem</strong></p>
+<br>
+<p>7,000+ app integrations. The easiest setup. The most non-technical-friendly interface. And in 2024–2025, Zapier added AI across the entire platform:</p>
+<br>
+<table>
+<thead><tr>
+<th>Zapier AI Feature</th>
+<th>Description</th>
+<th>Use Case</th>
+</tr></thead><tbody>
+<tr>
+<td><strong>AI Actions</strong></td>
+<td>GPT-4o as a step in any Zap — generate, analyze, decide</td>
+<td>Classify a lead's industry from their job title</td>
+</tr>
+<tr>
+<td><strong>Zapier Agents</strong></td>
+<td>Fully autonomous agents with no fixed trigger/action structure</td>
+<td>Monitor a Slack channel and take action on relevant messages</td>
+</tr>
+<tr>
+<td><strong>Canvas</strong></td>
+<td>Visual drag-and-drop workspace for planning AI workflows</td>
+<td>Design complex pipelines before building them</td>
+</tr>
+<tr>
+<td><strong>Zapier Chatbots</strong></td>
+<td>Deploy a customer-facing AI chatbot connected to your data</td>
+<td>Answer product FAQs using your documentation</td>
+</tr>
+</tbody></table>
+<br>
+<p><strong>Tool selection guide:</strong></p>
+<br>
+<table>
+<thead><tr>
+<th>Your situation</th>
+<th>Best choice</th>
+</tr></thead><tbody>
+<tr>
+<td>Sensitive data, need self-hosting, technical team</td>
+<td><strong>n8n</strong></td>
+</tr>
+<tr>
+<td>Non-technical team, fastest setup, broad integrations</td>
+<td><strong>Zapier</strong></td>
+</tr>
+<tr>
+<td>Visual workflows, medium complexity, moderate budget</td>
+<td><strong>Make</strong></td>
+</tr>
+<tr>
+<td>Developer team wanting full control + AI freedom</td>
+<td><strong>n8n</strong> with custom nodes</td>
+</tr>
+</tbody></table>
+<br>
+<hr class="slide-divider">
+<br>
+<h2 id="slide-23-multimodal-ai-vision-and-audio-in-business" class="slide-title">Slide 23: Multimodal AI — Vision and Audio in Business</h2>
+<br>
+<h3>The Business Data That Wasn't Accessible — Now Is</h3>
+<br>
+<p><strong>The shift:</strong> In 2022, AI worked on text. By 2026, leading models natively process text, images, PDFs, audio, and video in a single API call. This unlocks enormous amounts of previously inaccessible business data.</p>
+<br>
+<p><strong>Vision AI — what's production-ready today:</strong></p>
+<br>
+<table>
+<thead><tr>
+<th>Capability</th>
+<th>Best Model</th>
+<th>Business Application</th>
+<th>Accuracy Level</th>
+</tr></thead><tbody>
+<tr>
+<td>Invoice / receipt extraction</td>
+<td>GPT-4o, Claude 3.7</td>
+<td>Extract vendor, amount, date, line items → structured JSON</td>
+<td>95–98% on clean scans</td>
+</tr>
+<tr>
+<td>Contract / legal document review</td>
+<td>Claude 3.7 (200K ctx)</td>
+<td>Flag risky clauses, extract dates, obligations</td>
+<td>Strong — needs human review for legal decisions</td>
+</tr>
+<tr>
+<td>Dashboard / chart reading</td>
+<td>Gemini 2.5, GPT-4o</td>
+<td>"What does this chart tell us? What's the trend?"</td>
+<td>Very good on standard chart types</td>
+</tr>
+<tr>
+<td>Product photo QA</td>
+<td>Gemini 2.5 Pro</td>
+<td>Flag defects, verify packaging, check planogram compliance</td>
+<td>Varies by defect complexity</td>
+</tr>
+<tr>
+<td>Screen / UI automation</td>
+<td>Claude Computer Use</td>
+<td>Click through any application, fill forms, extract data from GUIs</td>
+<td>Production-ready for structured UIs</td>
+</tr>
+</tbody></table>
+<br>
+<p><strong>Audio AI — what's production-ready today:</strong></p>
+<br>
+<table>
+<thead><tr>
+<th>Capability</th>
+<th>Best Tool</th>
+<th>Business Application</th>
+<th>Notes</th>
+</tr></thead><tbody>
+<tr>
+<td>Meeting transcription</td>
+<td>Whisper (OpenAI), Deepgram</td>
+<td>Accurate transcripts + speaker diarization</td>
+<td>Handles accents, technical terms well</td>
+</tr>
+<tr>
+<td>Real-time voice agents</td>
+<td>GPT-4o Voice, Gemini Live</td>
+<td>Phone-based customer service, voice data entry</td>
+<td>Latency < 500ms — natural conversation</td>
+</tr>
+<tr>
+<td>Text-to-speech</td>
+<td>ElevenLabs, OpenAI TTS</td>
+<td>Narrate reports, e-learning, training content</td>
+<td>Near-human quality at $0.15–$0.30/1K chars</td>
+</tr>
+<tr>
+<td>Voice cloning</td>
+<td>ElevenLabs</td>
+<td>Consistent brand voice across all content</td>
+<td>Requires explicit consent for use</td>
+</tr>
+<tr>
+<td>Meeting → action items</td>
+<td>Otter.ai, Fireflies + LLM</td>
+<td>Auto-generate summary + task list from call recording</td>
+<td>Standard practice at many companies</td>
+</tr>
+</tbody></table>
+<br>
+<hr class="slide-divider">
+<br>
+<h2 id="slide-24-video-generation-where-business-use-is-ready" class="slide-title">Slide 24: Video Generation — Where Business Use Is Ready</h2>
+<br>
+<h3>What's Production-Ready vs. What Still Has Limitations</h3>
+<br>
+<p><strong>The 2026 state of AI video — platform comparison:</strong></p>
+<br>
+<table>
+<thead><tr>
+<th>Platform</th>
+<th>Creator</th>
+<th>Max Length</th>
+<th>Strengths</th>
+<th>Weaknesses</th>
+<th>Best Business Use</th>
+</tr></thead><tbody>
+<tr>
+<td><strong>Sora</strong></td>
+<td>OpenAI</td>
+<td>~1 min</td>
+<td>Highest photorealism, strong scene consistency</td>
+<td>Expensive ($200/mo), limited control</td>
+<td>Premium marketing, brand films</td>
+</tr>
+<tr>
+<td><strong>Runway Gen-3</strong></td>
+<td>Runway</td>
+<td>10–30 sec</td>
+<td>Film-quality, fine camera control, good motion</td>
+<td>Short clips only</td>
+<td>High-end social content</td>
+</tr>
+<tr>
+<td><strong>Google Veo 2</strong></td>
+<td>Google</td>
+<td>Several min</td>
+<td>Long clips, photorealistic, API access</td>
+<td>Limited availability</td>
+<td>Enterprise video at scale</td>
+</tr>
+<tr>
+<td><strong>Kling 2.0</strong></td>
+<td>Kuaishou</td>
+<td>2–3 min</td>
+<td>Fast, good quality, generous free tier</td>
+<td>Occasional consistency issues</td>
+<td>Social media, product demos</td>
+</tr>
+<tr>
+<td><strong>HeyGen</strong></td>
+<td>HeyGen</td>
+<td>Unlimited</td>
+<td>AI talking-head avatars, multilingual</td>
+<td>Presenters only, no scene generation</td>
+<td>Training, onboarding, explainer videos</td>
+</tr>
+<tr>
+<td><strong>Synthesia</strong></td>
+<td>Synthesia</td>
+<td>Unlimited</td>
+<td>Enterprise-grade, 140+ languages, compliance</td>
+<td>Template-based, less creative flexibility</td>
+<td>Corporate training, L&D</td>
+</tr>
+</tbody></table>
+<br>
+<p><strong>What's genuinely production-ready for business in 2026:</strong></p>
+<br>
+<ol>
+<li><strong>Training and onboarding videos (HeyGen / Synthesia):</strong> AI avatar presents content. Update the script → instantly regenerate. Translate to 30 languages at no added cost. Proven ROI: companies report 60–80% reduction in L&D video production time.</li>
+<br>
+<ol>
+<li><strong>Short-form marketing content:</strong> 15–30 second product clips, social media visuals, ad creative variants. Generate 20 variants in an hour for A/B testing. Cost: $0.50–$2.00 per clip.</li>
+<br>
+<ol>
+<li><strong>Product demonstration videos:</strong> Walk through software UI or product features. No reshooting when features change — regenerate from updated screenshots.</li>
+<br>
+<p><strong>Current limitations (be honest with stakeholders):</strong></p>
+<ul>
+<li>Clips longer than 2 minutes often have consistency issues</li>
+<li>Human faces and hands still occasionally distort — always review before publishing</li>
+<li>Complex narrative scenes with multiple characters remain difficult</li>
+<li>Always disclose AI-generated content — audience trust matters more than the cost savings</li>
+</ul>
+<br>
+<hr class="slide-divider">
+<br>
+<h2 id="slide-25-industry-applications-where-ai-is-creating-measurable-value" class="slide-title">Slide 25: Industry Applications — Where AI Is Creating Measurable Value</h2>
+<br>
+<h3>Real Deployments, Real Numbers</h3>
+<br>
+<p><strong>Finance and Banking</strong></p>
+<br>
+<table>
+<thead><tr>
+<th>Application</th>
+<th>AI Tools</th>
+<th>Measured Impact</th>
+</tr></thead><tbody>
+<tr>
+<td>Earnings call analysis and Q&A</td>
+<td>Claude 3.7, GPT-4o</td>
+<td>Analyst prep time: 2 hours → 8 minutes</td>
+</tr>
+<tr>
+<td>Credit risk narrative generation</td>
+<td>Fine-tuned LLM + RAG</td>
+<td>Decision documentation: 40% faster</td>
+</tr>
+<tr>
+<td>Regulatory gap analysis</td>
+<td>Claude (200K context)</td>
+<td>Compliance review: days → hours</td>
+</tr>
+<tr>
+<td>Trade surveillance reports</td>
+<td>LLM + structured ML</td>
+<td>Alert investigation: 50% faster triage</td>
+</tr>
+</tbody></table>
+<br>
+<p><strong>Healthcare and Life Sciences</strong></p>
+<br>
+<table>
+<thead><tr>
+<th>Application</th>
+<th>AI Tools</th>
+<th>Measured Impact</th>
+</tr></thead><tbody>
+<tr>
+<td>Clinical note drafting (ambient AI)</td>
+<td>Specialized models + voice</td>
+<td>Physician documentation: −2 hrs/day</td>
+</tr>
+<tr>
+<td>Prior authorization letters</td>
+<td>Fine-tuned LLM</td>
+<td>Drafting time: 45 min → 4 min</td>
+</tr>
+<tr>
+<td>Clinical trial site matching</td>
+<td>RAG + LLMs</td>
+<td>Patient screening: 3× faster</td>
+</tr>
+<tr>
+<td>Imaging report first draft</td>
+<td>Multimodal AI</td>
+<td>Radiologist throughput: +20–30%</td>
+</tr>
+</tbody></table>
+<br>
+<p><strong>Retail and E-commerce</strong></p>
+<br>
+<table>
+<thead><tr>
+<th>Application</th>
+<th>AI Tools</th>
+<th>Measured Impact</th>
+</tr></thead><tbody>
+<tr>
+<td>Product description generation</td>
+<td>GPT-4.1, Claude</td>
+<td>10,000 SKUs/hour vs. 100/day manual</td>
+</tr>
+<tr>
+<td>Returns reason classification</td>
+<td>Fine-tuned LLM</td>
+<td>Routing accuracy: 94% (vs. 71% rule-based)</td>
+</tr>
+<tr>
+<td>Customer chat resolution</td>
+<td>Fine-tuned LLM</td>
+<td>70% resolved without human agent</td>
+</tr>
+<tr>
+<td>Trend-driven copywriting</td>
+<td>Claude + RAG</td>
+<td>Campaign brief to copy: hours → minutes</td>
+</tr>
+</tbody></table>
+<br>
+<p><strong>Consulting and Professional Services</strong></p>
+<br>
+<table>
+<thead><tr>
+<th>Application</th>
+<th>AI Tools</th>
+<th>Measured Impact</th>
+</tr></thead><tbody>
+<tr>
+<td>RFP section drafting</td>
+<td>Claude + RAG on past proposals</td>
+<td>First draft: 30 min (was 1–2 days)</td>
+</tr>
+<tr>
+<td>Competitive intelligence digest</td>
+<td>Perplexity + LLM pipeline</td>
+<td>Daily brief: automated (was 4 hrs/week)</td>
+</tr>
+<tr>
+<td>Contract risk flagging</td>
+<td>Claude (long context)</td>
+<td>First-pass review: 3 min (was 2 hrs)</td>
+</tr>
+<tr>
+<td>Slide deck from outline</td>
+<td>GPT-4o + PowerPoint API</td>
+<td>Presentation first draft: 20 min</td>
+</tr>
+</tbody></table>
+<br>
+<blockquote><strong>The consistent pattern:</strong> AI absorbs 60–80% of the information-gathering and drafting work. Professionals shift their time to judgment, relationships, and quality control — higher-leverage activities. The job isn't eliminated; it's upgraded.</blockquote>
+<br>
+<hr class="slide-divider">
+<br>
+            </div>
+        </div>
+        
+
+        <div class="batch" id="batch5">
+            <div class="batch-header">
+                <span class="batch-number">Part 5</span>
+                <h2>Key Trends & Strategic Outlook — RAG, Fine-Tuning, AI Stack, Careers</h2>
+            </div>
+            <div class="batch-content">
+                <h1>Week 11 — New AI Tools and Trends</h1>
+<h1>Batch 5 of 5: Key Trends & Strategic Outlook (Slides 26–31)</h1>
+<h1>Course: BUAN 6v99 — Generative AI for Business | UTDallas Spring 2026</h1>
+<br>
+<hr class="slide-divider">
+<br>
+<h2 id="slide-26-rag-in-2026-beyond-basic-retrieval" class="slide-title">Slide 26: RAG in 2026 — Beyond Basic Retrieval</h2>
+<br>
+<h3>From Prototype to Production-Grade Knowledge Systems</h3>
+<br>
+<p><strong>What RAG does:</strong> Connects an LLM to your proprietary data so it answers questions grounded in <em>your</em> knowledge — policies, products, client history, research — not just its training data.</p>
+<br>
+<p><strong>Why RAG beats fine-tuning for most knowledge use cases:</strong></p>
+<br>
+<table>
+<thead><tr>
+<th>Criterion</th>
+<th>RAG</th>
+<th>Fine-tuning</th>
+</tr></thead><tbody>
+<tr>
+<td><strong>Updates when data changes</strong></td>
+<td>Yes — re-index the new document</td>
+<td>No — requires retraining</td>
+</tr>
+<tr>
+<td><strong>Cites sources</strong></td>
+<td>Yes — provenance is built in</td>
+<td>No — model "knows" it but can't cite</td>
+</tr>
+<tr>
+<td><strong>Cost to implement</strong></td>
+<td>Low to medium</td>
+<td>High</td>
+</tr>
+<tr>
+<td><strong>Time to production</strong></td>
+<td>Days to weeks</td>
+<td>Weeks to months</td>
+</tr>
+<tr>
+<td><strong>Handles proprietary facts</strong></td>
+<td>Yes</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td><strong>Requires ML expertise</strong></td>
+<td>No</td>
+<td>Yes</td>
+</tr>
+</tbody></table>
+<br>
+<p><strong>The 2025–2026 RAG improvements that matter for production:</strong></p>
+<br>
+<table>
+<thead><tr>
+<th>Advancement</th>
+<th>What It Does</th>
+<th>When You Need It</th>
+</tr></thead><tbody>
+<tr>
+<td><strong>Hybrid search</strong></td>
+<td>Combines keyword + semantic similarity</td>
+<td>When your documents use technical jargon or product names</td>
+</tr>
+<tr>
+<td><strong>Reranking</strong></td>
+<td>Second model re-scores retrieved chunks for relevance</td>
+<td>When retrieval quality is inconsistent</td>
+</tr>
+<tr>
+<td><strong>GraphRAG</strong></td>
+<td>Understands entity relationships across documents</td>
+<td>Complex, interconnected knowledge (org charts, product dependencies)</td>
+</tr>
+<tr>
+<td><strong>Multimodal RAG</strong></td>
+<td>Retrieves from PDFs with charts, tables, images</td>
+<td>Real business documents — most have mixed content</td>
+</tr>
+<tr>
+<td><strong>Agentic RAG</strong></td>
+<td>Model decides what to retrieve, and can do multiple retrieval passes</td>
+<td>Multi-hop questions requiring information from many places</td>
+</tr>
+</tbody></table>
+<br>
+<p><strong>Minimal production RAG stack (2026):</strong></p>
+<pre><code class="language-python">
+from llama_index.core import VectorStoreIndex, SimpleDirectoryReader
+# Index once
+docs = SimpleDirectoryReader("./company_docs/").load_data()
+index = VectorStoreIndex.from_documents(docs)
+# Query many times
+response = index.as_query_engine().query(
+    "What is our enterprise refund policy and how does it differ from SMB?"
+)
+</code></pre>
+<br>
+<p><strong>Cost benchmark:</strong> Indexing 1,000 documents ≈ $0.50. Answering a query ≈ $0.02–$0.10.</p>
+<br>
+<hr class="slide-divider">
+<br>
+<h2 id="slide-27-fine-tuning-accessibility-in-2026" class="slide-title">Slide 27: Fine-Tuning Accessibility in 2026</h2>
+<br>
+<h3>From Research Lab to Business Tool</h3>
+<br>
+<p><strong>Fine-tuning definition:</strong> Continue training a pre-trained model on your specific data — producing a model that reflects your domain language, output style, and task requirements.</p>
+<br>
+<p><strong>When fine-tuning is the right answer (and when it isn't):</strong></p>
+<br>
+<table>
+<thead><tr>
+<th>Scenario</th>
+<th>Best Approach</th>
+<th>Why</th>
+</tr></thead><tbody>
+<tr>
+<td>Need factual knowledge from your documents</td>
+<td>RAG</td>
+<td>Fine-tuning doesn't reliably memorize facts</td>
+</tr>
+<tr>
+<td>Need consistent output format or writing style</td>
+<td><strong>Fine-tuning</strong></td>
+<td>Style is baked in — no per-call prompting needed</td>
+</tr>
+<tr>
+<td>Domain-specific terminology and reasoning</td>
+<td><strong>Fine-tuning</strong></td>
+<td>Model learns your language, not just your content</td>
+</tr>
+<tr>
+<td>Running 10M+ calls/month, cost is critical</td>
+<td><strong>Fine-tuning on a small model</strong></td>
+<td>Fine-tuned small model outperforms large model on your task at 1/10th the cost</td>
+</tr>
+<tr>
+<td>Data is fresh / changes frequently</td>
+<td>RAG</td>
+<td>Re-indexing is instant; retraining is slow</td>
+</tr>
+</tbody></table>
+<br>
+<p><strong>What's accessible in 2026 — no PhD required:</strong></p>
+<br>
+<p><strong>OpenAI Fine-Tuning API (cloud):</strong></p>
+<pre><code class="language-python">
+# Format: JSONL file with {"messages": [...]} examples
+# Minimum: ~50 high-quality examples; optimal: 200–500+
+job = client.fine_tuning.jobs.create(
+    training_file="file-abc123",
+    model="gpt-4o-mini"     # Fine-tune the cheap model to match GPT-4o quality on your task
+)
+# Cost: ~$3–8 per 1M training tokens; inference 2–4× cheaper than base model
+</code></pre>
+<br>
+<p><strong>LoRA / QLoRA (local, open source):</strong></p>
+<ul>
+<li><strong>LoRA:</strong> Trains a small adapter on top of frozen base weights — 90% fewer trainable parameters, same quality improvement</li>
+<li><strong>QLoRA:</strong> LoRA + 4-bit quantization — fine-tune a 7B model on a single consumer GPU in 1–3 hours</li>
+<li><strong>Unsloth:</strong> Library that makes QLoRA training 2–5× faster; runs free on Google Colab</li>
+</ul>
+<br>
+<p><strong>Real business fine-tuning ROI examples:</strong></p>
+<ul>
+<li>Law firm: Fine-tuned on 2,000 past contracts → model drafts in firm's exact clause style → partner review time −60%</li>
+<li>E-commerce: Fine-tuned on brand voice guide + 500 product descriptions → 10,000 on-brand SKU descriptions/day</li>
+<li>Call center: Fine-tuned on 3 years of resolved tickets → model drafts replies matching senior agent quality → handle time −35%</li>
+</ul>
+<br>
+<hr class="slide-divider">
+<br>
+<h2 id="slide-28-building-your-ai-stack-a-tiered-roadmap" class="slide-title">Slide 28: Building Your AI Stack — A Tiered Roadmap</h2>
+<br>
+<h3>From Individual Tools to Enterprise AI in 5 Steps</h3>
+<br>
+<p><strong>The three-tier maturity model:</strong></p>
+<br>
+<table>
+<thead><tr>
+<th>Tier</th>
+<th>What You Build</th>
+<th>Tools</th>
+<th>Monthly Cost</th>
+<th>Timeline</th>
+</tr></thead><tbody>
+<tr>
+<td><strong>Tier 1: Individual Productivity</strong></td>
+<td>Personal AI assistants for daily work</td>
+<td>Claude/ChatGPT/Gemini, Cursor/Copilot, Perplexity</td>
+<td>$0–$50/person</td>
+<td>Start now</td>
+</tr>
+<tr>
+<td><strong>Tier 2: Team Workflows</strong></td>
+<td>Automated processes shared across the team</td>
+<td>Zapier/Make/n8n, NotebookLM, RAG chatbot on your docs</td>
+<td>$100–$1,000/month</td>
+<td>Months 1–6</td>
+</tr>
+<tr>
+<td><strong>Tier 3: Enterprise AI</strong></td>
+<td>AI-native products and internal platforms</td>
+<td>Fine-tuned models, multi-agent systems, AI-embedded products</td>
+<td>$10,000+/month</td>
+<td>Months 6–18</td>
+</tr>
+</tbody></table>
+<br>
+<p><strong>The five-step adoption playbook:</strong></p>
+<br>
+<ol>
+<li><strong>Map:</strong> List your 10 most time-consuming, low-judgment repetitive tasks. These are automation candidates.</li>
+<li><strong>Pilot:</strong> Pick 2–3. Use existing AI tools ($0 incremental cost) to assist with them for 2 weeks.</li>
+<li><strong>Measure:</strong> Quantify time saved per task. Calculate weekly/monthly hours. Document quality differences.</li>
+<li><strong>Scale:</strong> Once value is proven, formalize the workflow, automate with n8n/Zapier, roll out to the team.</li>
+<li><strong>Invest:</strong> With a track record, now consider custom fine-tuning, agents, or product integration.</li>
+<br>
+<p><strong>The five mistakes that derail AI adoption:</strong></p>
+<br>
+<table>
+<thead><tr>
+<th>Mistake</th>
+<th>What Goes Wrong</th>
+<th>The Fix</th>
+</tr></thead><tbody>
+<tr>
+<td>Starting at Tier 3</td>
+<td>"We need an enterprise AI platform" before proving any use case</td>
+<td>Tier 1 costs $20/month and proves value in week 1</td>
+</tr>
+<tr>
+<td>Vendor lock-in</td>
+<td>Deep dependency on one LLM provider; painful to migrate</td>
+<td>Use LiteLLM or LangChain as provider abstraction from day one</td>
+</tr>
+<tr>
+<td>No evaluation framework</td>
+<td>"It seems good" is not a quality standard</td>
+<td>Define what good looks like, build a test set, measure it</td>
+</tr>
+<tr>
+<td>Ignoring data privacy</td>
+<td>Sensitive data in cloud AI APIs before legal review</td>
+<td>Audit data classification; self-host for regulated data</td>
+</tr>
+<tr>
+<td>Automating broken processes</td>
+<td>Hoping AI will fix a workflow that was already chaotic</td>
+<td>Redesign the process first, then automate the clean version</td>
+</tr>
+</tbody></table>
+<br>
+<hr class="slide-divider">
+<br>
+<h2 id="slide-29-six-trends-reshaping-business-ai-2026-and-beyond" class="slide-title">Slide 29: Six Trends Reshaping Business AI — 2026 and Beyond</h2>
+<br>
+<h3>What to Watch, What It Means for You</h3>
+<br>
+<p><strong>Trend 1: Intelligence cost collapses toward zero</strong></p>
+<ul>
+<li>GPT-4 level in 2023: $60/million tokens → Today: $0.50–$2.00 → Projection 2027: $0.10 or less</li>
+<li>Implication: Cost is no longer the barrier to AI deployment — <strong>trust, integration, and governance</strong> are</li>
+</ul>
+<br>
+<p><strong>Trend 2: Agentic AI moves from demo to production</strong></p>
+<ul>
+<li>2024: Impressive demos. 2025: Pilots. 2026: Production at scale at companies like Klarna, JPMorgan, Salesforce</li>
+<li>Agents completing 4-hour knowledge work tasks in 15 minutes is now observable, not aspirational</li>
+</ul>
+<br>
+<p><strong>Trend 3: Domain specialization creates competitive moats</strong></p>
+<ul>
+<li>General models → domain models: Harvey (legal), Abridge (clinical), BloombergGPT (finance)</li>
+<li>Companies that fine-tune on proprietary data create models competitors can't replicate</li>
+<li>Your domain expertise × AI = a differentiated capability, not just efficiency</li>
+</ul>
+<br>
+<p><strong>Trend 4: Multimodal becomes the baseline</strong></p>
+<ul>
+<li>By 2027, the distinction between "text AI" and "vision AI" will be meaningless — all models are multimodal</li>
+<li>Every business process touching documents, images, audio, or video becomes automatable</li>
+<li>85%+ of business information is currently unstructured — this unlocks most of it</li>
+</ul>
+<br>
+<p><strong>Trend 5: AI governance transitions from voluntary to mandatory</strong></p>
+<ul>
+<li>EU AI Act enforcement: companies using AI in hiring, credit, healthcare, law enforcement face compliance requirements</li>
+<li>Enterprise buyers now require: audit logs, explainability reports, data lineage, bias testing</li>
+<li>New job titles appearing: Chief AI Ethics Officer, AI Risk Manager, Model Governance Lead</li>
+</ul>
+<br>
+<p><strong>Trend 6: The human role shifts from executor to director</strong></p>
+<blockquote>The highest-value professionals in 2027 will be those who combine <strong>deep domain expertise</strong> with <strong>AI fluency</strong> — who know what to ask AI to do, can validate what it produces, and can connect AI outputs to business strategy. Neither pure AI skill nor pure domain knowledge alone will be enough.</blockquote>
+<br>
+<hr class="slide-divider">
+<br>
+<h2 id="slide-30-career-opportunities-in-the-ai-era" class="slide-title">Slide 30: Career Opportunities in the AI Era</h2>
+<br>
+<h3>Where Business Analytics Students Fit in 2026</h3>
+<br>
+<p><strong>Roles that barely existed in 2022 — and are now in high demand:</strong></p>
+<br>
+<table>
+<thead><tr>
+<th>Role</th>
+<th>What They Do Day-to-Day</th>
+<th>Salary Range (US)</th>
+<th>Key Skill Stack</th>
+</tr></thead><tbody>
+<tr>
+<td><strong>AI Product Manager</strong></td>
+<td>Define AI features, manage LLM-based products, write evals</td>
+<td>$140–$210K</td>
+<td>Product instinct + LLM behavior understanding</td>
+</tr>
+<tr>
+<td><strong>AI Automation Engineer</strong></td>
+<td>Build agent workflows, connect LLMs to business systems</td>
+<td>$100–$165K</td>
+<td>Python, LangChain/n8n, REST APIs, cloud</td>
+</tr>
+<tr>
+<td><strong>Prompt Engineer / LLM Engineer</strong></td>
+<td>Design prompts, build evals, optimize model behavior</td>
+<td>$90–$155K</td>
+<td>LLM internals, eval frameworks, domain expertise</td>
+</tr>
+<tr>
+<td><strong>AI Data Curator</strong></td>
+<td>Build training and evaluation datasets for fine-tuning</td>
+<td>$80–$135K</td>
+<td>Domain expertise + annotation tooling + quality metrics</td>
+</tr>
+<tr>
+<td><strong>ML Ops / AI Ops Engineer</strong></td>
+<td>Deploy, monitor, and maintain production AI systems</td>
+<td>$130–$185K</td>
+<td>Cloud, MLflow, monitoring, cost optimization</td>
+</tr>
+<tr>
+<td><strong>AI Governance Analyst</strong></td>
+<td>Ensure AI compliance, conduct risk assessments</td>
+<td>$90–$145K</td>
+<td>Policy + risk + AI literacy</td>
+</tr>
+<tr>
+<td><strong>Business AI Analyst</strong></td>
+<td>Find automation opportunities, measure ROI, build business cases</td>
+<td>$80–$135K</td>
+<td>Analytics + business acumen + AI tools fluency</td>
+</tr>
+</tbody></table>
+<br>
+<p><strong>The five skills that compound most in this market:</strong></p>
+<br>
+<ol>
+<li><strong>Python + API integration</strong> — the LLM API call is the fundamental unit of AI product development; everything builds on this</li>
+<li><strong>RAG and vector databases</strong> — the backbone of every enterprise AI deployment; LlamaIndex, LangChain, ChromaDB, Pinecone</li>
+<li><strong>Prompt design + evaluation</strong> — systematic, measurable approach to getting consistent AI outputs; not art, it's engineering</li>
+<li><strong>Agent orchestration</strong> — building workflows where AI takes actions, not just answers; Claude SDK, LangGraph, n8n</li>
+<li><strong>Domain expertise × AI</strong> — knowing your industry deeply means you can direct AI better than a generalist; this is your moat</li>
+<br>
+<p><strong>Your portfolio action plan:</strong></p>
+<ul>
+<li>Build 2–3 AI projects: one RAG app, one agent, one automation pipeline — put them on GitHub</li>
+<li>Write about what you built and what you learned — LinkedIn posts, a blog, anything public</li>
+<li>Get certified: Anthropic, OpenAI, Google Cloud AI, AWS Machine Learning — all have free or cheap certifications</li>
+</ul>
+<br>
+<hr class="slide-divider">
+<br>
+<h2 id="slide-31-class-wrap-up-your-ai-landscape-map" class="slide-title">Slide 31: Class Wrap-Up — Your AI Landscape Map</h2>
+<br>
+<h3>Six Things to Walk Away Knowing</h3>
+<br>
+<p><strong>What today's class gave you:</strong></p>
+<br>
+<p><strong>1. The model landscape is rich, competitive, and fast-moving</strong></p>
+<p>GPT-4.1, Claude 3.7, Gemini 2.5, and open-source models like Llama 4 and DeepSeek all compete at the frontier. Choose by use case, data requirements, and cost — not by brand loyalty. The best model changes every 3–6 months.</p>
+<br>
+<p><strong>2. Agents are the most important architectural shift since ChatGPT</strong></p>
+<p>Claude SDK, OpenAI Agents SDK, LangGraph, and CrewAI let you build AI that takes actions. MCP standardizes how agents connect to every tool in your stack. This is the category where the most value is being created right now.</p>
+<br>
+<p><strong>3. AI coding tools are no longer optional for anyone who writes code</strong></p>
+<p>Claude Code, Cursor, Windsurf, and GitHub Copilot have moved from productivity boosters to competitive necessities. Writing code without AI assistance is increasingly a disadvantage, not a preference.</p>
+<br>
+<p><strong>4. Business automation + AI is transforming every operational role</strong></p>
+<p>n8n, Make, and Zapier now orchestrate AI judgment — not just rule-based routing. Any workflow involving document reading, content generation, or classification is automatable today.</p>
+<br>
+<p><strong>5. RAG and fine-tuning are your tools for customization — not re-training</strong></p>
+<p>You don't build models from scratch. You adapt existing frontier models to your domain. RAG for knowledge. Fine-tuning for style, format, and task-specific performance.</p>
+<br>
+<p><strong>6. The opportunity is specific, not general</strong></p>
+<blockquote>*"The opportunity isn't to use AI for everything. It's to identify the 20% of your work where AI creates 80% of the value — and go deep there."*</blockquote>
+<br>
+<p><strong>Your homework:</strong> Choose a real business process. Automate at least one step of it. Present it next class.</p>
+<br>
+<p><strong>Next class:</strong> AI in Finance and Business Decision-Making — applying these tools to financial modeling, forecasting, and quantitative analysis.</p>
+<br>
+<hr class="slide-divider">
+<br>
+            </div>
+        </div>
+        
+
+        <footer>
+            <strong>BUAN 6v99.SW2 — Generative AI for Business</strong><br>
+            University of Texas at Dallas | Spring 2026 | Professor Antonio de Pádua Paes Jr.<br>
+            Week 11: New AI Tools and Trends
+        </footer>
+    </div>
+</body>
+</html>
