@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Class 8 Homework — LLM Battle Test</title>
+  <style>
+    body {
+      font-family: Georgia, serif;
+      font-size: 16px;
+      line-height: 1.7;
+      max-width: 720px;
+      margin: 40px auto;
+      padding: 0 20px 60px;
+      color: #1a1a1a;
+      background: #fff;
+    }
+    h1 { font-size: 1.8rem; margin-bottom: 4px; }
+    h2 { font-size: 1.2rem; margin-top: 2rem; margin-bottom: 4px; border-bottom: 1px solid #ccc; padding-bottom: 4px; }
+    h3 { font-size: 1rem; margin-top: 1.2rem; margin-bottom: 2px; }
+    p  { margin: 0.6rem 0; }
+    ul, ol { margin: 0.4rem 0 0.6rem 1.4rem; }
+    li { margin-bottom: 4px; }
+    .meta { color: #555; font-size: 0.9rem; margin-bottom: 1.5rem; }
+    hr { border: none; border-top: 1px solid #ddd; margin: 2rem 0; }
+
+    table { width: 100%; border-collapse: collapse; font-size: 0.9rem; margin: 0.8rem 0; }
+    th { background: #f0f0f0; text-align: left; padding: 6px 10px; font-weight: bold; border: 1px solid #ccc; }
+    td { padding: 6px 10px; border: 1px solid #ccc; vertical-align: top; }
+    tr:nth-child(even) td { background: #fafafa; }
+
+    blockquote {
+      border-left: 3px solid #999;
+      margin: 0.8rem 0;
+      padding: 0.4rem 1rem;
+      color: #444;
+      font-style: italic;
+    }
+    .step { font-weight: bold; text-transform: uppercase; font-size: 0.75rem; letter-spacing: 0.08em; color: #666; }
+    footer { margin-top: 3rem; font-size: 0.8rem; color: #888; border-top: 1px solid #ddd; padding-top: 1rem; }
+  </style>
+</head>
+<body>
+
+<h1>Class 8 Homework — LLM Battle Test</h1>
+<p class="meta">
+  BUAN 6v99 — Generative AI for Business &nbsp;|&nbsp; UTDallas Spring 2026<br>
+  Professor Antonio de Pádua Paes Jr. &nbsp;|&nbsp; <strong>Due: Next class session</strong>
+</p>
+
+<p>You will act as an <strong>AI consultant</strong> hired to recommend the best LLM for a specific business problem. Put at least <strong>3 different LLMs head-to-head</strong> on a real task, analyze the results critically, and present your recommendation to the class.</p>
+<p><strong>Deliverable:</strong> A 5–7 minute live presentation. No slides required — share your screen and walk through your findings.</p>
+
+<hr>
+
+<p class="step">Step 1</p>
+<h2>Choose Your Business Problem</h2>
+<p>Pick <strong>one</strong> scenario from the list below, or propose your own (must be approved by professor):</p>
+
+<table>
+  <tr><th>#</th><th>Scenario</th><th>Industry</th></tr>
+  <tr><td>A</td><td>Draft a go-to-market strategy for a new AI-powered product</td><td>Tech / Startups</td></tr>
+  <tr><td>B</td><td>Analyze a competitor's strengths and weaknesses based on public information</td><td>Any</td></tr>
+  <tr><td>C</td><td>Write and refine a job description for a senior data analyst role</td><td>HR / Recruiting</td></tr>
+  <tr><td>D</td><td>Create a 90-day onboarding plan for a new department manager</td><td>Operations / HR</td></tr>
+  <tr><td>E</td><td>Summarize and extract key risks from a public contract or terms of service</td><td>Legal / Finance</td></tr>
+  <tr><td>F</td><td>Build a customer complaint response workflow using AI</td><td>Customer Service</td></tr>
+  <tr><td>G</td><td>Write a business case for adopting AI in a department of your choice</td><td>Strategy</td></tr>
+  <tr><td>H</td><td>Generate a market research brief on an industry trend of your choice</td><td>Consulting</td></tr>
+</table>
+
+<p><em>Custom scenario: If none of the above fits your career interests, propose your own. It must be concrete, realistic, and produce outputs you can compare across LLMs.</em></p>
+
+<hr>
+
+<p class="step">Step 2</p>
+<h2>Choose Your LLMs — Minimum 3</h2>
+
+<p>You must test <strong>at least 3 LLMs</strong> from different categories. Mix paid and free.</p>
+
+<h3>Paid / Proprietary — choose at least 1</h3>
+<ul>
+  <li>ChatGPT (GPT-4o) — chat.openai.com</li>
+  <li>Claude (Sonnet or Haiku) — claude.ai</li>
+  <li>Google Gemini Pro — gemini.google.com</li>
+  <li>Perplexity Pro — perplexity.ai</li>
+</ul>
+
+<h3>Free / Open-Source — choose at least 1</h3>
+<ul>
+  <li>Meta AI — meta.ai</li>
+  <li>Ollama + Llama 3.2 (local) — ollama.com</li>
+  <li>Groq + Llama 3.3 70B — console.groq.com</li>
+  <li>Google Gemini (free tier)</li>
+  <li>Claude (free tier)</li>
+</ul>
+
+<h3>Recommended Combinations</h3>
+<ul>
+  <li>ChatGPT + Claude + Meta AI — paid vs. free comparison</li>
+  <li>Claude + Gemini + Ollama — proprietary vs. local private</li>
+  <li>ChatGPT + Perplexity + Groq — general vs. search-augmented vs. speed-optimized</li>
+</ul>
+
+<hr>
+
+<p class="step">Step 3</p>
+<h2>Design Your Test</h2>
+
+<p>Use the <strong>exact same prompt for all LLMs.</strong> The comparison is only valid if the input is identical. Your prompt should be specific, complex enough to reveal differences, and realistic for a business context.</p>
+
+<h3>Example prompt (Scenario A — go-to-market strategy)</h3>
+<blockquote>
+  "We are launching an AI-powered contract review tool for small law firms (2–10 attorneys) in the United States. The tool automatically flags unusual clauses, suggests standard language, and reduces review time by 60%. Our pricing is $199/month per firm. Draft a go-to-market strategy including: target customer profile, top 3 acquisition channels, key messaging, and first 90-day milestones."
+</blockquote>
+
+<h3>Optional follow-up prompt (run on all LLMs after the first response)</h3>
+<blockquote>
+  "What are the 3 biggest risks to this strategy, and how would you mitigate each?"
+</blockquote>
+
+<p>Document both your prompt(s) and all responses in full.</p>
+
+<hr>
+
+<p class="step">Step 4</p>
+<h2>Run and Document</h2>
+
+<p>For each LLM:</p>
+<ol>
+  <li>Copy your prompt exactly — do not rephrase or adjust per tool</li>
+  <li>Record the full response — copy the complete text, do not summarize</li>
+  <li>Take a screenshot showing the tool, your prompt, and the start of the response</li>
+  <li>Note: response time (fast / medium / slow), response length, whether it asked clarifying questions, whether it refused or added excessive caveats</li>
+</ol>
+
+<h3>Documentation template — repeat for each LLM</h3>
+<table>
+  <tr><td><strong>LLM tested</strong></td><td>Name + model if known</td></tr>
+  <tr><td><strong>Date / time</strong></td><td>When you ran it</td></tr>
+  <tr><td><strong>Response time</strong></td><td>Fast / Medium / Slow</td></tr>
+  <tr><td><strong>Response length</strong></td><td>Approximate word count</td></tr>
+  <tr><td><strong>Full response</strong></td><td>Paste complete output here</td></tr>
+  <tr><td><strong>Screenshot</strong></td><td>Attach file</td></tr>
+</table>
+
+<hr>
+
+<p class="step">Step 5</p>
+<h2>Analyze and Compare</h2>
+
+<h3>5A — Quality Scorecard</h3>
+<p>Rate each LLM on these dimensions (1 = poor, 5 = excellent):</p>
+
+<table>
+  <tr><th>Criterion</th><th>LLM 1</th><th>LLM 2</th><th>LLM 3</th><th>Notes</th></tr>
+  <tr><td>Accuracy — factually correct, no hallucinations</td><td>/5</td><td>/5</td><td>/5</td><td></td></tr>
+  <tr><td>Completeness — covered all parts of the prompt</td><td>/5</td><td>/5</td><td>/5</td><td></td></tr>
+  <tr><td>Structure — well organized, easy to read</td><td>/5</td><td>/5</td><td>/5</td><td></td></tr>
+  <tr><td>Depth — went beyond surface-level answers</td><td>/5</td><td>/5</td><td>/5</td><td></td></tr>
+  <tr><td>Practicality — advice actually usable in business</td><td>/5</td><td>/5</td><td>/5</td><td></td></tr>
+  <tr><td>Tone — professional, appropriate for business</td><td>/5</td><td>/5</td><td>/5</td><td></td></tr>
+  <tr><td><strong>TOTAL</strong></td><td><strong>/30</strong></td><td><strong>/30</strong></td><td><strong>/30</strong></td><td></td></tr>
+</table>
+
+<h3>5B — Written Analysis</h3>
+<p>Answer each question in 1–2 paragraphs. Be specific — quote directly from the LLM responses.</p>
+<ol>
+  <li>What did the best-performing LLM do that the others didn't? Be specific — quote examples.</li>
+  <li>Where did each LLM fall short? What was missing, wrong, or unhelpful?</li>
+  <li>Did any LLM surprise you — positively or negatively?</li>
+  <li>Cost and accessibility: is the quality difference worth the cost? What would you recommend to a small business on a limited budget?</li>
+  <li>Your final recommendation: if a business hired you as an AI consultant, which LLM would you advise for this task — and why?</li>
+</ol>
+
+<hr>
+
+<p class="step">Step 6</p>
+<h2>Prepare Your Presentation</h2>
+
+<p><strong>Format:</strong> 5–7 minutes, live. No slides required — share your screen and walk through your results.</p>
+
+<table>
+  <tr><th>Section</th><th>Time</th><th>Content</th></tr>
+  <tr><td>1. Setup</td><td>1 min</td><td>Business problem you chose, why it's relevant, which LLMs you tested</td></tr>
+  <tr><td>2. Live demo / screenshots</td><td>2–3 min</td><td>Walk through the responses — show, don't just tell. Highlight the best and worst moments.</td></tr>
+  <tr><td>3. Scorecard &amp; analysis</td><td>1–2 min</td><td>Your ratings and key findings</td></tr>
+  <tr><td>4. Recommendation</td><td>30 sec</td><td>Which LLM wins for this task and why — one clear, confident answer</td></tr>
+</table>
+
+<h3>Tips for a strong presentation</h3>
+<ul>
+  <li>Lead with the most interesting finding — what surprised you most</li>
+  <li>Use direct quotes from the LLM responses to make your points concrete</li>
+  <li>Be opinionated — "LLM X was clearly better because..." is more valuable than "they were all good"</li>
+  <li>Anticipate the question: "Would you use this output as-is, or would you need to edit it significantly before using it in a real business context?"</li>
+</ul>
+
+<hr>
+
+<h2>Grading Rubric</h2>
+
+<table>
+  <tr><th>Category</th><th>Points</th><th>What We're Looking For</th></tr>
+  <tr><td>Test design</td><td>20 pts</td><td>Clear, realistic business prompt; same prompt used across all LLMs; at least 3 LLMs including at least 1 free model</td></tr>
+  <tr><td>Documentation</td><td>20 pts</td><td>Full responses captured; screenshots taken; notes on response time, length, and behavior</td></tr>
+  <tr><td>Analysis quality</td><td>30 pts</td><td>Scorecard completed; written analysis is specific, evidence-based, and goes beyond surface observations</td></tr>
+  <tr><td>Presentation</td><td>20 pts</td><td>Stays within 5–7 minutes; clearly structured; uses specific examples; confident recommendation</td></tr>
+  <tr><td>Critical thinking</td><td>10 pts</td><td>Questions assumptions; identifies limitations; considers cost vs. quality trade-offs</td></tr>
+  <tr><td><strong>TOTAL</strong></td><td><strong>100 pts</strong></td><td></td></tr>
+</table>
+
+<hr>
+
+<h2>Frequently Asked Questions</h2>
+
+<p><strong>Q: Do I need a paid subscription?</strong><br>
+No. ChatGPT free, Claude free, Gemini free, Meta AI, Groq, and Ollama are all available at no cost. You do not need to pay anything to complete this assignment.</p>
+
+<p><strong>Q: Can I use a problem from my current job?</strong><br>
+Yes, but do not include any confidential, proprietary, or personally identifiable information. Use a realistic but hypothetical version of the problem.</p>
+
+<p><strong>Q: Can I test more than 3 LLMs?</strong><br>
+Yes — testing 4 or 5 LLMs will strengthen your analysis. There is no penalty for going above the minimum.</p>
+
+<p><strong>Q: What if one LLM refuses to answer?</strong><br>
+Document the refusal exactly — this is data. Note what it said, adjust your prompt minimally without changing the business intent, and try again. If it still refuses, note that as a limitation.</p>
+
+<p><strong>Q: Can two students choose the same scenario?</strong><br>
+Yes, but your prompts and LLM choices should differ. Comparing results across students with the same scenario can make for an interesting class discussion.</p>
+
+<footer>
+  Class 8 Homework — BUAN 6v99 Generative AI for Business — Spring 2026<br>
+  University of Texas at Dallas | Professor Antonio de Pádua Paes Jr.
+</footer>
+
+</body>
+</html>
